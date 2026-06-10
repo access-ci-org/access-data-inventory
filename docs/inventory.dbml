@@ -1,5 +1,5 @@
 // ACCESS Data Inventory
-// Generated: 2026-03-11 19:20
+// Generated: 2026-06-10 16:46
 // Source: data-sources/*.md
 
 // =============================================================================
@@ -12,13 +12,13 @@ Enum data_source {
     description: ACCESS Support website CMS - canonical storage for support content
     category: Content Management
     track: Support
-    responsible_team: Support
     access_level: Varies
     is_canonical: true
     canonical_source: null
     mcp_available: false
     mcp_package: null
     api_endpoint: https://support.access-ci.org
+    storage_location: null
     priority: High
   ''']
 
@@ -27,13 +27,13 @@ Enum data_source {
     description: Community groups organized by interest or domain
     category: Community & Outreach
     track: Support
-    responsible_team: Support
     access_level: Public
     is_canonical: false
-    canonical_source: access-support-drupal
+    canonical_source: access_support_drupal
     mcp_available: true
     mcp_package: @access-mcp/affinity-groups
     api_endpoint: https://support.access-ci.org/api/1.1/affinity_groups
+    storage_location: null
     priority: High
   ''']
 
@@ -42,13 +42,13 @@ Enum data_source {
     description: Resource provider and community announcements
     category: Community & Outreach
     track: Support
-    responsible_team: Support
     access_level: Public
     is_canonical: false
-    canonical_source: access-support-drupal
+    canonical_source: access_support_drupal
     mcp_available: true
     mcp_package: @access-mcp/announcements
     api_endpoint: https://support.access-ci.org/api/2.2/announcements
+    storage_location: null
     priority: High
   ''']
 
@@ -57,13 +57,13 @@ Enum data_source {
     description: User identity information
     category: Users & Identity
     track: Operations
-    responsible_team: Operations
     access_level: Sensitive
     is_canonical: true
     canonical_source: null
     mcp_available: false
     mcp_package: null
     api_endpoint: null
+    storage_location: null
     priority: Low
   ''']
 
@@ -72,13 +72,13 @@ Enum data_source {
     description: Registration and attendance data for events
     category: Events & Training
     track: Support
-    responsible_team: Support
     access_level: Restricted
     is_canonical: true
     canonical_source: null
     mcp_available: false
     mcp_package: null
     api_endpoint: null
+    storage_location: null
     priority: Medium
   ''']
 
@@ -87,13 +87,13 @@ Enum data_source {
     description: Workshops, webinars, training sessions, and office hours
     category: Events & Training
     track: Support
-    responsible_team: Support
     access_level: Public
     is_canonical: false
-    canonical_source: access-support-drupal
+    canonical_source: access_support_drupal
     mcp_available: true
     mcp_package: @access-mcp/events
     api_endpoint: https://support.access-ci.org/api/2.2/events
+    storage_location: null
     priority: High
   ''']
 
@@ -102,13 +102,13 @@ Enum data_source {
     description: HPC metrics, usage analytics, and resource specifications from the ACCESS XDMoD instance
     category: Metrics & Reporting
     track: Metrics
-    responsible_team: Metrics
     access_level: Varies
     is_canonical: true
     canonical_source: null
     mcp_available: true
     mcp_package: @access-mcp/xdmod
     api_endpoint: https://xdmod.access-ci.org/controllers/user_interface.php
+    storage_location: null
     priority: High
     realms: Accounts (2 stats, 2 dims), Allocations (11 stats, 9 dims), Cloud (11 stats, 23 dims), Gateways (28 stats, 23 dims), Jobs (30 stats, 24 dims), Requests (2 stats, 3 dims), ResourceSpecifications (18 stats, 4 dims), Storage (6 stats, 0 dims), SUPREMM (33 stats, 30 dims)
   ''']
@@ -120,15 +120,15 @@ Enum data_source {
 // =============================================================================
 
 Table access_support_drupal {
-  nid int [pk, note: 'access: Public | semantic: entity_id | Drupal node ID']
-  uuid varchar [note: 'access: Public | semantic: uuid | Drupal UUID']
-  type varchar [note: 'access: Public | semantic: entity_type | Drupal content type']
-  title varchar [note: 'access: Public | semantic: entity_name | Content title']
+  nid int [pk, not null, note: 'access: Public | semantic: entity_id | Drupal node ID']
+  uuid varchar [not null, note: 'access: Public | semantic: uuid | Drupal UUID']
+  type varchar [not null, note: 'access: Public | semantic: entity_type | Drupal content type']
+  title varchar [not null, note: 'access: Public | semantic: entity_name | Content title']
   body text [note: 'access: Public | semantic: entity_description | Content body (HTML)']
-  status boolean [note: 'access: Internal Only | semantic: entity_status | Published status']
-  created timestamp [note: 'access: Public | semantic: date_created | Content creation date']
-  changed timestamp [note: 'access: Public | semantic: date_modified | Last modification date']
-  uid int [note: 'access: Restricted | Author user ID']
+  status boolean [not null, note: 'access: Internal Only | semantic: entity_status | Published status']
+  created timestamp [not null, note: 'access: Public | semantic: date_created | Content creation date']
+  changed timestamp [not null, note: 'access: Public | semantic: date_modified | Last modification date']
+  uid int [not null, note: 'access: Restricted | Author user ID']
 
   Note: '''
     source: access_support_drupal
@@ -142,8 +142,8 @@ Table access_support_drupal {
 }
 
 Table affinity_groups {
-  nid int [pk, note: 'access: Public | semantic: entity_id | Node ID']
-  uuid varchar [note: 'access: Public | mcp: id | semantic: uuid | Unique identifier']
+  nid int [pk, not null, note: 'access: Public | semantic: entity_id | Node ID']
+  uuid varchar [not null, note: 'access: Public | mcp: id | semantic: uuid | Unique identifier']
   title varchar [not null, note: 'access: Public | mcp: name | semantic: entity_name | Group name']
   body text [note: 'access: Public | mcp: description | semantic: entity_description | Group description (HTML cleaned in MCP)']
   group_id varchar [not null, note: 'access: Public | mcp: id | semantic: entity_id | URL-friendly group identifier']
@@ -176,12 +176,12 @@ Table affinity_groups {
 }
 
 Table announcements {
-  nid int [pk, note: 'access: Public | semantic: entity_id | Node ID']
-  uuid varchar [note: 'access: Public | mcp: uuid | semantic: uuid | Unique identifier']
+  nid int [pk, not null, note: 'access: Public | semantic: entity_id | Node ID']
+  uuid varchar [not null, note: 'access: Public | mcp: uuid | semantic: uuid | Unique identifier']
   title varchar [not null, note: 'access: Public | mcp: title | semantic: entity_name | Announcement title']
-  body text [note: 'access: Public | mcp: body | semantic: entity_description | HTML content']
+  body text [not null, note: 'access: Public | mcp: body | semantic: entity_description | HTML content']
   summary varchar [note: 'access: Public | mcp: summary | semantic: entity_summary | Short summary text']
-  published_date date [note: 'access: Public | mcp: published_date | semantic: date_published | When the announcement was published']
+  published_date date [not null, note: 'access: Public | mcp: published_date | semantic: date_published | When the announcement was published']
   affiliation varchar [note: 'access: Public | mcp: affiliation | semantic: affiliation | Whether this is an official ACCESS or community announcement']
   external_link varchar [note: 'access: Public | mcp: external_link | semantic: url_external | Link to external resource']
   where_to_share text [note: 'access: Internal Only | mcp: where_to_share | Distribution channels for this announcement']
@@ -222,10 +222,10 @@ Table comanage {
 }
 
 Table event_registrations {
-  registration_id varchar [pk, note: 'access: Restricted | semantic: entity_id | Registration record ID']
-  event_id int [note: 'access: Restricted | Associated event']
-  user_id varchar [note: 'access: Restricted | Registered user']
-  registration_date timestamp [note: 'access: Restricted | semantic: date_created | When the registration was submitted']
+  registration_id varchar [pk, not null, note: 'access: Restricted | semantic: entity_id | Registration record ID']
+  event_id int [not null, note: 'access: Restricted | Associated event']
+  user_id varchar [not null, note: 'access: Restricted | Registered user']
+  registration_date timestamp [not null, note: 'access: Restricted | semantic: date_created | When the registration was submitted']
   attendance_status varchar [note: 'access: Restricted | semantic: entity_status | Registration and attendance status']
   referral_source varchar [note: 'access: Restricted | How the registrant heard about the event']
   registrant_name varchar [note: 'access: Sensitive | semantic: person_name | Registrant\'s name (PII)']
@@ -249,14 +249,14 @@ Table event_registrations {
 }
 
 Table events {
-  id int [pk, note: 'access: Public | semantic: entity_id | Event ID']
-  uuid varchar [note: 'access: Public | semantic: uuid | Unique identifier']
+  id int [pk, not null, note: 'access: Public | semantic: entity_id | Event ID']
+  uuid varchar [not null, note: 'access: Public | semantic: uuid | Unique identifier']
   title varchar [not null, note: 'access: Public | mcp: title | semantic: entity_name | Event title']
   description text [note: 'access: Public | mcp: description | semantic: entity_description | Event description']
   event_type varchar [not null, note: 'access: Public | mcp: type | semantic: entity_type | Type of event']
   skill_level varchar [note: 'access: Public | mcp: skill | semantic: skill_level | Target skill level for attendees']
   affiliation varchar [note: 'access: Public | semantic: affiliation | Whether this is an official ACCESS or community event']
-  start_date timestamp [note: 'access: Public | mcp: start_date | semantic: date_start | Event start date and time']
+  start_date timestamp [not null, note: 'access: Public | mcp: start_date | semantic: date_start | Event start date and time']
   end_date timestamp [note: 'access: Public | mcp: end_date | semantic: date_end | Event end date and time']
   duration_hours decimal [note: 'access: Public | mcp: duration_hours | computed: true | semantic: duration | Calculated duration in hours']
   starts_in_hours decimal [note: 'access: Public | mcp: starts_in_hours | computed: true | semantic: time_relative | Hours until event starts (negative if past)']

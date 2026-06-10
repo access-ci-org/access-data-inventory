@@ -52,6 +52,16 @@ def load_schema() -> dict:
     return {}
 
 
+def canonical_source_ids(source: dict) -> list[str]:
+    """Return a source's canonical_source list of source ids ([] if canonical).
+
+    canonical_source is always a list of slugified source ids — emitted by the
+    converter from the inventory's 'Canonical Sources' column, and authored the
+    same way in the data-source files.
+    """
+    return list(source.get('canonical_source') or [])
+
+
 def validate_source(source: dict, schema: dict) -> list[str]:
     """Validate a data source against the schema. Returns list of errors."""
     errors = []
@@ -83,8 +93,13 @@ def validate_source(source: dict, schema: dict) -> list[str]:
     for field in source.get('fields', []):
         field_name = field.get('name', 'unknown')
 
-        if 'access' in field and field['access'] not in allowed.get('field_access', []):
-            errors.append(f"{source_id}.{field_name}: Invalid access '{field['access']}'")
+        if 'access' in field:
+            # access may be a single level or a list of levels (a field whose
+            # access varies, e.g. public in aggregate, authenticated in detail).
+            access_values = field['access'] if isinstance(field['access'], list) else [field['access']]
+            for av in access_values:
+                if av not in allowed.get('field_access', []):
+                    errors.append(f"{source_id}.{field_name}: Invalid access '{av}'")
 
         if 'type' in field and field['type'] not in allowed.get('field_type', []):
             errors.append(f"{source_id}.{field_name}: Invalid type '{field['type']}'")
@@ -175,10 +190,13 @@ def generate_index(sources: list[dict]) -> str:
 
             # Add canonical source indicator
             canonical_note = ""
-            if not source.get('is_canonical') and source.get('canonical_source'):
-                canon_id = source['canonical_source'].replace('-', '_')
-                canon_name = next((s.get('name', canon_id) for s in sources if s.get('id') == canon_id), canon_id)
-                canonical_note = f" *(sourced from [{canon_name}](field-dictionary#{canon_id}))*"
+            canon_ids = canonical_source_ids(source)
+            if not source.get('is_canonical') and canon_ids:
+                links = []
+                for canon_id in canon_ids:
+                    canon_name = next((s.get('name', canon_id) for s in sources if s.get('id') == canon_id), canon_id)
+                    links.append(f"[{canon_name}](field-dictionary#{canon_id})")
+                canonical_note = f" *(sourced from {', '.join(links)})*"
 
             lines.append(f"| [{name}](field-dictionary#{source_id}) | {desc}{canonical_note} | {access} | {links_str} |")
 
@@ -229,10 +247,13 @@ def generate_field_dictionary(sources: list[dict]) -> str:
         lines.append("")
 
         # Add canonical source cross-link for non-authoritative sources
-        if not source.get('is_canonical') and source.get('canonical_source'):
-            canon_id = source['canonical_source'].replace('-', '_')
-            canon_name = next((s.get('name', canon_id) for s in sources if s.get('id') == canon_id), canon_id)
-            lines.append(f"> **Canonical source:** [{canon_name}](#{canon_id}) — this data is derived from the authoritative source above.")
+        canon_ids = canonical_source_ids(source)
+        if not source.get('is_canonical') and canon_ids:
+            links = []
+            for canon_id in canon_ids:
+                canon_name = next((s.get('name', canon_id) for s in sources if s.get('id') == canon_id), canon_id)
+                links.append(f"[{canon_name}](#{canon_id})")
+            lines.append(f"> **Canonical source:** {', '.join(links)} — this data is derived from the authoritative source(s) above.")
             lines.append("")
         elif source.get('is_canonical') and source.get('provides_data_for'):
             derived = source['provides_data_for']
@@ -242,6 +263,17 @@ def generate_field_dictionary(sources: list[dict]) -> str:
                 derived_links.append(f"[{d_name}](#{d})")
             lines.append(f"> **Authoritative source** for: {', '.join(derived_links)}")
             lines.append("")
+
+        # Source-level provenance / operational metadata
+        for key, label in (
+            ('storage_location', 'Storage'),
+            ('data_access_mechanism', 'Access mechanism'),
+            ('refresh_frequency', 'Refresh frequency'),
+            ('query_capacity', 'Query capacity'),
+        ):
+            if source.get(key):
+                lines.append(f"**{label}:** {source[key]}")
+                lines.append("")
 
         # Render use_cases
         use_cases = source.get('use_cases', [])
@@ -313,13 +345,16 @@ def generate_field_dictionary(sources: list[dict]) -> str:
             computed = " (computed)" if field.get('computed') else ""
             mcp_name = field.get('mcp_name', '')
             sem = f" [{field['semantic_type']}]" if field.get('semantic_type') else ""
+            auth = f" (source: {field['authoritative_source']})" if field.get('authoritative_source') else ""
+            access = field.get('access', '')
+            access_str = ", ".join(access) if isinstance(access, list) else access
 
             lines.append(
                 f"| `{field.get('name', '')}`{pk}{req} | "
                 f"{field.get('type', '')} | "
-                f"{field.get('access', '')} | "
+                f"{access_str} | "
                 f"{mcp_name} | "
-                f"{field.get('description', '')}{computed}{sem} |"
+                f"{field.get('description', '')}{computed}{sem}{auth} |"
             )
 
         lines.append("")
@@ -360,15 +395,20 @@ def generate_dbml(sources: list[dict]) -> str:
             f"description: {source.get('description', '')}",
             f"category: {source.get('category', '')}",
             f"track: {source.get('track', '')}",
-            f"responsible_team: {source.get('responsible_team', '')}",
             f"access_level: {source.get('access_level', '')}",
             f"is_canonical: {str(source.get('is_canonical', False)).lower()}",
-            f"canonical_source: {source.get('canonical_source') or 'null'}",
+            f"canonical_source: {', '.join(canonical_source_ids(source)) or 'null'}",
             f"mcp_available: {str(source.get('mcp', {}).get('available', False)).lower()}",
             f"mcp_package: {source.get('mcp', {}).get('package') or 'null'}",
             f"api_endpoint: {source.get('api_endpoint') or 'null'}",
+            f"storage_location: {source.get('storage_location') or 'null'}",
             f"priority: {source.get('priority', '')}",
         ]
+
+        # Optional operational metadata — only emitted when present.
+        for key in ('data_access_mechanism', 'refresh_frequency', 'query_capacity'):
+            if source.get(key):
+                note_lines.append(f"{key}: {source[key]}")
 
         realms = source.get('realms', [])
         if realms:
@@ -410,7 +450,10 @@ def generate_dbml(sources: list[dict]) -> str:
             if field.get('required'):
                 attrs.append('not null')
 
-            note_parts = [f"access: {field.get('access', 'Public')}"]
+            field_access = field.get('access', 'Public')
+            if isinstance(field_access, list):
+                field_access = ", ".join(field_access)
+            note_parts = [f"access: {field_access}"]
             if field.get('mcp_name'):
                 note_parts.append(f"mcp: {field.get('mcp_name')}")
             if field.get('computed'):

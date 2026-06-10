@@ -4,10 +4,10 @@ name: Events and Training
 description: Workshops, webinars, training sessions, and office hours
 category: Events & Training
 track: Support
-responsible_team: Support
 access_level: Public
 is_canonical: false
-canonical_source: access-support-drupal
+canonical_source:
+  - access_support_drupal
 api_endpoint: https://support.access-ci.org/api/2.2/events
 dynamic: false
 priority: High
@@ -34,6 +34,7 @@ use_cases:
 
 fields:
   - name: id
+    required: true
     type: int
     access: Public
     primary_key: true
@@ -41,6 +42,7 @@ fields:
     semantic_type: entity_id
 
   - name: uuid
+    required: true
     type: varchar
     access: Public
     description: Unique identifier
@@ -86,6 +88,7 @@ fields:
     semantic_type: affiliation
 
   - name: start_date
+    required: true
     type: timestamp
     access: Public
     mcp_name: start_date

@@ -4,10 +4,10 @@ name: Affinity Groups
 description: Community groups organized by interest or domain
 category: Community & Outreach
 track: Support
-responsible_team: Support
 access_level: Public
 is_canonical: false
-canonical_source: access-support-drupal
+canonical_source:
+  - access_support_drupal
 api_endpoint: https://support.access-ci.org/api/1.1/affinity_groups
 dynamic: false
 priority: High
@@ -38,6 +38,7 @@ constraints:
 
 fields:
   - name: nid
+    required: true
     type: int
     access: Public
     primary_key: true
@@ -45,6 +46,7 @@ fields:
     semantic_type: entity_id
 
   - name: uuid
+    required: true
     type: varchar
     access: Public
     mcp_name: id

@@ -31,15 +31,15 @@ Field-level documentation for all ACCESS data sources.
 
 | Field | Type | Access | MCP Name | Description |
 |-------|------|--------|----------|-------------|
-| `nid` (PK) | int | Public |  | Drupal node ID [entity_id] |
-| `uuid` | varchar | Public |  | Drupal UUID [uuid] |
-| `type` | varchar | Public |  | Drupal content type [entity_type] |
-| `title` | varchar | Public |  | Content title [entity_name] |
+| `nid` (PK) * | int | Public |  | Drupal node ID [entity_id] |
+| `uuid` * | varchar | Public |  | Drupal UUID [uuid] |
+| `type` * | varchar | Public |  | Drupal content type [entity_type] |
+| `title` * | varchar | Public |  | Content title [entity_name] |
 | `body` | text | Public |  | Content body (HTML) [entity_description] |
-| `status` | boolean | Internal Only |  | Published status [entity_status] |
-| `created` | timestamp | Public |  | Content creation date [date_created] |
-| `changed` | timestamp | Public |  | Last modification date [date_modified] |
-| `uid` | int | Restricted |  | Author user ID |
+| `status` * | boolean | Internal Only |  | Published status [entity_status] |
+| `created` * | timestamp | Public |  | Content creation date [date_created] |
+| `changed` * | timestamp | Public |  | Last modification date [date_modified] |
+| `uid` * | int | Restricted |  | Author user ID |
 
 *PK = Primary Key, * = Required, [type] = Semantic Type*
 
@@ -55,7 +55,7 @@ Field-level documentation for all ACCESS data sources.
 
 *Community groups organized by interest or domain*
 
-> **Canonical source:** [ACCESS Support Drupal](#access_support_drupal) — this data is derived from the authoritative source above.
+> **Canonical source:** [ACCESS Support Drupal](#access_support_drupal) — this data is derived from the authoritative source(s) above.
 
 **Example questions this data can answer:**
 
@@ -70,8 +70,8 @@ Field-level documentation for all ACCESS data sources.
 
 | Field | Type | Access | MCP Name | Description |
 |-------|------|--------|----------|-------------|
-| `nid` (PK) | int | Public |  | Node ID [entity_id] |
-| `uuid` | varchar | Public | id | Unique identifier [uuid] |
+| `nid` (PK) * | int | Public |  | Node ID [entity_id] |
+| `uuid` * | varchar | Public | id | Unique identifier [uuid] |
 | `title` * | varchar | Public | name | Group name [entity_name] |
 | `body` | text | Public | description | Group description (HTML cleaned in MCP) [entity_description] |
 | `group_id` * | varchar | Public | id | URL-friendly group identifier [entity_id] |
@@ -103,7 +103,7 @@ Field-level documentation for all ACCESS data sources.
 
 *Resource provider and community announcements*
 
-> **Canonical source:** [ACCESS Support Drupal](#access_support_drupal) — this data is derived from the authoritative source above.
+> **Canonical source:** [ACCESS Support Drupal](#access_support_drupal) — this data is derived from the authoritative source(s) above.
 
 **Example questions this data can answer:**
 
@@ -113,12 +113,12 @@ Field-level documentation for all ACCESS data sources.
 
 | Field | Type | Access | MCP Name | Description |
 |-------|------|--------|----------|-------------|
-| `nid` (PK) | int | Public |  | Node ID [entity_id] |
-| `uuid` | varchar | Public | uuid | Unique identifier [uuid] |
+| `nid` (PK) * | int | Public |  | Node ID [entity_id] |
+| `uuid` * | varchar | Public | uuid | Unique identifier [uuid] |
 | `title` * | varchar | Public | title | Announcement title [entity_name] |
-| `body` | text | Public | body | HTML content [entity_description] |
+| `body` * | text | Public | body | HTML content [entity_description] |
 | `summary` | varchar | Public | summary | Short summary text [entity_summary] |
-| `published_date` | date | Public | published_date | When the announcement was published [date_published] |
+| `published_date` * | date | Public | published_date | When the announcement was published [date_published] |
 | `affiliation` | varchar | Public | affiliation | Whether this is an official ACCESS or community announcement [affiliation] |
 | `external_link` | varchar | Public | external_link | Link to external resource [url_external] |
 | `where_to_share` | text | Internal Only | where_to_share | Distribution channels for this announcement |
@@ -181,10 +181,10 @@ Field-level documentation for all ACCESS data sources.
 
 | Field | Type | Access | MCP Name | Description |
 |-------|------|--------|----------|-------------|
-| `registration_id` (PK) | varchar | Restricted |  | Registration record ID [entity_id] |
-| `event_id` | int | Restricted |  | Associated event |
-| `user_id` | varchar | Restricted |  | Registered user |
-| `registration_date` | timestamp | Restricted |  | When the registration was submitted [date_created] |
+| `registration_id` (PK) * | varchar | Restricted |  | Registration record ID [entity_id] |
+| `event_id` * | int | Restricted |  | Associated event |
+| `user_id` * | varchar | Restricted |  | Registered user |
+| `registration_date` * | timestamp | Restricted |  | When the registration was submitted [date_created] |
 | `attendance_status` | varchar | Restricted |  | Registration and attendance status [entity_status] |
 | `referral_source` | varchar | Restricted |  | How the registrant heard about the event |
 | `registrant_name` | varchar | Sensitive |  | Registrant's name (PII) [person_name] |
@@ -203,7 +203,7 @@ Field-level documentation for all ACCESS data sources.
 
 *Workshops, webinars, training sessions, and office hours*
 
-> **Canonical source:** [ACCESS Support Drupal](#access_support_drupal) — this data is derived from the authoritative source above.
+> **Canonical source:** [ACCESS Support Drupal](#access_support_drupal) — this data is derived from the authoritative source(s) above.
 
 **Example questions this data can answer:**
 
@@ -214,14 +214,14 @@ Field-level documentation for all ACCESS data sources.
 
 | Field | Type | Access | MCP Name | Description |
 |-------|------|--------|----------|-------------|
-| `id` (PK) | int | Public |  | Event ID [entity_id] |
-| `uuid` | varchar | Public |  | Unique identifier [uuid] |
+| `id` (PK) * | int | Public |  | Event ID [entity_id] |
+| `uuid` * | varchar | Public |  | Unique identifier [uuid] |
 | `title` * | varchar | Public | title | Event title [entity_name] |
 | `description` | text | Public | description | Event description [entity_description] |
 | `event_type` * | varchar | Public | type | Type of event [entity_type] |
 | `skill_level` | varchar | Public | skill | Target skill level for attendees [skill_level] |
 | `affiliation` | varchar | Public |  | Whether this is an official ACCESS or community event [affiliation] |
-| `start_date` | timestamp | Public | start_date | Event start date and time [date_start] |
+| `start_date` * | timestamp | Public | start_date | Event start date and time [date_start] |
 | `end_date` | timestamp | Public | end_date | Event end date and time [date_end] |
 | `duration_hours` | decimal | Public | duration_hours | Calculated duration in hours (computed) [duration] |
 | `starts_in_hours` | decimal | Public | starts_in_hours | Hours until event starts (negative if past) (computed) [time_relative] |

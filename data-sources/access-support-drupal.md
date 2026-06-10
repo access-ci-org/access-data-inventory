@@ -4,7 +4,6 @@ name: ACCESS Support Drupal
 description: ACCESS Support website CMS - canonical storage for support content
 category: Content Management
 track: Support
-responsible_team: Support
 access_level: Varies
 is_canonical: true
 canonical_source: null
@@ -33,6 +32,7 @@ fields:
   - name: nid
     type: int
     access: Public
+    required: true
     primary_key: true
     description: Drupal node ID
     semantic_type: entity_id
@@ -40,12 +40,14 @@ fields:
   - name: uuid
     type: varchar
     access: Public
+    required: true
     description: Drupal UUID
     semantic_type: uuid
 
   - name: type
     type: varchar
     access: Public
+    required: true
     allowed_values: [announcement, event, eventseries, eventinstance, affinity_group, page, article]
     description: Drupal content type
     semantic_type: entity_type
@@ -53,6 +55,7 @@ fields:
   - name: title
     type: varchar
     access: Public
+    required: true
     description: Content title
     semantic_type: entity_name
 
@@ -65,24 +68,28 @@ fields:
   - name: status
     type: boolean
     access: Internal Only
+    required: true
     description: Published status
     semantic_type: entity_status
 
   - name: created
     type: timestamp
     access: Public
+    required: true
     description: Content creation date
     semantic_type: date_created
 
   - name: changed
     type: timestamp
     access: Public
+    required: true
     description: Last modification date
     semantic_type: date_modified
 
   - name: uid
     type: int
     access: Restricted
+    required: true
     references: users.user_id
     description: Author user ID
 

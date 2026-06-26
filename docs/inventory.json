@@ -1,6 +1,6 @@
 {
-  "generated": "2026-06-26T12:17:25.613161",
-  "source_count": 10,
+  "generated": "2026-06-26T14:13:29.762954",
+  "source_count": 11,
   "sources": [
     {
       "id": "access_support_drupal",
@@ -141,125 +141,6 @@
           "description": "Stores user accounts (Drupal users, linked to COManage)"
         }
       ]
-    },
-    {
-      "id": "access_sds_software_discovery_api",
-      "name": "ACCESS SDS (Software Discovery) API",
-      "track": "Support",
-      "fields": [
-        {
-          "name": "rps",
-          "type": "json",
-          "access": "Restricted",
-          "access_notes": "API key required",
-          "description": "Request param: array of Resource Provider names/IDs to filter by, case-insensitive. Conditional (rps and/or software).",
-          "notes": "Request body field",
-          "authoritative_source": "SDS"
-        },
-        {
-          "name": "software",
-          "type": "json",
-          "access": "Restricted",
-          "access_notes": "API key required",
-          "description": "Request param: array of software names to filter by, case-insensitive. Conditional (rps and/or software).",
-          "semantic_type": "entity_name",
-          "notes": "Request body field",
-          "authoritative_source": "SDS"
-        },
-        {
-          "name": "columns",
-          "type": "json",
-          "access": "Restricted",
-          "access_notes": "API key required",
-          "description": "Request param: array of fields to return. rp_software and software_name are always included.",
-          "notes": "Request body field",
-          "authoritative_source": "SDS"
-        },
-        {
-          "name": "exclude",
-          "type": "boolean",
-          "access": "Restricted",
-          "access_notes": "API key required",
-          "description": "Request param: when true, treat columns as an exclude list rather than an include list. Default false.",
-          "notes": "Request body field",
-          "authoritative_source": "SDS"
-        },
-        {
-          "name": "fuzz_software",
-          "type": "boolean",
-          "access": "Restricted",
-          "access_notes": "API key required",
-          "description": "Request param: enable fuzzy matching on software names. Default false.",
-          "notes": "Request body field",
-          "authoritative_source": "SDS"
-        },
-        {
-          "name": "fuzz_rp",
-          "type": "boolean",
-          "access": "Restricted",
-          "access_notes": "API key required",
-          "description": "Request param: enable fuzzy matching on RP names/IDs. Default false.",
-          "notes": "Request body field",
-          "authoritative_source": "SDS"
-        },
-        {
-          "name": "collapse_resource_groups",
-          "type": "boolean",
-          "access": "Restricted",
-          "access_notes": "API key required",
-          "description": "Request param: when false, emit separate entries per resource group. Default true.",
-          "notes": "Request body field",
-          "authoritative_source": "SDS"
-        },
-        {
-          "name": "software_name",
-          "type": "varchar",
-          "access": "Restricted",
-          "access_notes": "API key required",
-          "description": "Response field: name of the software package. Results are sorted alphabetically by this field.",
-          "required": true,
-          "semantic_type": "entity_name",
-          "notes": "Always present in responses",
-          "authoritative_source": "SDS"
-        },
-        {
-          "name": "rp_software",
-          "type": "varchar",
-          "access": "Restricted",
-          "access_notes": "API key required",
-          "description": "Response field: the software identifier as known to the resource provider. Always present in responses.",
-          "required": true,
-          "notes": "Always present in responses",
-          "authoritative_source": "SDS"
-        },
-        {
-          "name": "resource_provider",
-          "type": "varchar",
-          "access": "Restricted",
-          "access_notes": "API key required",
-          "description": "Response field: resource provider / resource group the software is available on.",
-          "semantic_type": "institution",
-          "notes": "Response field",
-          "authoritative_source": "SDS"
-        }
-      ],
-      "category": "Resources",
-      "access_level": "Restricted",
-      "priority": "Medium",
-      "description": "Software discovery: which software packages are available on which ACCESS resource providers.",
-      "notes": "Requires an X-API-Key header. Request a key by opening a ticket at https://support.access-ci.org/help-ticket. Documented on the portal at /api-docs/sds.",
-      "storage_location": "sds-ara-api.access-ci.org",
-      "data_access_mechanism": "POST-only HTTP/JSON API (single endpoint POST /api/v1; no GET endpoints)",
-      "api_endpoint": "https://sds-ara-api.access-ci.org/api/v1",
-      "refresh_frequency": "Daily",
-      "query_capacity": "Per-request software/RP filtering with optional fuzzy matching and column selection",
-      "is_canonical": false,
-      "canonical_source": [
-        "resource_documentation_api"
-      ],
-      "mcp": {
-        "available": false
-      }
     },
     {
       "id": "affinity_groups",
@@ -818,7 +699,7 @@
       "description": "Plain-text page content and a discovery index for ACCESS Support pages, for RAG ingestion and search syndication.",
       "notes": "Responses include content_hash (SHA-256 of extracted text) and last_modified for incremental ingestion. Documented on the portal at /api-docs/content.",
       "storage_location": "support.access-ci.org",
-      "data_access_mechanism": "Public JSON REST API (GET /api/1.0/content/{id}, GET /api/1.0/content?path=, GET /.well-known/content-index.json)",
+      "data_access_mechanism": "API, Web",
       "api_endpoint": "https://support.access-ci.org/.well-known/content-index.json",
       "refresh_frequency": "Real-time",
       "query_capacity": "Per-page by node ID or path alias",
@@ -1289,16 +1170,171 @@
       "description": "Team-authored documentation for ACCESS resource providers (login, file transfer, storage, queue specs, top software, datasets), with resource-group inheritance.",
       "notes": "Detail responses include a content_hash for change detection. Documented on the portal at /api-docs/resources.",
       "storage_location": "support.access-ci.org",
-      "data_access_mechanism": "Public JSON REST API (GET /api/1.0/resources, GET /api/1.0/resources/{id}, GET /api/1.0/resource-groups)",
+      "data_access_mechanism": "API, Web",
       "api_endpoint": "https://support.access-ci.org/api/1.0/resources",
       "refresh_frequency": "Real-time",
       "query_capacity": "Per-resource and per-group lookups",
       "is_canonical": false,
       "canonical_source": [
-        "access_support_drupal"
+        "access_support_drupal",
+        "resource_information_cider"
       ],
       "mcp": {
         "available": false
+      }
+    },
+    {
+      "id": "resource_information_cider",
+      "name": "Resource Information (CIDeR)",
+      "track": "Operations",
+      "fields": [],
+      "category": "Resources",
+      "access_level": "Public",
+      "priority": "High",
+      "description": "Organizations, resource descriptions, and integration information for ACCESS resource providers.",
+      "notes": "Source of record for ACCESS resource/organization data. The Resource Documentation API and SDS draw on CiDeR resource identifiers.",
+      "storage_location": "operations.access-ci.org",
+      "data_access_mechanism": "API, Web",
+      "api_endpoint": "https://operations-api.access-ci.org/wh2/cider/v1/",
+      "refresh_frequency": "Daily",
+      "query_capacity": "high",
+      "is_canonical": true,
+      "mcp": {
+        "available": false
+      }
+    },
+    {
+      "id": "sds_software_discovery_service",
+      "name": "SDS (Software Discovery Service)",
+      "track": "Support",
+      "fields": [
+        {
+          "name": "rps",
+          "type": "json",
+          "access": "Restricted",
+          "access_notes": "API key required",
+          "description": "Request param: array of Resource Provider names/IDs to filter by, case-insensitive. Conditional (rps and/or software).",
+          "notes": "Request body field",
+          "authoritative_source": "SDS"
+        },
+        {
+          "name": "software",
+          "type": "json",
+          "access": "Restricted",
+          "access_notes": "API key required",
+          "description": "Request param: array of software names to filter by, case-insensitive. Conditional (rps and/or software).",
+          "semantic_type": "entity_name",
+          "notes": "Request body field",
+          "authoritative_source": "SDS"
+        },
+        {
+          "name": "columns",
+          "type": "json",
+          "access": "Restricted",
+          "access_notes": "API key required",
+          "description": "Request param: array of fields to return. rp_software and software_name are always included.",
+          "notes": "Request body field",
+          "authoritative_source": "SDS"
+        },
+        {
+          "name": "exclude",
+          "type": "boolean",
+          "access": "Restricted",
+          "access_notes": "API key required",
+          "description": "Request param: when true, treat columns as an exclude list rather than an include list. Default false.",
+          "notes": "Request body field",
+          "authoritative_source": "SDS"
+        },
+        {
+          "name": "fuzz_software",
+          "type": "boolean",
+          "access": "Restricted",
+          "access_notes": "API key required",
+          "description": "Request param: enable fuzzy matching on software names. Default false.",
+          "notes": "Request body field",
+          "authoritative_source": "SDS"
+        },
+        {
+          "name": "fuzz_rp",
+          "type": "boolean",
+          "access": "Restricted",
+          "access_notes": "API key required",
+          "description": "Request param: enable fuzzy matching on RP names/IDs. Default false.",
+          "notes": "Request body field",
+          "authoritative_source": "SDS"
+        },
+        {
+          "name": "collapse_resource_groups",
+          "type": "boolean",
+          "access": "Restricted",
+          "access_notes": "API key required",
+          "description": "Request param: when false, emit separate entries per resource group. Default true.",
+          "notes": "Request body field",
+          "authoritative_source": "SDS"
+        },
+        {
+          "name": "software_name",
+          "type": "varchar",
+          "access": "Restricted",
+          "access_notes": "API key required",
+          "description": "Response field: name of the software package. Results are sorted alphabetically by this field.",
+          "required": true,
+          "semantic_type": "entity_name",
+          "notes": "Always present in responses",
+          "authoritative_source": "SDS"
+        },
+        {
+          "name": "rp_software",
+          "type": "varchar",
+          "access": "Restricted",
+          "access_notes": "API key required",
+          "description": "Response field: the software identifier as known to the resource provider. Always present in responses.",
+          "required": true,
+          "notes": "Always present in responses",
+          "authoritative_source": "SDS"
+        },
+        {
+          "name": "resource_provider",
+          "type": "varchar",
+          "access": "Restricted",
+          "access_notes": "API key required",
+          "description": "Response field: resource provider / resource group the software is available on.",
+          "semantic_type": "institution",
+          "notes": "Response field",
+          "authoritative_source": "SDS"
+        }
+      ],
+      "category": "Resources",
+      "access_level": "Public",
+      "priority": "High",
+      "description": "Software discovery: which software packages are available on which ACCESS resource providers.",
+      "notes": "software-discovery MCP exists. Discovery is public; the API (POST /api/v1) is key-gated, request a key via https://support.access-ci.org/help-ticket. Documented at /api-docs/sds.",
+      "storage_location": "sds-ara-api.access-ci.org",
+      "data_access_mechanism": "API, MCP, Web",
+      "api_endpoint": "https://sds-ara-api.access-ci.org/api/v1",
+      "refresh_frequency": "Daily",
+      "query_capacity": "high",
+      "is_canonical": false,
+      "canonical_source": [
+        "resource_information_cider"
+      ],
+      "mcp": {
+        "available": true,
+        "package": "@access-mcp/software-discovery",
+        "tools": [
+          {
+            "name": "search_software"
+          },
+          {
+            "name": "list_all_software"
+          },
+          {
+            "name": "get_software_details"
+          },
+          {
+            "name": "compare_software_availability"
+          }
+        ]
       }
     },
     {
@@ -2177,16 +2213,17 @@
   "by_track": {
     "Support": [
       "access_support_drupal",
-      "access_sds_software_discovery_api",
       "affinity_groups",
       "announcements",
       "content_api",
       "event_registrations",
       "events",
-      "resource_documentation_api"
+      "resource_documentation_api",
+      "sds_software_discovery_service"
     ],
     "Operations": [
-      "comanage"
+      "comanage",
+      "resource_information_cider"
     ],
     "Metrics": [
       "xdmod"
@@ -2196,10 +2233,6 @@
     "Content Management": [
       "access_support_drupal",
       "content_api"
-    ],
-    "Resources": [
-      "access_sds_software_discovery_api",
-      "resource_documentation_api"
     ],
     "Community & Outreach": [
       "affinity_groups",
@@ -2212,6 +2245,11 @@
       "event_registrations",
       "events"
     ],
+    "Resources": [
+      "resource_documentation_api",
+      "resource_information_cider",
+      "sds_software_discovery_service"
+    ],
     "Metrics & Reporting": [
       "xdmod"
     ]
@@ -2221,19 +2259,20 @@
       "access_support_drupal",
       "xdmod"
     ],
-    "Restricted": [
-      "access_sds_software_discovery_api",
-      "event_registrations"
-    ],
     "Public": [
       "affinity_groups",
       "announcements",
       "content_api",
       "events",
-      "resource_documentation_api"
+      "resource_documentation_api",
+      "resource_information_cider",
+      "sds_software_discovery_service"
     ],
     "Sensitive": [
       "comanage"
+    ],
+    "Restricted": [
+      "event_registrations"
     ]
   }
 }

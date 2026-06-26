@@ -32,10 +32,12 @@ allowed_values:
   access_level:
     - Public
     - Authenticated
+    - Public and Authenticated
     - Restricted
     - Internal Only
     - Sensitive
     - Varies
+    - TBD
 
   priority:
     - High

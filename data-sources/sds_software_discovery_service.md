@@ -1,6 +1,6 @@
 ---
-id: access_sds_software_discovery_api
-name: ACCESS SDS (Software Discovery) API
+id: sds_software_discovery_service
+name: SDS (Software Discovery Service)
 track: Support
 fields:
 - name: rps
@@ -79,18 +79,24 @@ fields:
   notes: Response field
   authoritative_source: SDS
 category: Resources
-access_level: Restricted
-priority: Medium
+access_level: Public
+priority: High
 description: 'Software discovery: which software packages are available on which ACCESS resource providers.'
-notes: Requires an X-API-Key header. Request a key by opening a ticket at https://support.access-ci.org/help-ticket. Documented on the portal at /api-docs/sds.
+notes: software-discovery MCP exists. Discovery is public; the API (POST /api/v1) is key-gated, request a key via https://support.access-ci.org/help-ticket. Documented at /api-docs/sds.
 storage_location: sds-ara-api.access-ci.org
-data_access_mechanism: POST-only HTTP/JSON API (single endpoint POST /api/v1; no GET endpoints)
+data_access_mechanism: API, MCP, Web
 api_endpoint: https://sds-ara-api.access-ci.org/api/v1
 refresh_frequency: Daily
-query_capacity: Per-request software/RP filtering with optional fuzzy matching and column selection
+query_capacity: high
 is_canonical: false
 canonical_source:
-- resource_documentation_api
+- resource_information_cider
 mcp:
-  available: false
+  available: true
+  package: '@access-mcp/software-discovery'
+  tools:
+  - name: search_software
+  - name: list_all_software
+  - name: get_software_details
+  - name: compare_software_availability
 ---

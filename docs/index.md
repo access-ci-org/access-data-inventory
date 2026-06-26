@@ -39,19 +39,20 @@ _Other teams' API-docs hubs can be added here as they come online._
 | Source | Description | Access | |
 |--------|-------------|--------|---|
 | [COManage/ACCESS Identity](field-dictionary#comanage) | User identity information | Sensitive |  |
+| [Resource Information (CIDeR)](field-dictionary#resource_information_cider) | Organizations, resource descriptions, and integration information for ACCESS resource providers. | Public | [API](https://operations-api.access-ci.org/wh2/cider/v1/) |
 
 ### Support
 
 | Source | Description | Access | |
 |--------|-------------|--------|---|
-| [ACCESS SDS (Software Discovery) API](field-dictionary#access_sds_software_discovery_api) | Software discovery: which software packages are available on which ACCESS resource providers. *(sourced from [Resource Documentation API](field-dictionary#resource_documentation_api))* | Restricted | [API](https://sds-ara-api.access-ci.org/api/v1) |
 | [ACCESS Support Drupal](field-dictionary#access_support_drupal) | ACCESS Support website CMS - canonical storage for support content | Varies | [API](https://support.access-ci.org) |
 | [Affinity Groups](field-dictionary#affinity_groups) | Community groups organized by interest or domain *(sourced from [ACCESS Support Drupal](field-dictionary#access_support_drupal))* | Public | [MCP](https://mcp.access-ci.org/servers/affinity-groups) · [API](https://support.access-ci.org/api/1.1/affinity_groups) |
 | [Announcements](field-dictionary#announcements) | Resource provider and community announcements *(sourced from [ACCESS Support Drupal](field-dictionary#access_support_drupal))* | Public | [MCP](https://mcp.access-ci.org/servers/announcements) · [API](https://support.access-ci.org/api/2.2/announcements) |
 | [Content API](field-dictionary#content_api) | Plain-text page content and a discovery index for ACCESS Support pages, for RAG ingestion and search syndication. *(sourced from [ACCESS Support Drupal](field-dictionary#access_support_drupal))* | Public | [API](https://support.access-ci.org/.well-known/content-index.json) |
 | [Event Registrations](field-dictionary#event_registrations) | Registration and attendance data for events | Restricted |  |
 | [Events and Training](field-dictionary#events) | Workshops, webinars, training sessions, and office hours *(sourced from [ACCESS Support Drupal](field-dictionary#access_support_drupal))* | Public | [MCP](https://mcp.access-ci.org/servers/events) · [API](https://support.access-ci.org/api/2.2/events) |
-| [Resource Documentation API](field-dictionary#resource_documentation_api) | Team-authored documentation for ACCESS resource providers (login, file transfer, storage, queue specs, top software, datasets), with resource-group inheritance. *(sourced from [ACCESS Support Drupal](field-dictionary#access_support_drupal))* | Public | [API](https://support.access-ci.org/api/1.0/resources) |
+| [Resource Documentation API](field-dictionary#resource_documentation_api) | Team-authored documentation for ACCESS resource providers (login, file transfer, storage, queue specs, top software, datasets), with resource-group inheritance. *(sourced from [ACCESS Support Drupal](field-dictionary#access_support_drupal), [Resource Information (CIDeR)](field-dictionary#resource_information_cider))* | Public | [API](https://support.access-ci.org/api/1.0/resources) |
+| [SDS (Software Discovery Service)](field-dictionary#sds_software_discovery_service) | Software discovery: which software packages are available on which ACCESS resource providers. *(sourced from [Resource Information (CIDeR)](field-dictionary#resource_information_cider))* | Public | [MCP](https://mcp.access-ci.org/servers/software-discovery) · [API](https://sds-ara-api.access-ci.org/api/v1) |
 
 ## Resources
 

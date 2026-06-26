@@ -60,7 +60,7 @@ priority: Medium
 description: Plain-text page content and a discovery index for ACCESS Support pages, for RAG ingestion and search syndication.
 notes: Responses include content_hash (SHA-256 of extracted text) and last_modified for incremental ingestion. Documented on the portal at /api-docs/content.
 storage_location: support.access-ci.org
-data_access_mechanism: Public JSON REST API (GET /api/1.0/content/{id}, GET /api/1.0/content?path=, GET /.well-known/content-index.json)
+data_access_mechanism: API, Web
 api_endpoint: https://support.access-ci.org/.well-known/content-index.json
 refresh_frequency: Real-time
 query_capacity: Per-page by node ID or path alias

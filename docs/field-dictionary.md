@@ -9,7 +9,6 @@ Field-level documentation for all ACCESS data sources.
 
 ## Table of Contents
 
-- [ACCESS SDS (Software Discovery) API](#access_sds_software_discovery_api)
 - [ACCESS Support Drupal](#access_support_drupal)
 - [Affinity Groups](#affinity_groups)
 - [Announcements](#announcements)
@@ -18,36 +17,9 @@ Field-level documentation for all ACCESS data sources.
 - [Event Registrations](#event_registrations)
 - [Events and Training](#events)
 - [Resource Documentation API](#resource_documentation_api)
+- [Resource Information (CIDeR)](#resource_information_cider)
+- [SDS (Software Discovery Service)](#sds_software_discovery_service)
 - [XDMoD Metrics](#xdmod)
-
-<h2 id="access_sds_software_discovery_api">ACCESS SDS (Software Discovery) API</h2>
-
-*Software discovery: which software packages are available on which ACCESS resource providers.*
-
-> **Canonical source:** [Resource Documentation API](#resource_documentation_api) — this data is derived from the authoritative source(s) above.
-
-**Storage:** sds-ara-api.access-ci.org
-
-**Access mechanism:** POST-only HTTP/JSON API (single endpoint POST /api/v1; no GET endpoints)
-
-**Refresh frequency:** Daily
-
-**Query capacity:** Per-request software/RP filtering with optional fuzzy matching and column selection
-
-| Field | Type | Access | MCP Name | Description |
-|-------|------|--------|----------|-------------|
-| `rps` | json | Restricted |  | Request param: array of Resource Provider names/IDs to filter by, case-insensitive. Conditional (rps and/or software). (source: SDS) |
-| `software` | json | Restricted |  | Request param: array of software names to filter by, case-insensitive. Conditional (rps and/or software). [entity_name] (source: SDS) |
-| `columns` | json | Restricted |  | Request param: array of fields to return. rp_software and software_name are always included. (source: SDS) |
-| `exclude` | boolean | Restricted |  | Request param: when true, treat columns as an exclude list rather than an include list. Default false. (source: SDS) |
-| `fuzz_software` | boolean | Restricted |  | Request param: enable fuzzy matching on software names. Default false. (source: SDS) |
-| `fuzz_rp` | boolean | Restricted |  | Request param: enable fuzzy matching on RP names/IDs. Default false. (source: SDS) |
-| `collapse_resource_groups` | boolean | Restricted |  | Request param: when false, emit separate entries per resource group. Default true. (source: SDS) |
-| `software_name` * | varchar | Restricted |  | Response field: name of the software package. Results are sorted alphabetically by this field. [entity_name] (source: SDS) |
-| `rp_software` * | varchar | Restricted |  | Response field: the software identifier as known to the resource provider. Always present in responses. (source: SDS) |
-| `resource_provider` | varchar | Restricted |  | Response field: resource provider / resource group the software is available on. [institution] (source: SDS) |
-
-*PK = Primary Key, * = Required, [type] = Semantic Type*
 
 <h2 id="access_support_drupal">ACCESS Support Drupal</h2>
 
@@ -203,7 +175,7 @@ Field-level documentation for all ACCESS data sources.
 
 **Storage:** support.access-ci.org
 
-**Access mechanism:** Public JSON REST API (GET /api/1.0/content/{id}, GET /api/1.0/content?path=, GET /.well-known/content-index.json)
+**Access mechanism:** API, Web
 
 **Refresh frequency:** Real-time
 
@@ -304,11 +276,11 @@ Field-level documentation for all ACCESS data sources.
 
 *Team-authored documentation for ACCESS resource providers (login, file transfer, storage, queue specs, top software, datasets), with resource-group inheritance.*
 
-> **Canonical source:** [ACCESS Support Drupal](#access_support_drupal) — this data is derived from the authoritative source(s) above.
+> **Canonical source:** [ACCESS Support Drupal](#access_support_drupal), [Resource Information (CIDeR)](#resource_information_cider) — this data is derived from the authoritative source(s) above.
 
 **Storage:** support.access-ci.org
 
-**Access mechanism:** Public JSON REST API (GET /api/1.0/resources, GET /api/1.0/resources/{id}, GET /api/1.0/resource-groups)
+**Access mechanism:** API, Web
 
 **Refresh frequency:** Real-time
 
@@ -327,6 +299,49 @@ Field-level documentation for all ACCESS data sources.
 | `last_modified` | timestamp | Public |  | ISO 8601 last-changed time. [date_modified] (source: ACCESS Support Drupal) |
 | `content_hash` | varchar | Public |  | Deterministic SHA-256 fingerprint of the resource payload (detail endpoint) for change detection. (computed) (source: ACCESS Support Drupal) |
 | `url` | varchar | Public |  | Canonical URL of the resource documentation page. [url_external] (source: ACCESS Support Drupal) |
+
+*PK = Primary Key, * = Required, [type] = Semantic Type*
+
+<h2 id="resource_information_cider">Resource Information (CIDeR)</h2>
+
+*Organizations, resource descriptions, and integration information for ACCESS resource providers.*
+
+**Storage:** operations.access-ci.org
+
+**Access mechanism:** API, Web
+
+**Refresh frequency:** Daily
+
+**Query capacity:** high
+
+*No fields documented.*
+
+<h2 id="sds_software_discovery_service">SDS (Software Discovery Service)</h2>
+
+*Software discovery: which software packages are available on which ACCESS resource providers.*
+
+> **Canonical source:** [Resource Information (CIDeR)](#resource_information_cider) — this data is derived from the authoritative source(s) above.
+
+**Storage:** sds-ara-api.access-ci.org
+
+**Access mechanism:** API, MCP, Web
+
+**Refresh frequency:** Daily
+
+**Query capacity:** high
+
+| Field | Type | Access | MCP Name | Description |
+|-------|------|--------|----------|-------------|
+| `rps` | json | Restricted |  | Request param: array of Resource Provider names/IDs to filter by, case-insensitive. Conditional (rps and/or software). (source: SDS) |
+| `software` | json | Restricted |  | Request param: array of software names to filter by, case-insensitive. Conditional (rps and/or software). [entity_name] (source: SDS) |
+| `columns` | json | Restricted |  | Request param: array of fields to return. rp_software and software_name are always included. (source: SDS) |
+| `exclude` | boolean | Restricted |  | Request param: when true, treat columns as an exclude list rather than an include list. Default false. (source: SDS) |
+| `fuzz_software` | boolean | Restricted |  | Request param: enable fuzzy matching on software names. Default false. (source: SDS) |
+| `fuzz_rp` | boolean | Restricted |  | Request param: enable fuzzy matching on RP names/IDs. Default false. (source: SDS) |
+| `collapse_resource_groups` | boolean | Restricted |  | Request param: when false, emit separate entries per resource group. Default true. (source: SDS) |
+| `software_name` * | varchar | Restricted |  | Response field: name of the software package. Results are sorted alphabetically by this field. [entity_name] (source: SDS) |
+| `rp_software` * | varchar | Restricted |  | Response field: the software identifier as known to the resource provider. Always present in responses. (source: SDS) |
+| `resource_provider` | varchar | Restricted |  | Response field: resource provider / resource group the software is available on. [institution] (source: SDS) |
 
 *PK = Primary Key, * = Required, [type] = Semantic Type*
 

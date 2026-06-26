@@ -275,5 +275,42 @@ class TestInventoryEnrichment(unittest.TestCase):
             self.assertNotIn(k, fm)
 
 
+class TestParseMcp(unittest.TestCase):
+    def test_package_and_tools(self):
+        mcp = s2m.parse_mcp({"MCP": "@access-mcp/software-discovery | search_software, list_all_software"})
+        self.assertTrue(mcp["available"])
+        self.assertEqual(mcp["package"], "@access-mcp/software-discovery")
+        self.assertEqual(mcp["tools"], [{"name": "search_software"}, {"name": "list_all_software"}])
+
+    def test_package_only(self):
+        mcp = s2m.parse_mcp({"MCP": "@access-mcp/events"})
+        self.assertTrue(mcp["available"])
+        self.assertEqual(mcp["package"], "@access-mcp/events")
+        self.assertNotIn("tools", mcp)
+
+    def test_blank_is_unavailable(self):
+        self.assertEqual(s2m.parse_mcp({"MCP": ""}), {"available": False})
+
+    def test_legacy_mcp_available_fallback(self):
+        # No 'MCP' cell, but a legacy 'MCP Available' yes/no column.
+        self.assertTrue(s2m.parse_mcp({"MCP Available": "yes"})["available"])
+        self.assertFalse(s2m.parse_mcp({"MCP Available": "no"})["available"])
+
+
+class TestApiEndpoint(unittest.TestCase):
+    def test_api_column_maps_to_api_endpoint(self):
+        inv = {("Support", "S"): {
+            "Track": "Support", "Data Source": "S",
+            "API": "https://support.access-ci.org/api/1.0/resources",
+        }}
+        fm, _ = s2m.build_frontmatter("S", "Support", [], inv)
+        self.assertEqual(fm["api_endpoint"], "https://support.access-ci.org/api/1.0/resources")
+
+    def test_blank_api_omitted(self):
+        inv = {("Support", "S"): {"Track": "Support", "Data Source": "S", "API": ""}}
+        fm, _ = s2m.build_frontmatter("S", "Support", [], inv)
+        self.assertNotIn("api_endpoint", fm)
+
+
 if __name__ == "__main__":
     unittest.main()

@@ -1,5 +1,5 @@
 // ACCESS Data Inventory
-// Generated: 2026-03-11 19:20
+// Generated: 2026-06-26 14:13
 // Source: data-sources/*.md
 
 // =============================================================================
@@ -12,13 +12,13 @@ Enum data_source {
     description: ACCESS Support website CMS - canonical storage for support content
     category: Content Management
     track: Support
-    responsible_team: Support
     access_level: Varies
     is_canonical: true
     canonical_source: null
     mcp_available: false
     mcp_package: null
     api_endpoint: https://support.access-ci.org
+    storage_location: null
     priority: High
   ''']
 
@@ -27,13 +27,13 @@ Enum data_source {
     description: Community groups organized by interest or domain
     category: Community & Outreach
     track: Support
-    responsible_team: Support
     access_level: Public
     is_canonical: false
-    canonical_source: access-support-drupal
+    canonical_source: access_support_drupal
     mcp_available: true
     mcp_package: @access-mcp/affinity-groups
     api_endpoint: https://support.access-ci.org/api/1.1/affinity_groups
+    storage_location: null
     priority: High
   ''']
 
@@ -42,13 +42,13 @@ Enum data_source {
     description: Resource provider and community announcements
     category: Community & Outreach
     track: Support
-    responsible_team: Support
     access_level: Public
     is_canonical: false
-    canonical_source: access-support-drupal
+    canonical_source: access_support_drupal
     mcp_available: true
     mcp_package: @access-mcp/announcements
     api_endpoint: https://support.access-ci.org/api/2.2/announcements
+    storage_location: null
     priority: High
   ''']
 
@@ -57,14 +57,32 @@ Enum data_source {
     description: User identity information
     category: Users & Identity
     track: Operations
-    responsible_team: Operations
     access_level: Sensitive
     is_canonical: true
     canonical_source: null
     mcp_available: false
     mcp_package: null
     api_endpoint: null
+    storage_location: null
     priority: Low
+  ''']
+
+  content_api [note: '''
+    name: Content API
+    description: Plain-text page content and a discovery index for ACCESS Support pages, for RAG ingestion and search syndication.
+    category: Content Management
+    track: Support
+    access_level: Public
+    is_canonical: false
+    canonical_source: access_support_drupal
+    mcp_available: false
+    mcp_package: null
+    api_endpoint: https://support.access-ci.org/.well-known/content-index.json
+    storage_location: support.access-ci.org
+    priority: Medium
+    data_access_mechanism: API, Web
+    refresh_frequency: Real-time
+    query_capacity: Per-page by node ID or path alias
   ''']
 
   event_registrations [note: '''
@@ -72,13 +90,13 @@ Enum data_source {
     description: Registration and attendance data for events
     category: Events & Training
     track: Support
-    responsible_team: Support
     access_level: Restricted
     is_canonical: true
     canonical_source: null
     mcp_available: false
     mcp_package: null
     api_endpoint: null
+    storage_location: null
     priority: Medium
   ''']
 
@@ -87,14 +105,68 @@ Enum data_source {
     description: Workshops, webinars, training sessions, and office hours
     category: Events & Training
     track: Support
-    responsible_team: Support
     access_level: Public
     is_canonical: false
-    canonical_source: access-support-drupal
+    canonical_source: access_support_drupal
     mcp_available: true
     mcp_package: @access-mcp/events
     api_endpoint: https://support.access-ci.org/api/2.2/events
+    storage_location: null
     priority: High
+  ''']
+
+  resource_documentation_api [note: '''
+    name: Resource Documentation API
+    description: Team-authored documentation for ACCESS resource providers (login, file transfer, storage, queue specs, top software, datasets), with resource-group inheritance.
+    category: Resources
+    track: Support
+    access_level: Public
+    is_canonical: false
+    canonical_source: access_support_drupal, resource_information_cider
+    mcp_available: false
+    mcp_package: null
+    api_endpoint: https://support.access-ci.org/api/1.0/resources
+    storage_location: support.access-ci.org
+    priority: Medium
+    data_access_mechanism: API, Web
+    refresh_frequency: Real-time
+    query_capacity: Per-resource and per-group lookups
+  ''']
+
+  resource_information_cider [note: '''
+    name: Resource Information (CIDeR)
+    description: Organizations, resource descriptions, and integration information for ACCESS resource providers.
+    category: Resources
+    track: Operations
+    access_level: Public
+    is_canonical: true
+    canonical_source: null
+    mcp_available: false
+    mcp_package: null
+    api_endpoint: https://operations-api.access-ci.org/wh2/cider/v1/
+    storage_location: operations.access-ci.org
+    priority: High
+    data_access_mechanism: API, Web
+    refresh_frequency: Daily
+    query_capacity: high
+  ''']
+
+  sds_software_discovery_service [note: '''
+    name: SDS (Software Discovery Service)
+    description: Software discovery: which software packages are available on which ACCESS resource providers.
+    category: Resources
+    track: Support
+    access_level: Public
+    is_canonical: false
+    canonical_source: resource_information_cider
+    mcp_available: true
+    mcp_package: @access-mcp/software-discovery
+    api_endpoint: https://sds-ara-api.access-ci.org/api/v1
+    storage_location: sds-ara-api.access-ci.org
+    priority: High
+    data_access_mechanism: API, MCP, Web
+    refresh_frequency: Daily
+    query_capacity: high
   ''']
 
   xdmod [note: '''
@@ -102,13 +174,13 @@ Enum data_source {
     description: HPC metrics, usage analytics, and resource specifications from the ACCESS XDMoD instance
     category: Metrics & Reporting
     track: Metrics
-    responsible_team: Metrics
     access_level: Varies
     is_canonical: true
     canonical_source: null
     mcp_available: true
     mcp_package: @access-mcp/xdmod
     api_endpoint: https://xdmod.access-ci.org/controllers/user_interface.php
+    storage_location: null
     priority: High
     realms: Accounts (2 stats, 2 dims), Allocations (11 stats, 9 dims), Cloud (11 stats, 23 dims), Gateways (28 stats, 23 dims), Jobs (30 stats, 24 dims), Requests (2 stats, 3 dims), ResourceSpecifications (18 stats, 4 dims), Storage (6 stats, 0 dims), SUPREMM (33 stats, 30 dims)
   ''']
@@ -120,15 +192,15 @@ Enum data_source {
 // =============================================================================
 
 Table access_support_drupal {
-  nid int [pk, note: 'access: Public | semantic: entity_id | Drupal node ID']
-  uuid varchar [note: 'access: Public | semantic: uuid | Drupal UUID']
-  type varchar [note: 'access: Public | semantic: entity_type | Drupal content type']
-  title varchar [note: 'access: Public | semantic: entity_name | Content title']
+  nid int [pk, not null, note: 'access: Public | semantic: entity_id | Drupal node ID']
+  uuid varchar [not null, note: 'access: Public | semantic: uuid | Drupal UUID']
+  type varchar [not null, note: 'access: Public | semantic: entity_type | Drupal content type']
+  title varchar [not null, note: 'access: Public | semantic: entity_name | Content title']
   body text [note: 'access: Public | semantic: entity_description | Content body (HTML)']
-  status boolean [note: 'access: Internal Only | semantic: entity_status | Published status']
-  created timestamp [note: 'access: Public | semantic: date_created | Content creation date']
-  changed timestamp [note: 'access: Public | semantic: date_modified | Last modification date']
-  uid int [note: 'access: Restricted | Author user ID']
+  status boolean [not null, note: 'access: Internal Only | semantic: entity_status | Published status']
+  created timestamp [not null, note: 'access: Public | semantic: date_created | Content creation date']
+  changed timestamp [not null, note: 'access: Public | semantic: date_modified | Last modification date']
+  uid int [not null, note: 'access: Restricted | Author user ID']
 
   Note: '''
     source: access_support_drupal
@@ -142,8 +214,8 @@ Table access_support_drupal {
 }
 
 Table affinity_groups {
-  nid int [pk, note: 'access: Public | semantic: entity_id | Node ID']
-  uuid varchar [note: 'access: Public | mcp: id | semantic: uuid | Unique identifier']
+  nid int [pk, not null, note: 'access: Public | semantic: entity_id | Node ID']
+  uuid varchar [not null, note: 'access: Public | mcp: id | semantic: uuid | Unique identifier']
   title varchar [not null, note: 'access: Public | mcp: name | semantic: entity_name | Group name']
   body text [note: 'access: Public | mcp: description | semantic: entity_description | Group description (HTML cleaned in MCP)']
   group_id varchar [not null, note: 'access: Public | mcp: id | semantic: entity_id | URL-friendly group identifier']
@@ -176,12 +248,12 @@ Table affinity_groups {
 }
 
 Table announcements {
-  nid int [pk, note: 'access: Public | semantic: entity_id | Node ID']
-  uuid varchar [note: 'access: Public | mcp: uuid | semantic: uuid | Unique identifier']
+  nid int [pk, not null, note: 'access: Public | semantic: entity_id | Node ID']
+  uuid varchar [not null, note: 'access: Public | mcp: uuid | semantic: uuid | Unique identifier']
   title varchar [not null, note: 'access: Public | mcp: title | semantic: entity_name | Announcement title']
-  body text [note: 'access: Public | mcp: body | semantic: entity_description | HTML content']
+  body text [not null, note: 'access: Public | mcp: body | semantic: entity_description | HTML content']
   summary varchar [note: 'access: Public | mcp: summary | semantic: entity_summary | Short summary text']
-  published_date date [note: 'access: Public | mcp: published_date | semantic: date_published | When the announcement was published']
+  published_date date [not null, note: 'access: Public | mcp: published_date | semantic: date_published | When the announcement was published']
   affiliation varchar [note: 'access: Public | mcp: affiliation | semantic: affiliation | Whether this is an official ACCESS or community announcement']
   external_link varchar [note: 'access: Public | mcp: external_link | semantic: url_external | Link to external resource']
   where_to_share text [note: 'access: Internal Only | mcp: where_to_share | Distribution channels for this announcement']
@@ -221,11 +293,28 @@ Table comanage {
   '''
 }
 
+Table content_api {
+  id int [not null, note: 'access: Public | semantic: entity_id | Drupal node ID of the page.']
+  title varchar [not null, note: 'access: Public | semantic: entity_name | Page title.']
+  path varchar [note: 'access: Public | semantic: url_external | Absolute URL of the support page.']
+  content_type varchar [note: 'access: Public | semantic: entity_type | Drupal content type of the page.']
+  text text [note: 'access: Public | computed: true | semantic: entity_description | Full extracted plain text of the page (detail endpoint).']
+  content_hash varchar [note: 'access: Public | computed: true | SHA-256 hash of the extracted text for incremental ingestion.']
+  last_modified timestamp [note: 'access: Public | semantic: date_modified | ISO 8601 last-changed time.']
+  content_url varchar [note: 'access: Public | semantic: url_external | URL of the per-page content endpoint (index entries).']
+
+  Note: '''
+    source: content_api
+    description: Plain-text page content and a discovery index for ACCESS Support pages, for RAG ingestion and search syndication.
+    access_level: Public
+  '''
+}
+
 Table event_registrations {
-  registration_id varchar [pk, note: 'access: Restricted | semantic: entity_id | Registration record ID']
-  event_id int [note: 'access: Restricted | Associated event']
-  user_id varchar [note: 'access: Restricted | Registered user']
-  registration_date timestamp [note: 'access: Restricted | semantic: date_created | When the registration was submitted']
+  registration_id varchar [pk, not null, note: 'access: Restricted | semantic: entity_id | Registration record ID']
+  event_id int [not null, note: 'access: Restricted | Associated event']
+  user_id varchar [not null, note: 'access: Restricted | Registered user']
+  registration_date timestamp [not null, note: 'access: Restricted | semantic: date_created | When the registration was submitted']
   attendance_status varchar [note: 'access: Restricted | semantic: entity_status | Registration and attendance status']
   referral_source varchar [note: 'access: Restricted | How the registrant heard about the event']
   registrant_name varchar [note: 'access: Sensitive | semantic: person_name | Registrant\'s name (PII)']
@@ -249,14 +338,14 @@ Table event_registrations {
 }
 
 Table events {
-  id int [pk, note: 'access: Public | semantic: entity_id | Event ID']
-  uuid varchar [note: 'access: Public | semantic: uuid | Unique identifier']
+  id int [pk, not null, note: 'access: Public | semantic: entity_id | Event ID']
+  uuid varchar [not null, note: 'access: Public | semantic: uuid | Unique identifier']
   title varchar [not null, note: 'access: Public | mcp: title | semantic: entity_name | Event title']
   description text [note: 'access: Public | mcp: description | semantic: entity_description | Event description']
   event_type varchar [not null, note: 'access: Public | mcp: type | semantic: entity_type | Type of event']
   skill_level varchar [note: 'access: Public | mcp: skill | semantic: skill_level | Target skill level for attendees']
   affiliation varchar [note: 'access: Public | semantic: affiliation | Whether this is an official ACCESS or community event']
-  start_date timestamp [note: 'access: Public | mcp: start_date | semantic: date_start | Event start date and time']
+  start_date timestamp [not null, note: 'access: Public | mcp: start_date | semantic: date_start | Event start date and time']
   end_date timestamp [note: 'access: Public | mcp: end_date | semantic: date_end | Event end date and time']
   duration_hours decimal [note: 'access: Public | mcp: duration_hours | computed: true | semantic: duration | Calculated duration in hours']
   starts_in_hours decimal [note: 'access: Public | mcp: starts_in_hours | computed: true | semantic: time_relative | Hours until event starts (negative if past)']
@@ -277,6 +366,45 @@ Table events {
       - Which events are associated with a specific affinity group?
       - How many office hours are scheduled for next week?
       - What events require registration?
+  '''
+}
+
+Table resource_documentation_api {
+  nid int [not null, note: 'access: Public | semantic: entity_id | Drupal node ID of the resource.']
+  title varchar [not null, note: 'access: Public | semantic: entity_name | Resource title.']
+  short_name varchar [note: 'access: Public | semantic: entity_name | Short display name.']
+  resource_id varchar [not null, note: 'access: Public | semantic: entity_id | CIDER resource identifier.']
+  global_resource_id varchar [note: 'access: Public | semantic: entity_id | ACCESS global resource ID.']
+  org_name varchar [note: 'access: Public | semantic: institution | Organization that operates the resource.']
+  resource_type varchar [note: 'access: Public | semantic: entity_type | Resource type (Compute, Storage, Cloud, etc.).']
+  description text [note: 'access: Public | semantic: entity_description | Team-authored resource description (detail endpoint).']
+  last_modified timestamp [note: 'access: Public | semantic: date_modified | ISO 8601 last-changed time.']
+  content_hash varchar [note: 'access: Public | computed: true | Deterministic SHA-256 fingerprint of the resource payload (detail endpoint) for change detection.']
+  url varchar [note: 'access: Public | semantic: url_external | Canonical URL of the resource documentation page.']
+
+  Note: '''
+    source: resource_documentation_api
+    description: Team-authored documentation for ACCESS resource providers (login, file transfer, storage, queue specs, top software, datasets), with resource-group inheritance.
+    access_level: Public
+  '''
+}
+
+Table sds_software_discovery_service {
+  rps json [note: 'access: Restricted | Request param: array of Resource Provider names/IDs to filter by, case-insensitive. Conditional (rps and/or software).']
+  software json [note: 'access: Restricted | semantic: entity_name | Request param: array of software names to filter by, case-insensitive. Conditional (rps and/or software).']
+  columns json [note: 'access: Restricted | Request param: array of fields to return. rp_software and software_name are always included.']
+  exclude boolean [note: 'access: Restricted | Request param: when true, treat columns as an exclude list rather than an include list. Default false.']
+  fuzz_software boolean [note: 'access: Restricted | Request param: enable fuzzy matching on software names. Default false.']
+  fuzz_rp boolean [note: 'access: Restricted | Request param: enable fuzzy matching on RP names/IDs. Default false.']
+  collapse_resource_groups boolean [note: 'access: Restricted | Request param: when false, emit separate entries per resource group. Default true.']
+  software_name varchar [not null, note: 'access: Restricted | semantic: entity_name | Response field: name of the software package. Results are sorted alphabetically by this field.']
+  rp_software varchar [not null, note: 'access: Restricted | Response field: the software identifier as known to the resource provider. Always present in responses.']
+  resource_provider varchar [note: 'access: Restricted | semantic: institution | Response field: resource provider / resource group the software is available on.']
+
+  Note: '''
+    source: sds_software_discovery_service
+    description: Software discovery: which software packages are available on which ACCESS resource providers.
+    access_level: Public
   '''
 }
 

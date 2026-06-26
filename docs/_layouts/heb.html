@@ -565,6 +565,15 @@
           '<p style="color: #e63946; padding: 40px;">Failed to load data. Make sure inventory.json is available.</p>';
       });
 
+    // Normalize a source's canonical_source into a list of ids with hyphens
+    // converted to underscores. The generator emits a list; a legacy single
+    // string is tolerated. null/undefined -> [].
+    function normalizeCanonicalSources(cs) {
+      if (!cs) return [];
+      const arr = Array.isArray(cs) ? cs : [cs];
+      return arr.filter(Boolean).map(id => String(id).replace(/-/g, '_'));
+    }
+
     // Transform inventory JSON into visualization nodes/edges
     function buildVisualizationData(data) {
       const nodes = [];
@@ -585,7 +594,10 @@
           type: 'data_source',
           has_mcp: source.mcp?.available || false,
           is_canonical: source.is_canonical || false,
-          canonical_source: source.canonical_source ? source.canonical_source.replace(/-/g, '_') : null,
+          // canonical_source is a LIST of upstream source ids (the generator
+          // always emits a list). Normalize hyphens->underscores per id; tolerate
+          // a legacy single-string value defensively.
+          canonical_source: normalizeCanonicalSources(source.canonical_source),
           provides_data_for: source.provides_data_for || [],
           fields: source.fields || [],
           relationships: source.relationships || [],
@@ -617,9 +629,9 @@
           }
         }
 
-        // Add canonical source edge (normalize hyphens to underscores for ID matching)
-        if (source.canonical_source) {
-          const canonId = source.canonical_source.replace(/-/g, '_');
+        // Add a canonical source edge per upstream source. canonical_source is
+        // a list of ids (normalize hyphens->underscores for matching).
+        for (const canonId of normalizeCanonicalSources(source.canonical_source)) {
           if (data.sources.some(s => s.id === canonId)) {
             edges.push({
               source: canonId,
@@ -858,7 +870,7 @@
 
         document.getElementById("infoName").innerHTML = data.name +
           (data.is_canonical ? '<span class="canonical-badge">Authoritative</span>' : '') +
-          (!data.is_canonical && data.canonical_source ? '<span class="derived-badge">Derived</span>' : '');
+          (!data.is_canonical && (data.canonical_source || []).length ? '<span class="derived-badge">Derived</span>' : '');
         document.getElementById("infoDesc").textContent = data.description;
 
         let metaHTML = `
@@ -867,11 +879,14 @@
           <span class="tag">${data.type || 'data_source'}</span>
         `;
 
-        // Canonical source note
-        if (!data.is_canonical && data.canonical_source) {
-          const canonNode = inventoryData.nodes.find(n => n.id === data.canonical_source);
-          const canonName = canonNode ? canonNode.name : data.canonical_source;
-          metaHTML += `<span class="tag" style="background: var(--access-teal); color: white;">Sourced from: ${canonName}</span>`;
+        // Canonical source note (canonical_source is a list of upstream ids)
+        const canonIds = data.canonical_source || [];
+        if (!data.is_canonical && canonIds.length) {
+          const canonNames = canonIds.map(cid => {
+            const canonNode = inventoryData.nodes.find(n => n.id === cid);
+            return canonNode ? canonNode.name : cid;
+          });
+          metaHTML += `<span class="tag" style="background: var(--access-teal); color: white;">Sourced from: ${canonNames.join(', ')}</span>`;
         }
         if (data.is_canonical && data.provides_data_for && data.provides_data_for.length > 0) {
           metaHTML += `<span class="tag" style="background: var(--access-teal); color: white;">Provides data for: ${data.provides_data_for.join(', ')}</span>`;

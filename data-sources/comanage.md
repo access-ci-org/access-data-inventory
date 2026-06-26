@@ -4,7 +4,6 @@ name: COManage/ACCESS Identity
 description: User identity information
 category: Users & Identity
 track: Operations
-responsible_team: Operations
 access_level: Sensitive
 is_canonical: true
 canonical_source: null

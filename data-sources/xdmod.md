@@ -4,7 +4,6 @@ name: XDMoD Metrics
 description: HPC metrics, usage analytics, and resource specifications from the ACCESS XDMoD instance
 category: Metrics & Reporting
 track: Metrics
-responsible_team: Metrics
 access_level: Varies
 is_canonical: true
 api_endpoint: https://xdmod.access-ci.org/controllers/user_interface.php

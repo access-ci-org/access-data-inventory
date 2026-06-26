@@ -7,7 +7,6 @@ required_fields:
   - description
   - category
   - track
-  - responsible_team
   - access_level
   - is_canonical
   - priority
@@ -33,10 +32,12 @@ allowed_values:
   access_level:
     - Public
     - Authenticated
+    - Public and Authenticated
     - Restricted
     - Internal Only
     - Sensitive
     - Varies
+    - TBD
 
   priority:
     - High
@@ -58,6 +59,7 @@ allowed_values:
     - date
     - timestamp
     - decimal
+    - json
 
   relationship_type:
     - belongs_to
@@ -113,3 +115,5 @@ field_properties:
     - allowed_values
     - references
     - semantic_type
+    - access_notes
+    - notes

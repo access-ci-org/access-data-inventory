@@ -4,10 +4,10 @@ name: Announcements
 description: Resource provider and community announcements
 category: Community & Outreach
 track: Support
-responsible_team: Support
 access_level: Public
 is_canonical: false
-canonical_source: access-support-drupal
+canonical_source:
+  - access_support_drupal
 api_endpoint: https://support.access-ci.org/api/2.2/announcements
 dynamic: false
 priority: High
@@ -39,6 +39,7 @@ use_cases:
 
 fields:
   - name: nid
+    required: true
     type: int
     access: Public
     primary_key: true
@@ -46,6 +47,7 @@ fields:
     semantic_type: entity_id
 
   - name: uuid
+    required: true
     type: varchar
     access: Public
     mcp_name: uuid
@@ -61,6 +63,7 @@ fields:
     semantic_type: entity_name
 
   - name: body
+    required: true
     type: text
     access: Public
     mcp_name: body
@@ -75,6 +78,7 @@ fields:
     semantic_type: entity_summary
 
   - name: published_date
+    required: true
     type: date
     access: Public
     mcp_name: published_date

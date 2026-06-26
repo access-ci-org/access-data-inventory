@@ -4,7 +4,6 @@ name: Event Registrations
 description: Registration and attendance data for events
 category: Events & Training
 track: Support
-responsible_team: Support
 access_level: Restricted
 is_canonical: true
 canonical_source: null
@@ -32,6 +31,7 @@ constraints:
 
 fields:
   - name: registration_id
+    required: true
     type: varchar
     access: Restricted
     primary_key: true
@@ -39,18 +39,21 @@ fields:
     semantic_type: entity_id
 
   - name: event_id
+    required: true
     type: int
     access: Restricted
     references: events.id
     description: Associated event
 
   - name: user_id
+    required: true
     type: varchar
     access: Restricted
     references: users.user_id
     description: Registered user
 
   - name: registration_date
+    required: true
     type: timestamp
     access: Restricted
     description: When the registration was submitted

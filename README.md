@@ -13,9 +13,30 @@ The ACCESS ecosystem spans dozens of data sources across multiple teams and trac
 
 ## How It Works
 
-1. **Edit** a markdown file in `data-sources/`
-2. **Commit** and push to `main`
-3. **Done** - GitHub Actions regenerates all docs automatically
+The **canonical source of truth is the Google Sheet** ("ACCESS Data Source
+Inventory"). Everything else is generated from it:
+
+```
+Google Sheet  →  CSV export  →  sheets_to_md.py  →  data-sources/*.md  →  generate.py  →  docs/ (Pages + dbdocs)
+   (canonical)                  (converter)         (generated md)        (visualizations)
+```
+
+1. **Edit the Google Sheet** — add or update a row in the inventory tab and its
+   fields in the matching `<Track> Fields` tab.
+2. **Regenerate the markdown** — export the sheet tabs to CSV and run
+   `python sheets_to_md.py -f <fields-dir> -d <inventory.csv> -o data-sources`.
+   This rewrites `data-sources/*.md` from the sheet.
+3. **Commit and push to `main`** — GitHub Actions then runs `generate.py` and
+   publishes the docs.
+
+> **Important:** `data-sources/*.md` are a **generated intermediate**. Do NOT
+> hand-edit them — your changes will be overwritten the next time the sheet is
+> exported. Edit the Google Sheet instead. (`md_to_sheet.py` is a helper for the
+> reverse direction: dumping curated markdown back into sheet-pasteable CSVs.)
+
+> **Coming soon:** the sheet export + regeneration is currently a manual local
+> step. The plan is to automate pulling from the Google Sheet (via the Sheets
+> API) so a sheet edit regenerates and publishes without the manual export.
 
 The generated documentation is published to:
 - **GitHub Pages** - browsable docs and interactive relationship diagram
@@ -23,7 +44,14 @@ The generated documentation is published to:
 
 ## Adding or Editing a Data Source
 
-Edit or create a `.md` file in `data-sources/`. Each file has YAML frontmatter for structured data and markdown for notes.
+**Edit the Google Sheet, not the markdown.** Add a row to the inventory tab
+(Track, Data Source, Description, Category, Canonical Sources, Data Access
+mechanism(s), API, MCP, Access Level, etc.) and its field rows in the matching
+`<Track> Fields` tab, then regenerate (step 2 above).
+
+The reference below documents the markdown frontmatter that `sheets_to_md.py`
+produces, so you can see how a sheet row maps to the generated structure. Treat
+it as a schema reference, not an editing target.
 
 ### Minimal Example
 
@@ -153,7 +181,7 @@ Detailed description of this data source.
 
 **track:** Support, Operations, Allocations, ACO
 
-**access_level:** Public, Authenticated, Restricted, Internal Only, Sensitive, Varies
+**access_level:** Public, Authenticated, Public and Authenticated, Restricted, Internal Only, Sensitive, Varies, TBD
 
 **priority:** High, Medium, Low
 
@@ -246,7 +274,7 @@ python generate.py --validate
 
 ```
 data-inventory/
-├── data-sources/           # SOURCE OF TRUTH - edit these files
+├── data-sources/           # GENERATED from the sheet via sheets_to_md.py - do not hand-edit
 │   ├── announcements.md
 │   ├── events.md
 │   └── ...

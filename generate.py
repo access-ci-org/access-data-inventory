@@ -158,6 +158,15 @@ def generate_index(sources: list[dict]) -> str:
         "- **Enable discovery across tracks** by generating browsable docs and interactive diagrams",
         "- **Power AI tools and automation** by providing machine-readable metadata that integrates with MCP servers, agents, and other workflows",
         "",
+        "## Documentation Hubs",
+        "",
+        "Front doors to the APIs and MCP servers catalogued below. Individual sources link to their own endpoint and MCP server in the table; these are the catalogs that list them all:",
+        "",
+        "- **[ACCESS Support API docs](https://support.access-ci.org/api-docs)** — interactive Swagger documentation for the Support-track REST APIs (events, announcements, affinity groups, resource documentation, content, and more).",
+        "- **[ACCESS MCP servers](https://mcp.access-ci.org)** — the catalog of MCP servers that expose ACCESS data to AI tools and agents.",
+        "",
+        "_Other teams' API-docs hubs can be added here as they come online._",
+        "",
     ]
 
     # Data Sources by Track
@@ -183,7 +192,7 @@ def generate_index(sources: list[dict]) -> str:
             if mcp.get('available'):
                 package = mcp.get('package', '')
                 package_name = package.replace('@access-mcp/', '')
-                links.append(f"[MCP](https://access-mcp.netlify.app/servers/{package_name})")
+                links.append(f"[MCP](https://mcp.access-ci.org/servers/{package_name})")
             if source.get('api_endpoint'):
                 links.append(f"[API]({source.get('api_endpoint')})")
             links_str = " · ".join(links)

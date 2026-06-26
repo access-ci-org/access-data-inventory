@@ -219,6 +219,32 @@ def parse_canonical_sources(value: str):
     return False, (ids or None)
 
 
+def parse_mcp(inv_row: dict):
+    """Parse the inventory 'MCP' cell into an mcp block.
+
+    Cell format: 'package | tool1, tool2, ...' (see md_to_sheet.mcp_cell).
+    Presence of any content => available: true; a package and/or a tool list are
+    extracted. Per-tool method/description are not carried in the sheet, so tools
+    round-trip as name-only entries. Falls back to a legacy 'MCP Available'
+    yes/no column if an older sheet has one and no 'MCP' cell.
+    """
+    cell = (inv_row.get("MCP") or "").strip()
+    if not cell:
+        legacy = (inv_row.get("MCP Available") or "").strip().lower()
+        return {"available": legacy in ("yes", "true", "partial")}
+
+    package, _, tools_part = cell.partition("|")
+    package = package.strip().strip('"')
+    tool_names = [t.strip() for t in tools_part.split(",") if t.strip()]
+
+    mcp = {"available": True}
+    if package:
+        mcp["package"] = package
+    if tool_names:
+        mcp["tools"] = [{"name": n} for n in tool_names]
+    return mcp
+
+
 def build_frontmatter(source_name, track, fields, inventory):
     """Assemble the frontmatter dict for one source, enriching from inventory if matched."""
     inv_row = inventory.get((track, source_name)) if inventory else None
@@ -252,6 +278,7 @@ def build_frontmatter(source_name, track, fields, inventory):
         for col, key in (
             ("Storage Location", "storage_location"),     # where the data physically lives
             ("Data Access mechanism(s)", "data_access_mechanism"),  # how to get it
+            ("API", "api_endpoint"),                      # endpoint URL (drives the [API] link)
             ("Refresh Frequency", "refresh_frequency"),   # how often it updates
             ("Query Capacity", "query_capacity"),         # query load it supports
         ):
@@ -263,8 +290,7 @@ def build_frontmatter(source_name, track, fields, inventory):
         fm["is_canonical"] = is_canon
         if canon:
             fm["canonical_source"] = canon
-        mcp_avail = (inv_row.get("MCP Available") or "").strip().lower()
-        fm["mcp"] = {"available": mcp_avail in ("yes", "true", "partial")}
+        fm["mcp"] = parse_mcp(inv_row)
 
     return fm, (inv_row is not None)
 

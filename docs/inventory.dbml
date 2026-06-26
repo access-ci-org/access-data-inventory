@@ -1,5 +1,5 @@
 // ACCESS Data Inventory
-// Generated: 2026-06-10 16:46
+// Generated: 2026-06-26 12:17
 // Source: data-sources/*.md
 
 // =============================================================================
@@ -20,6 +20,24 @@ Enum data_source {
     api_endpoint: https://support.access-ci.org
     storage_location: null
     priority: High
+  ''']
+
+  access_sds_software_discovery_api [note: '''
+    name: ACCESS SDS (Software Discovery) API
+    description: Software discovery: which software packages are available on which ACCESS resource providers.
+    category: Resources
+    track: Support
+    access_level: Restricted
+    is_canonical: false
+    canonical_source: resource_documentation_api
+    mcp_available: false
+    mcp_package: null
+    api_endpoint: https://sds-ara-api.access-ci.org/api/v1
+    storage_location: sds-ara-api.access-ci.org
+    priority: Medium
+    data_access_mechanism: POST-only HTTP/JSON API (single endpoint POST /api/v1; no GET endpoints)
+    refresh_frequency: Daily
+    query_capacity: Per-request software/RP filtering with optional fuzzy matching and column selection
   ''']
 
   affinity_groups [note: '''
@@ -67,6 +85,24 @@ Enum data_source {
     priority: Low
   ''']
 
+  content_api [note: '''
+    name: Content API
+    description: Plain-text page content and a discovery index for ACCESS Support pages, for RAG ingestion and search syndication.
+    category: Content Management
+    track: Support
+    access_level: Public
+    is_canonical: false
+    canonical_source: access_support_drupal
+    mcp_available: false
+    mcp_package: null
+    api_endpoint: https://support.access-ci.org/.well-known/content-index.json
+    storage_location: support.access-ci.org
+    priority: Medium
+    data_access_mechanism: Public JSON REST API (GET /api/1.0/content/{id}, GET /api/1.0/content?path=, GET /.well-known/content-index.json)
+    refresh_frequency: Real-time
+    query_capacity: Per-page by node ID or path alias
+  ''']
+
   event_registrations [note: '''
     name: Event Registrations
     description: Registration and attendance data for events
@@ -95,6 +131,24 @@ Enum data_source {
     api_endpoint: https://support.access-ci.org/api/2.2/events
     storage_location: null
     priority: High
+  ''']
+
+  resource_documentation_api [note: '''
+    name: Resource Documentation API
+    description: Team-authored documentation for ACCESS resource providers (login, file transfer, storage, queue specs, top software, datasets), with resource-group inheritance.
+    category: Resources
+    track: Support
+    access_level: Public
+    is_canonical: false
+    canonical_source: access_support_drupal
+    mcp_available: false
+    mcp_package: null
+    api_endpoint: https://support.access-ci.org/api/1.0/resources
+    storage_location: support.access-ci.org
+    priority: Medium
+    data_access_mechanism: Public JSON REST API (GET /api/1.0/resources, GET /api/1.0/resources/{id}, GET /api/1.0/resource-groups)
+    refresh_frequency: Real-time
+    query_capacity: Per-resource and per-group lookups
   ''']
 
   xdmod [note: '''
@@ -138,6 +192,25 @@ Table access_support_drupal {
       - What content types are stored in the ACCESS Support CMS?
       - When was a specific piece of content last modified?
       - How many published nodes exist by content type?
+  '''
+}
+
+Table access_sds_software_discovery_api {
+  rps json [note: 'access: Restricted | Request param: array of Resource Provider names/IDs to filter by, case-insensitive. Conditional (rps and/or software).']
+  software json [note: 'access: Restricted | semantic: entity_name | Request param: array of software names to filter by, case-insensitive. Conditional (rps and/or software).']
+  columns json [note: 'access: Restricted | Request param: array of fields to return. rp_software and software_name are always included.']
+  exclude boolean [note: 'access: Restricted | Request param: when true, treat columns as an exclude list rather than an include list. Default false.']
+  fuzz_software boolean [note: 'access: Restricted | Request param: enable fuzzy matching on software names. Default false.']
+  fuzz_rp boolean [note: 'access: Restricted | Request param: enable fuzzy matching on RP names/IDs. Default false.']
+  collapse_resource_groups boolean [note: 'access: Restricted | Request param: when false, emit separate entries per resource group. Default true.']
+  software_name varchar [not null, note: 'access: Restricted | semantic: entity_name | Response field: name of the software package. Results are sorted alphabetically by this field.']
+  rp_software varchar [not null, note: 'access: Restricted | Response field: the software identifier as known to the resource provider. Always present in responses.']
+  resource_provider varchar [note: 'access: Restricted | semantic: institution | Response field: resource provider / resource group the software is available on.']
+
+  Note: '''
+    source: access_sds_software_discovery_api
+    description: Software discovery: which software packages are available on which ACCESS resource providers.
+    access_level: Restricted
   '''
 }
 
@@ -221,6 +294,23 @@ Table comanage {
   '''
 }
 
+Table content_api {
+  id int [not null, note: 'access: Public | semantic: entity_id | Drupal node ID of the page.']
+  title varchar [not null, note: 'access: Public | semantic: entity_name | Page title.']
+  path varchar [note: 'access: Public | semantic: url_external | Absolute URL of the support page.']
+  content_type varchar [note: 'access: Public | semantic: entity_type | Drupal content type of the page.']
+  text text [note: 'access: Public | computed: true | semantic: entity_description | Full extracted plain text of the page (detail endpoint).']
+  content_hash varchar [note: 'access: Public | computed: true | SHA-256 hash of the extracted text for incremental ingestion.']
+  last_modified timestamp [note: 'access: Public | semantic: date_modified | ISO 8601 last-changed time.']
+  content_url varchar [note: 'access: Public | semantic: url_external | URL of the per-page content endpoint (index entries).']
+
+  Note: '''
+    source: content_api
+    description: Plain-text page content and a discovery index for ACCESS Support pages, for RAG ingestion and search syndication.
+    access_level: Public
+  '''
+}
+
 Table event_registrations {
   registration_id varchar [pk, not null, note: 'access: Restricted | semantic: entity_id | Registration record ID']
   event_id int [not null, note: 'access: Restricted | Associated event']
@@ -277,6 +367,26 @@ Table events {
       - Which events are associated with a specific affinity group?
       - How many office hours are scheduled for next week?
       - What events require registration?
+  '''
+}
+
+Table resource_documentation_api {
+  nid int [not null, note: 'access: Public | semantic: entity_id | Drupal node ID of the resource.']
+  title varchar [not null, note: 'access: Public | semantic: entity_name | Resource title.']
+  short_name varchar [note: 'access: Public | semantic: entity_name | Short display name.']
+  resource_id varchar [not null, note: 'access: Public | semantic: entity_id | CIDER resource identifier.']
+  global_resource_id varchar [note: 'access: Public | semantic: entity_id | ACCESS global resource ID.']
+  org_name varchar [note: 'access: Public | semantic: institution | Organization that operates the resource.']
+  resource_type varchar [note: 'access: Public | semantic: entity_type | Resource type (Compute, Storage, Cloud, etc.).']
+  description text [note: 'access: Public | semantic: entity_description | Team-authored resource description (detail endpoint).']
+  last_modified timestamp [note: 'access: Public | semantic: date_modified | ISO 8601 last-changed time.']
+  content_hash varchar [note: 'access: Public | computed: true | Deterministic SHA-256 fingerprint of the resource payload (detail endpoint) for change detection.']
+  url varchar [note: 'access: Public | semantic: url_external | Canonical URL of the resource documentation page.']
+
+  Note: '''
+    source: resource_documentation_api
+    description: Team-authored documentation for ACCESS resource providers (login, file transfer, storage, queue specs, top software, datasets), with resource-group inheritance.
+    access_level: Public
   '''
 }
 

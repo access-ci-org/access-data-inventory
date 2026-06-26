@@ -1,6 +1,6 @@
 {
-  "generated": "2026-06-10T16:46:51.656883",
-  "source_count": 7,
+  "generated": "2026-06-26T12:17:25.613161",
+  "source_count": 10,
   "sources": [
     {
       "id": "access_support_drupal",
@@ -141,6 +141,125 @@
           "description": "Stores user accounts (Drupal users, linked to COManage)"
         }
       ]
+    },
+    {
+      "id": "access_sds_software_discovery_api",
+      "name": "ACCESS SDS (Software Discovery) API",
+      "track": "Support",
+      "fields": [
+        {
+          "name": "rps",
+          "type": "json",
+          "access": "Restricted",
+          "access_notes": "API key required",
+          "description": "Request param: array of Resource Provider names/IDs to filter by, case-insensitive. Conditional (rps and/or software).",
+          "notes": "Request body field",
+          "authoritative_source": "SDS"
+        },
+        {
+          "name": "software",
+          "type": "json",
+          "access": "Restricted",
+          "access_notes": "API key required",
+          "description": "Request param: array of software names to filter by, case-insensitive. Conditional (rps and/or software).",
+          "semantic_type": "entity_name",
+          "notes": "Request body field",
+          "authoritative_source": "SDS"
+        },
+        {
+          "name": "columns",
+          "type": "json",
+          "access": "Restricted",
+          "access_notes": "API key required",
+          "description": "Request param: array of fields to return. rp_software and software_name are always included.",
+          "notes": "Request body field",
+          "authoritative_source": "SDS"
+        },
+        {
+          "name": "exclude",
+          "type": "boolean",
+          "access": "Restricted",
+          "access_notes": "API key required",
+          "description": "Request param: when true, treat columns as an exclude list rather than an include list. Default false.",
+          "notes": "Request body field",
+          "authoritative_source": "SDS"
+        },
+        {
+          "name": "fuzz_software",
+          "type": "boolean",
+          "access": "Restricted",
+          "access_notes": "API key required",
+          "description": "Request param: enable fuzzy matching on software names. Default false.",
+          "notes": "Request body field",
+          "authoritative_source": "SDS"
+        },
+        {
+          "name": "fuzz_rp",
+          "type": "boolean",
+          "access": "Restricted",
+          "access_notes": "API key required",
+          "description": "Request param: enable fuzzy matching on RP names/IDs. Default false.",
+          "notes": "Request body field",
+          "authoritative_source": "SDS"
+        },
+        {
+          "name": "collapse_resource_groups",
+          "type": "boolean",
+          "access": "Restricted",
+          "access_notes": "API key required",
+          "description": "Request param: when false, emit separate entries per resource group. Default true.",
+          "notes": "Request body field",
+          "authoritative_source": "SDS"
+        },
+        {
+          "name": "software_name",
+          "type": "varchar",
+          "access": "Restricted",
+          "access_notes": "API key required",
+          "description": "Response field: name of the software package. Results are sorted alphabetically by this field.",
+          "required": true,
+          "semantic_type": "entity_name",
+          "notes": "Always present in responses",
+          "authoritative_source": "SDS"
+        },
+        {
+          "name": "rp_software",
+          "type": "varchar",
+          "access": "Restricted",
+          "access_notes": "API key required",
+          "description": "Response field: the software identifier as known to the resource provider. Always present in responses.",
+          "required": true,
+          "notes": "Always present in responses",
+          "authoritative_source": "SDS"
+        },
+        {
+          "name": "resource_provider",
+          "type": "varchar",
+          "access": "Restricted",
+          "access_notes": "API key required",
+          "description": "Response field: resource provider / resource group the software is available on.",
+          "semantic_type": "institution",
+          "notes": "Response field",
+          "authoritative_source": "SDS"
+        }
+      ],
+      "category": "Resources",
+      "access_level": "Restricted",
+      "priority": "Medium",
+      "description": "Software discovery: which software packages are available on which ACCESS resource providers.",
+      "notes": "Requires an X-API-Key header. Request a key by opening a ticket at https://support.access-ci.org/help-ticket. Documented on the portal at /api-docs/sds.",
+      "storage_location": "sds-ara-api.access-ci.org",
+      "data_access_mechanism": "POST-only HTTP/JSON API (single endpoint POST /api/v1; no GET endpoints)",
+      "api_endpoint": "https://sds-ara-api.access-ci.org/api/v1",
+      "refresh_frequency": "Daily",
+      "query_capacity": "Per-request software/RP filtering with optional fuzzy matching and column selection",
+      "is_canonical": false,
+      "canonical_source": [
+        "resource_documentation_api"
+      ],
+      "mcp": {
+        "available": false
+      }
     },
     {
       "id": "affinity_groups",
@@ -621,6 +740,97 @@
       ]
     },
     {
+      "id": "content_api",
+      "name": "Content API",
+      "track": "Support",
+      "fields": [
+        {
+          "name": "id",
+          "type": "int",
+          "access": "Public",
+          "description": "Drupal node ID of the page.",
+          "required": true,
+          "semantic_type": "entity_id",
+          "authoritative_source": "ACCESS Support Drupal"
+        },
+        {
+          "name": "title",
+          "type": "varchar",
+          "access": "Public",
+          "description": "Page title.",
+          "required": true,
+          "semantic_type": "entity_name",
+          "authoritative_source": "ACCESS Support Drupal"
+        },
+        {
+          "name": "path",
+          "type": "varchar",
+          "access": "Public",
+          "description": "Absolute URL of the support page.",
+          "semantic_type": "url_external",
+          "authoritative_source": "ACCESS Support Drupal"
+        },
+        {
+          "name": "content_type",
+          "type": "varchar",
+          "access": "Public",
+          "description": "Drupal content type of the page.",
+          "semantic_type": "entity_type",
+          "authoritative_source": "ACCESS Support Drupal"
+        },
+        {
+          "name": "text",
+          "type": "text",
+          "access": "Public",
+          "description": "Full extracted plain text of the page (detail endpoint).",
+          "computed": true,
+          "semantic_type": "entity_description",
+          "authoritative_source": "ACCESS Support Drupal"
+        },
+        {
+          "name": "content_hash",
+          "type": "varchar",
+          "access": "Public",
+          "description": "SHA-256 hash of the extracted text for incremental ingestion.",
+          "computed": true,
+          "authoritative_source": "ACCESS Support Drupal"
+        },
+        {
+          "name": "last_modified",
+          "type": "timestamp",
+          "access": "Public",
+          "description": "ISO 8601 last-changed time.",
+          "semantic_type": "date_modified",
+          "authoritative_source": "ACCESS Support Drupal"
+        },
+        {
+          "name": "content_url",
+          "type": "varchar",
+          "access": "Public",
+          "description": "URL of the per-page content endpoint (index entries).",
+          "semantic_type": "url_external",
+          "authoritative_source": "ACCESS Support Drupal"
+        }
+      ],
+      "category": "Content Management",
+      "access_level": "Public",
+      "priority": "Medium",
+      "description": "Plain-text page content and a discovery index for ACCESS Support pages, for RAG ingestion and search syndication.",
+      "notes": "Responses include content_hash (SHA-256 of extracted text) and last_modified for incremental ingestion. Documented on the portal at /api-docs/content.",
+      "storage_location": "support.access-ci.org",
+      "data_access_mechanism": "Public JSON REST API (GET /api/1.0/content/{id}, GET /api/1.0/content?path=, GET /.well-known/content-index.json)",
+      "api_endpoint": "https://support.access-ci.org/.well-known/content-index.json",
+      "refresh_frequency": "Real-time",
+      "query_capacity": "Per-page by node ID or path alias",
+      "is_canonical": false,
+      "canonical_source": [
+        "access_support_drupal"
+      ],
+      "mcp": {
+        "available": false
+      }
+    },
+    {
       "id": "event_registrations",
       "name": "Event Registrations",
       "description": "Registration and attendance data for events",
@@ -975,6 +1185,121 @@
           "description": "Registration records for this event"
         }
       ]
+    },
+    {
+      "id": "resource_documentation_api",
+      "name": "Resource Documentation API",
+      "track": "Support",
+      "fields": [
+        {
+          "name": "nid",
+          "type": "int",
+          "access": "Public",
+          "description": "Drupal node ID of the resource.",
+          "required": true,
+          "semantic_type": "entity_id",
+          "authoritative_source": "ACCESS Support Drupal"
+        },
+        {
+          "name": "title",
+          "type": "varchar",
+          "access": "Public",
+          "description": "Resource title.",
+          "required": true,
+          "semantic_type": "entity_name",
+          "authoritative_source": "ACCESS Support Drupal"
+        },
+        {
+          "name": "short_name",
+          "type": "varchar",
+          "access": "Public",
+          "description": "Short display name.",
+          "semantic_type": "entity_name",
+          "authoritative_source": "ACCESS Support Drupal"
+        },
+        {
+          "name": "resource_id",
+          "type": "varchar",
+          "access": "Public",
+          "description": "CIDER resource identifier.",
+          "required": true,
+          "semantic_type": "entity_id",
+          "authoritative_source": "ACCESS Support Drupal"
+        },
+        {
+          "name": "global_resource_id",
+          "type": "varchar",
+          "access": "Public",
+          "description": "ACCESS global resource ID.",
+          "semantic_type": "entity_id",
+          "authoritative_source": "ACCESS Support Drupal"
+        },
+        {
+          "name": "org_name",
+          "type": "varchar",
+          "access": "Public",
+          "description": "Organization that operates the resource.",
+          "semantic_type": "institution",
+          "authoritative_source": "ACCESS Support Drupal"
+        },
+        {
+          "name": "resource_type",
+          "type": "varchar",
+          "access": "Public",
+          "description": "Resource type (Compute, Storage, Cloud, etc.).",
+          "semantic_type": "entity_type",
+          "authoritative_source": "ACCESS Support Drupal"
+        },
+        {
+          "name": "description",
+          "type": "text",
+          "access": "Public",
+          "description": "Team-authored resource description (detail endpoint).",
+          "semantic_type": "entity_description",
+          "authoritative_source": "ACCESS Support Drupal"
+        },
+        {
+          "name": "last_modified",
+          "type": "timestamp",
+          "access": "Public",
+          "description": "ISO 8601 last-changed time.",
+          "semantic_type": "date_modified",
+          "authoritative_source": "ACCESS Support Drupal"
+        },
+        {
+          "name": "content_hash",
+          "type": "varchar",
+          "access": "Public",
+          "description": "Deterministic SHA-256 fingerprint of the resource payload (detail endpoint) for change detection.",
+          "computed": true,
+          "authoritative_source": "ACCESS Support Drupal"
+        },
+        {
+          "name": "url",
+          "type": "varchar",
+          "access": "Public",
+          "description": "Canonical URL of the resource documentation page.",
+          "semantic_type": "url_external",
+          "authoritative_source": "ACCESS Support Drupal"
+        }
+      ],
+      "category": "Resources",
+      "access_level": "Public",
+      "priority": "Medium",
+      "description": "Team-authored documentation for ACCESS resource providers (login, file transfer, storage, queue specs, top software, datasets), with resource-group inheritance.",
+      "notes": "Detail responses include a content_hash for change detection. Documented on the portal at /api-docs/resources.",
+      "storage_location": "support.access-ci.org",
+      "data_access_mechanism": "Public JSON REST API (GET /api/1.0/resources, GET /api/1.0/resources/{id}, GET /api/1.0/resource-groups)",
+      "api_endpoint": "https://support.access-ci.org/api/1.0/resources",
+      "refresh_frequency": "Real-time",
+      "query_capacity": "Per-resource and per-group lookups",
+      "is_canonical": false,
+      "canonical_source": [
+        "access_support_drupal"
+      ],
+      "mcp": {
+        "available": false
+      }
     },
     {
       "id": "xdmod",
@@ -1852,10 +2177,13 @@
   "by_track": {
     "Support": [
       "access_support_drupal",
+      "access_sds_software_discovery_api",
       "affinity_groups",
       "announcements",
+      "content_api",
       "event_registrations",
-      "events"
+      "events",
+      "resource_documentation_api"
     ],
     "Operations": [
       "comanage"
@@ -1866,7 +2194,12 @@
   },
   "by_category": {
     "Content Management": [
-      "access_support_drupal"
+      "access_support_drupal",
+      "content_api"
+    ],
+    "Resources": [
+      "access_sds_software_discovery_api",
+      "resource_documentation_api"
     ],
     "Community & Outreach": [
       "affinity_groups",
@@ -1888,16 +2221,19 @@
       "access_support_drupal",
       "xdmod"
     ],
+    "Restricted": [
+      "access_sds_software_discovery_api",
+      "event_registrations"
+    ],
     "Public": [
       "affinity_groups",
       "announcements",
-      "events"
+      "content_api",
+      "events",
+      "resource_documentation_api"
     ],
     "Sensitive": [
       "comanage"
-    ],
-    "Restricted": [
-      "event_registrations"
     ]
   }
 }

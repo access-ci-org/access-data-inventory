@@ -159,7 +159,8 @@ class TestParseFieldsCsv(unittest.TestCase):
              "Semantic Type": "", "Primary Key (DBs only)": "",
              "Reference (DBs only)": ""},
         ]
-        grouped, skipped = s2m.group_fields(rows)
+        grouped, skipped, bad = s2m.group_fields(rows)
+        self.assertEqual(bad, [])
         self.assertIn("XDMoD Open API Documentation", grouped)
         self.assertEqual(len(grouped["XDMoD Open API Documentation"]), 1)
         self.assertEqual(len(skipped), 1)  # the TODO row
@@ -310,6 +311,182 @@ class TestApiEndpoint(unittest.TestCase):
         inv = {("Support", "S"): {"Track": "Support", "Data Source": "S", "API": ""}}
         fm, _ = s2m.build_frontmatter("S", "Support", [], inv)
         self.assertNotIn("api_endpoint", fm)
+
+
+class TestErrorHeadings(unittest.TestCase):
+    """A 'Data Source' heading that is a spreadsheet error (a broken lookup
+    formula) is not a source; it and its rows are dropped and reported."""
+    def test_error_heading_is_skipped(self):
+        rows = [
+            {"Data Source": "#NUM!", "Name": ""},
+            {"Data Source": "", "Name": "orphan", "Type": "int", "Access": "Public",
+             "Description": "d"},
+            {"Data Source": "Real", "Name": ""},
+            {"Data Source": "", "Name": "f", "Type": "int", "Access": "Public",
+             "Description": "d"},
+        ]
+        grouped, skipped, bad = s2m.group_fields(rows)
+        self.assertEqual(list(grouped), ["Real"])
+        self.assertEqual(bad, ["#NUM!"])
+
+    def test_blank_rows_not_reported(self):
+        rows = [{"Data Source": "S", "Name": ""}, {"Data Source": "", "Name": ""}]
+        _, skipped, _ = s2m.group_fields(rows)
+        self.assertEqual(skipped, [])
+
+
+class TestReadFieldsDirKeyedByTrack(unittest.TestCase):
+    """Two tracks may each list a source of the same name; they stay separate."""
+    def test_same_name_in_two_tracks(self):
+        import tempfile
+        from pathlib import Path
+        header = "Data Source,Name,Type,Access,Description\n"
+        with tempfile.TemporaryDirectory() as d:
+            (Path(d) / "X - Metrics Fields.csv").write_text(
+                header + "Publications,,,,\n,Year,int,Public,y\n")
+            (Path(d) / "X - Allocations Fields.csv").write_text(
+                header + "Publications,,,,\n")
+            sources, _, warnings = s2m.read_fields_dir(Path(d))
+        self.assertEqual(len(sources[("Metrics", "Publications")]["fields"]), 1)
+        self.assertEqual(sources[("Allocations", "Publications")]["fields"], [])
+        self.assertEqual(warnings, [])
+
+
+class TestMcpUrl(unittest.TestCase):
+    def test_url_first_segment_lands_in_url(self):
+        mcp = s2m.parse_mcp({"MCP": "https://mcp.access-ci.org/events/mcp | search_events"})
+        self.assertEqual(mcp["url"], "https://mcp.access-ci.org/events/mcp")
+        self.assertNotIn("package", mcp)
+        self.assertEqual(mcp["tools"], [{"name": "search_events"}])
+
+
+class TestNewInventoryColumns(unittest.TestCase):
+    def test_docs_sensitivity_request_access(self):
+        inv = {("Support", "S"): {
+            "Track": "Support", "Data Source": "S",
+            "Docs": "https://support.access-ci.org/api-docs/events",
+            "Sensitivity": "Low", "How to request access": "Ask the Support team",
+        }}
+        fm, _ = s2m.build_frontmatter("S", "Support", [], inv)
+        self.assertEqual(fm["docs_url"], "https://support.access-ci.org/api-docs/events")
+        self.assertEqual(fm["sensitivity"], "Low")
+        self.assertEqual(fm["how_to_request_access"], "Ask the Support team")
+
+
+class TestMergeFrontmatter(unittest.TestCase):
+    """Regenerating over an existing file: sheet-owned keys come from the sheet,
+    hand-curated keys and the existing id survive."""
+    def setUp(self):
+        self.existing = {
+            "id": "events", "name": "Events and Training", "track": "Support",
+            "description": "old desc", "api_endpoint": "https://old",
+            "dynamic": False, "use_cases": ["q?"],
+            "relationships": [{"type": "has_many", "target": "tags"}],
+            "mcp": {"available": True, "package": "@access-mcp/events",
+                    "tools": [{"name": "search_events", "method": "GET",
+                               "description": "Search"}]},
+            "fields": [{"name": "old_field", "type": "int", "access": "Public",
+                        "description": "d"}],
+        }
+
+    def test_sheet_keys_replace_curated_keys_survive(self):
+        sheet = {"id": "events_and_training", "name": "Events and Training",
+                 "track": "Support", "description": "new desc",
+                 "fields": [{"name": "title", "type": "varchar", "access": "Public",
+                             "description": "t"}]}
+        w = []
+        merged = s2m.merge_frontmatter(self.existing, sheet, w, "Support/Events")
+        self.assertEqual(merged["id"], "events")
+        self.assertEqual(merged["description"], "new desc")
+        self.assertEqual([f["name"] for f in merged["fields"]], ["title"])
+        self.assertEqual(merged["use_cases"], ["q?"])
+        self.assertEqual(merged["relationships"][0]["target"], "tags")
+        self.assertIs(merged["dynamic"], False)
+        self.assertNotIn("api_endpoint", merged)  # blank in sheet -> dropped
+        self.assertTrue(any("dropped 'api_endpoint'" in m for m in w))
+        self.assertEqual(list(merged)[:3], ["id", "name", "track"])  # order kept
+
+    def test_empty_sheet_fields_keep_curated_fields(self):
+        sheet = {"id": "events", "name": "Events and Training", "track": "Support",
+                 "description": "d", "fields": []}
+        w = []
+        merged = s2m.merge_frontmatter(self.existing, sheet, w, "Support/Events")
+        self.assertEqual(merged["fields"][0]["name"], "old_field")
+        self.assertTrue(any("no field rows" in m for m in w))
+
+    def test_mcp_tool_descriptions_ride_along(self):
+        sheet = {"id": "events", "name": "Events and Training", "track": "Support",
+                 "fields": [], "mcp": {"available": True,
+                                       "url": "https://mcp.access-ci.org/events/mcp",
+                                       "tools": [{"name": "search_events"},
+                                                 {"name": "get_event_by_id"}]}}
+        merged = s2m.merge_frontmatter(self.existing, sheet, [], "x")
+        tools = {t["name"]: t for t in merged["mcp"]["tools"]}
+        self.assertEqual(tools["search_events"]["method"], "GET")
+        self.assertEqual(tools["search_events"]["description"], "Search")
+        self.assertEqual(tools["get_event_by_id"], {"name": "get_event_by_id"})
+        self.assertEqual(merged["mcp"]["url"], "https://mcp.access-ci.org/events/mcp")
+        self.assertNotIn("package", merged["mcp"])
+
+    def test_mcp_notes_ride_along(self):
+        self.existing["mcp"] = {"available": False, "notes": "Too sensitive for MCP"}
+        sheet = {"id": "events", "name": "Events and Training", "track": "Support",
+                 "fields": [], "mcp": {"available": False}}
+        merged = s2m.merge_frontmatter(self.existing, sheet, [], "x")
+        self.assertEqual(merged["mcp"], {"available": False, "notes": "Too sensitive for MCP"})
+
+
+class TestInventoryOnlySources(unittest.TestCase):
+    def test_rows_missing_from_fields_tab_are_added_empty(self):
+        sources = {("Support", "Events"): {"track": "Support", "name": "Events", "fields": [1]}}
+        inv = {("Support", "Events"): {}, ("Support", "Chatbot"): {},
+               ("Support", "#NUM!"): {}, ("", ""): {}}
+        added = s2m.add_inventory_only_sources(sources, inv)
+        self.assertEqual(added, [("Support", "Chatbot")])
+        self.assertEqual(sources[("Support", "Chatbot")]["fields"], [])
+        self.assertNotIn(("Support", "#NUM!"), sources)
+
+
+class TestFindExisting(unittest.TestCase):
+    def setUp(self):
+        from pathlib import Path
+        self.entry = (Path("events.md"), {"id": "events", "name": "Events and Training",
+                                          "track": "Support"}, "")
+        self.by_id = {"events": self.entry}
+        self.by_name = {"Events and Training": [self.entry]}
+
+    def test_matches_by_id_or_name_within_track(self):
+        self.assertIs(s2m.find_existing(self.by_id, self.by_name, "events", "x", "Support"), self.entry)
+        self.assertIs(s2m.find_existing(self.by_id, self.by_name, "events_and_training",
+                                        "Events and Training", "Support"), self.entry)
+
+    def test_other_track_does_not_match(self):
+        self.assertIsNone(s2m.find_existing(self.by_id, self.by_name, "events",
+                                            "Events and Training", "Metrics"))
+
+    def test_same_name_two_tracks_each_find_their_own_file(self):
+        from pathlib import Path
+        metrics = (Path("publications.md"), {"id": "publications", "name": "Publications",
+                                             "track": "Metrics"}, "")
+        alloc = (Path("publications_allocations.md"),
+                 {"id": "publications_allocations", "name": "Publications",
+                  "track": "Allocations"}, "")
+        by_id = {"publications": metrics, "publications_allocations": alloc}
+        by_name = {"Publications": [metrics, alloc]}
+        self.assertIs(s2m.find_existing(by_id, by_name, "publications", "Publications", "Metrics"), metrics)
+        self.assertIs(s2m.find_existing(by_id, by_name, "publications", "Publications", "Allocations"), alloc)
+
+
+class TestRenderMarkdown(unittest.TestCase):
+    def test_body_preserved(self):
+        out = s2m.render_markdown({"id": "x", "name": "X"}, "## Overview\n\nHi\n")
+        self.assertTrue(out.startswith("---\nid: x\nname: X\n---\n\n## Overview"))
+        fm, body = s2m.split_frontmatter(out)
+        self.assertEqual(fm, {"id": "x", "name": "X"})
+        self.assertEqual(body, "## Overview\n\nHi")
+
+    def test_no_body(self):
+        self.assertEqual(s2m.render_markdown({"id": "x"}), "---\nid: x\n---\n")
 
 
 if __name__ == "__main__":

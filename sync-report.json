@@ -1,0 +1,60 @@
+{
+  "generated": "2026-09-14T19:35:06",
+  "fields_dir": "export/fields",
+  "inventory": "export/inventory.csv",
+  "warnings": [
+    "Skipped spreadsheet error heading '#NUM!' in ACCESS Data Source Inventory - ACO Fields.csv",
+    "Skipped spreadsheet error heading '#NUM!' in ACCESS Data Source Inventory - Allocations Fields.csv",
+    "Skipped spreadsheet error heading '#NUM!' in ACCESS Data Source Inventory - External Fields.csv",
+    "Operations/COManage/ACCESS Identity: sheet has no field rows; kept 5 curated field(s) \u2014 paste them into the sheet"
+  ],
+  "placeholder_rows": [
+    {
+      "track": "Metrics",
+      "source": "Graphical Visualizations of data avaible in XDMoD",
+      "name": "TODO (Computed from multiple API endpoint(s))"
+    },
+    {
+      "track": "Metrics",
+      "source": "NetSage",
+      "name": "TODO"
+    },
+    {
+      "track": "Metrics",
+      "source": "ACCESS Reports",
+      "name": "TODO (Reports are new)"
+    },
+    {
+      "track": "Metrics",
+      "source": "ACCESS User Monthly Reports",
+      "name": "TODO (Reports are new)"
+    },
+    {
+      "track": "Metrics",
+      "source": "ACCESS RP Monthly Reports",
+      "name": "TODO (Reports are new)"
+    }
+  ],
+  "not_in_inventory": [],
+  "not_in_fields_tab": [
+    {
+      "track": "Support",
+      "source": "Chatbot"
+    },
+    {
+      "track": "Support",
+      "source": "MATCH Services"
+    },
+    {
+      "track": "Support",
+      "source": "ACCESS Pegasus"
+    },
+    {
+      "track": "Support",
+      "source": "Website Analytics"
+    }
+  ],
+  "files_without_sheet_source": [
+    "data-sources/xdmod.md"
+  ]
+}

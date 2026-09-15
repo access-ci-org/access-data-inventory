@@ -21,6 +21,10 @@ allowed_values:
     - Resources
     - Operations
     - Metrics & Reporting
+    - Usage & Metrics
+    - Publications & Research
+    - Surveys & Feedback
+    - Support & Tickets
 
   track:
     - Support
@@ -28,6 +32,7 @@ allowed_values:
     - Allocations
     - ACO
     - Metrics
+    - External
 
   access_level:
     - Public
@@ -117,3 +122,4 @@ field_properties:
     - semantic_type
     - access_notes
     - notes
+    - authoritative_source

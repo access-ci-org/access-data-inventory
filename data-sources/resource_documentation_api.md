@@ -74,18 +74,20 @@ fields:
   authoritative_source: ACCESS Support Drupal
 category: Resources
 access_level: Public
-priority: Medium
+priority: High
 description: Team-authored documentation for ACCESS resource providers (login, file transfer, storage, queue specs, top software, datasets), with resource-group inheritance.
 notes: Detail responses include a content_hash for change detection. Documented on the portal at /api-docs/resources.
 storage_location: support.access-ci.org
 data_access_mechanism: API, Web
 api_endpoint: https://support.access-ci.org/api/1.0/resources
 refresh_frequency: Real-time
-query_capacity: Per-resource and per-group lookups
+query_capacity: high
 is_canonical: false
 canonical_source:
 - access_support_drupal
-- resource_information_cider
+- resource_description_cider
 mcp:
   available: false
+docs_url: https://support.access-ci.org/api-docs/resources
+sensitivity: Low
 ---

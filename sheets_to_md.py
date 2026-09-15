@@ -8,13 +8,28 @@ exist. The inventory CSV (optional, via -d) only enriches catalog-level
 metadata when a source name matches; an unmatched source is generated anyway
 with a warning. Nothing crashes on mismatch.
 
+Existing files in the output directory are updated in place, matched by id or
+by name: every sheet-owned key (see SHEET_OWNED_KEYS) is replaced from the
+sheet, while keys the sheet has no column for (use_cases, constraints,
+relationships, realms, mcp_authenticated, ...) and the markdown body are
+preserved. Every inventory row is written, including ones with no field rows
+yet (their file says so; pass --skip-empty to leave those out). An existing
+file whose sheet source has no field rows keeps its curated fields.
+
+Data problems are not fixed here and do not stop generation: they are written
+to sync-report.json, which generate.py folds into docs/data-quality.md so the
+team can see what to clean up in the sheet.
+
 Usage:
-    python3 sheets_to_md.py -f path/to/fields-dir [-d inventory.csv] [-o data-sources] [--dry-run]
+    python3 xlsx_to_csv.py "ACCESS Data Source Inventory.xlsx" -o export
+    python3 sheets_to_md.py -f export/fields -d export/inventory.csv [-o data-sources] [--dry-run]
 """
 import re
 import csv
 import sys
+import json
 import argparse
+from datetime import datetime
 from pathlib import Path
 
 import yaml
@@ -56,6 +71,14 @@ def normalize_access(value: str):
 def _truthy(value: str) -> bool:
     """Sheet booleans arrive as TRUE/FALSE or as 1/0 depending on the export."""
     return (value or "").strip().upper() in ("TRUE", "1")
+
+
+SPREADSHEET_ERRORS = ("#NUM!", "#REF!", "#N/A", "#VALUE!", "#DIV/0!", "#NAME?", "#ERROR!", "#NULL!")
+
+
+def is_error_cell(value: str) -> bool:
+    """A spreadsheet formula error (#NUM!, #REF!, ...) exported as text."""
+    return (value or "").strip().upper() in SPREADSHEET_ERRORS
 
 
 def is_placeholder_field(row: dict) -> bool:
@@ -124,35 +147,50 @@ def group_fields(rows):
     """Group field rows under their data source.
 
     A row with a non-blank 'Data Source' starts a new source. Subsequent rows
-    with a blank 'Data Source' are that source's fields. Placeholder rows are
-    collected into `skipped` rather than emitted.
+    with a blank 'Data Source' are that source's fields. TODO placeholder rows
+    are collected into `skipped` rather than emitted; fully blank rows (the
+    empty grid below the data) are ignored silently. A heading that is a
+    spreadsheet error value (a broken lookup formula) is collected into
+    `bad_headings` and its rows are dropped.
 
-    Returns (grouped: {source_name: [field_dict, ...]}, skipped: [(source, name), ...]).
+    Returns (grouped: {source_name: [field_dict, ...]},
+             skipped: [(source, name), ...],
+             bad_headings: [str, ...]).
     """
     grouped = {}
     skipped = []
+    bad_headings = []
     current = None
 
     for row in rows:
         ds = (row.get("Data Source") or "").strip()
         if ds:
+            if is_error_cell(ds):
+                bad_headings.append(ds)
+                current = None
+                continue
             current = ds
             grouped.setdefault(current, [])
             continue
         if current is None:
             continue  # field row before any source heading; ignore
         if is_placeholder_field(row):
-            skipped.append((current, (row.get("Name") or "").strip()))
+            name = (row.get("Name") or "").strip()
+            if name:
+                skipped.append((current, name))
             continue
         grouped[current].append(build_field(row))
 
-    return grouped, skipped
+    return grouped, skipped, bad_headings
 
 
 def read_fields_dir(fields_dir: Path):
     """Read every *.csv in fields_dir. Returns (sources, skipped, warnings).
 
-    sources: {source_name: {"track": str, "fields": [...]}}
+    sources: {(track, source_name): {"track": str, "name": str, "fields": [...]}}
+    Keyed by track as well as name because two tracks can list a source of the
+    same name (e.g. "Publications" under both Allocations and Metrics); the
+    inventory tab is keyed the same way.
     Track is parsed from the filename pattern '... - <Track> Fields.csv'.
     """
     sources = {}
@@ -166,15 +204,18 @@ def read_fields_dir(fields_dir: Path):
             continue
         with open(csv_path, newline="") as f:
             rows = list(csv.DictReader(f))
-        grouped, file_skipped = group_fields(rows)
+        grouped, file_skipped, bad_headings = group_fields(rows)
         skipped.extend((track, src, name) for src, name in file_skipped)
+        warnings.extend(
+            f"Skipped spreadsheet error heading {h!r} in {csv_path.name}" for h in bad_headings)
         for src_name, fields in grouped.items():
-            if src_name in sources:
+            key = (track, src_name)
+            if key in sources:
                 warnings.append(
                     f"Duplicate data source '{src_name}' (track {track}); merging fields")
-                sources[src_name]["fields"].extend(fields)
+                sources[key]["fields"].extend(fields)
             else:
-                sources[src_name] = {"track": track, "fields": fields}
+                sources[key] = {"track": track, "name": src_name, "fields": fields}
 
     return sources, skipped, warnings
 
@@ -203,6 +244,23 @@ def read_inventory(inventory_path: Path):
     return inv
 
 
+def add_inventory_only_sources(sources: dict, inventory: dict):
+    """Add inventory rows that appear in no Fields tab as field-less sources.
+
+    The catalog value of a row (description, access level, sensitivity) does
+    not depend on anyone having typed its fields yet. Returns the (track, name)
+    keys added, for reporting.
+    """
+    added = []
+    for (track, name) in inventory:
+        if not track or not name or is_error_cell(name):
+            continue
+        if (track, name) not in sources:
+            sources[(track, name)] = {"track": track, "name": name, "fields": []}
+            added.append((track, name))
+    return added
+
+
 def parse_canonical_sources(value: str):
     """Derive (is_canonical, canonical_source) from the inventory's
     'Canonical Sources' cell.
@@ -222,7 +280,10 @@ def parse_canonical_sources(value: str):
 def parse_mcp(inv_row: dict):
     """Parse the inventory 'MCP' cell into an mcp block.
 
-    Cell format: 'package | tool1, tool2, ...' (see md_to_sheet.mcp_cell).
+    Cell format: 'package | tool1, tool2, ...' (see md_to_sheet.mcp_cell). The
+    first segment is either an npm package ("@access-mcp/events") or, as the
+    sheet now records it, the server's URL ("https://mcp.access-ci.org/events/mcp");
+    a URL lands in `url`, anything else in `package`.
     Presence of any content => available: true; a package and/or a tool list are
     extracted. Per-tool method/description are not carried in the sheet, so tools
     round-trip as name-only entries. Falls back to a legacy 'MCP Available'
@@ -238,7 +299,9 @@ def parse_mcp(inv_row: dict):
     tool_names = [t.strip() for t in tools_part.split(",") if t.strip()]
 
     mcp = {"available": True}
-    if package:
+    if package.startswith(("http://", "https://")):
+        mcp["url"] = package
+    elif package:
         mcp["package"] = package
     if tool_names:
         mcp["tools"] = [{"name": n} for n in tool_names]
@@ -279,8 +342,11 @@ def build_frontmatter(source_name, track, fields, inventory):
             ("Storage Location", "storage_location"),     # where the data physically lives
             ("Data Access mechanism(s)", "data_access_mechanism"),  # how to get it
             ("API", "api_endpoint"),                      # endpoint URL (drives the [API] link)
+            ("Docs", "docs_url"),                         # human-readable API/service docs
             ("Refresh Frequency", "refresh_frequency"),   # how often it updates
             ("Query Capacity", "query_capacity"),         # query load it supports
+            ("Sensitivity", "sensitivity"),               # data sensitivity rating
+            ("How to request access", "how_to_request_access"),
         ):
             val = (inv_row.get(col) or "").strip()
             if val:
@@ -295,11 +361,109 @@ def build_frontmatter(source_name, track, fields, inventory):
     return fm, (inv_row is not None)
 
 
-def render_markdown(frontmatter: dict) -> str:
-    """Serialize frontmatter dict + empty body into a markdown file string."""
+def render_markdown(frontmatter: dict, body: str = "") -> str:
+    """Serialize frontmatter dict + markdown body into a markdown file string."""
     yaml_str = yaml.dump(frontmatter, sort_keys=False, default_flow_style=False,
                          allow_unicode=True, width=1000)
-    return f"---\n{yaml_str}---\n"
+    out = f"---\n{yaml_str}---\n"
+    if body.strip():
+        out += "\n" + body.strip("\n") + "\n"
+    return out
+
+
+# Frontmatter keys the sheet owns. On regeneration each is replaced from the
+# sheet, or dropped when the sheet cell is blank. Every other key found in an
+# existing file (use_cases, constraints, relationships, realms,
+# mcp_authenticated, dynamic, provides_data_for, ...) and the markdown body
+# are hand-curated, because the sheet has no column for them, and survive.
+SHEET_OWNED_KEYS = (
+    "name", "track", "fields", "category", "access_level", "priority",
+    "description", "notes", "storage_location", "data_access_mechanism",
+    "api_endpoint", "docs_url", "refresh_frequency", "query_capacity",
+    "sensitivity", "how_to_request_access", "is_canonical", "canonical_source",
+    "mcp",
+)
+
+
+def split_frontmatter(text: str):
+    """Split a markdown file into (frontmatter dict or None, body)."""
+    if not text.startswith("---"):
+        return None, text
+    end = text.index("---", 3)
+    fm = yaml.safe_load(text[3:end]) or {}
+    return fm, text[end + 3:].strip("\n")
+
+
+def load_existing(out_dir: Path):
+    """Index existing *.md in out_dir: by_id -> entry, by_name -> [entries].
+    An entry is (path, frontmatter, body). Names can repeat across tracks."""
+    by_id, by_name = {}, {}
+    for path in sorted(out_dir.glob("*.md")):
+        fm, body = split_frontmatter(path.read_text())
+        if not fm:
+            continue
+        entry = (path, fm, body)
+        if fm.get("id"):
+            by_id[str(fm["id"])] = entry
+        if fm.get("name"):
+            by_name.setdefault(str(fm["name"]).strip(), []).append(entry)
+    return by_id, by_name
+
+
+def find_existing(by_id: dict, by_name: dict, source_id: str, name: str, track: str):
+    """Locate the existing file for a sheet source: by id (plain or
+    track-suffixed), else by name, and only within the same track (two tracks
+    may both list "Publications")."""
+    candidates = [by_id.get(source_id), by_id.get(f"{source_id}_{slugify(track)}")]
+    candidates += by_name.get(name, [])
+    for entry in candidates:
+        if entry and str(entry[1].get("track", "")).strip() == track:
+            return entry
+    return None
+
+
+def merge_mcp_tools(sheet_mcp: dict, existing_mcp) -> dict:
+    """The sheet decides which tools exist; an existing tool's method and
+    description (not carried by the sheet) ride along when the name matches."""
+    prior = {t.get("name"): t for t in (existing_mcp or {}).get("tools") or []
+             if isinstance(t, dict)}
+    if sheet_mcp.get("tools"):
+        sheet_mcp["tools"] = [{**prior.get(t["name"], {}), **t} for t in sheet_mcp["tools"]]
+    if (existing_mcp or {}).get("notes"):
+        sheet_mcp["notes"] = existing_mcp["notes"]  # curated; no sheet column
+    return sheet_mcp
+
+
+def merge_frontmatter(existing: dict, sheet: dict, warnings: list, label: str) -> dict:
+    """Overlay sheet-owned keys onto an existing file's frontmatter.
+
+    Existing key order is kept so regeneration diffs stay small. The existing
+    id wins (files may carry a shorter id than the name slug). If the sheet has
+    no field rows for this source yet, curated fields are kept and reported.
+    """
+    sheet = dict(sheet)
+    if not sheet.get("fields"):
+        sheet.pop("fields", None)
+        if existing.get("fields"):
+            warnings.append(f"{label}: sheet has no field rows; kept {len(existing['fields'])} "
+                            f"curated field(s) — paste them into the sheet")
+    if "mcp" in sheet:
+        sheet["mcp"] = merge_mcp_tools(dict(sheet["mcp"]), existing.get("mcp"))
+
+    merged = {}
+    for key, value in existing.items():
+        if key not in SHEET_OWNED_KEYS or key == "id":
+            merged[key] = value
+        elif key in sheet:
+            merged[key] = sheet[key]
+        elif key == "fields":
+            merged[key] = value
+        elif value not in (None, "", [], {}):
+            warnings.append(f"{label}: dropped '{key}' (blank in sheet; was {value!r})")
+    for key, value in sheet.items():
+        if key not in merged and key != "id":
+            merged[key] = value
+    return merged
 
 
 def main():
@@ -313,6 +477,12 @@ def main():
                         help="Output directory for markdown files (default: data-sources)")
     parser.add_argument("--dry-run", action="store_true",
                         help="Report what would be written without writing files")
+    parser.add_argument("--skip-empty", action="store_true",
+                        help="Do not write sources that have no field rows yet "
+                             "(default: write them; an existing file is always updated)")
+    parser.add_argument("--report", type=str, default="sync-report.json",
+                        help="Where to write the JSON sync report generate.py reads "
+                             "for docs/data-quality.md (default: sync-report.json)")
     args = parser.parse_args()
 
     fields_dir = Path(args.fields)
@@ -321,28 +491,52 @@ def main():
 
     inventory = read_inventory(Path(args.data_sources)) if args.data_sources else None
     sources, skipped, warnings = read_fields_dir(fields_dir)
+    inventory_only = add_inventory_only_sources(sources, inventory) if inventory else []
 
     out_dir = Path(args.out)
     if not args.dry_run:
         out_dir.mkdir(parents=True, exist_ok=True)
 
+    by_id, by_name = load_existing(out_dir) if out_dir.is_dir() else ({}, {})
+    touched = set()
     written = 0
     unmatched = []
+    skipped_empty = []
     seen_ids = {}
-    for source_name, data in sorted(sources.items()):
-        fm, matched = build_frontmatter(source_name, data["track"], data["fields"], inventory)
+    for (track, source_name), data in sorted(sources.items()):
+        fm, matched = build_frontmatter(source_name, track, data["fields"], inventory)
         if inventory is not None and not matched:
-            unmatched.append((data["track"], source_name))
-        sid = fm["id"]
-        if sid in seen_ids and seen_ids[sid] != source_name:
-            warnings.append(f"id collision: '{source_name}' and '{seen_ids[sid]}' both -> {sid}")
-        seen_ids[sid] = source_name
-        out_path = out_dir / f"{sid}.md"
-        if args.dry_run:
-            print(f"[dry-run] would write {out_path} ({len(data['fields'])} fields)")
+            unmatched.append((track, source_name))
+
+        existing = find_existing(by_id, by_name, fm["id"], source_name, track)
+        body = ""
+        if existing:
+            out_path, old_fm, body = existing
+            touched.add(out_path)
+            fm = merge_frontmatter(old_fm, fm, warnings, f"{track}/{source_name}")
+        elif not data["fields"] and args.skip_empty:
+            skipped_empty.append((track, source_name))
+            continue
         else:
-            out_path.write_text(render_markdown(fm))
+            if fm["id"] in seen_ids or (out_dir / f"{fm['id']}.md").exists():
+                # Same name in another track: keep both, disambiguate by track.
+                fm["id"] = f"{fm['id']}_{slugify(track)}"
+                warnings.append(f"{track}/{source_name}: id collides with another track; using {fm['id']}")
+            out_path = out_dir / f"{fm['id']}.md"
+
+        sid = fm["id"]
+        if sid in seen_ids and seen_ids[sid] != (track, source_name):
+            warnings.append(f"id collision: {track}/{source_name} and "
+                            f"{'/'.join(seen_ids[sid])} both -> {sid}")
+        seen_ids[sid] = (track, source_name)
+        action = "update" if existing else "create"
+        if args.dry_run:
+            print(f"[dry-run] would {action} {out_path} ({len(fm.get('fields') or [])} fields)")
+        else:
+            out_path.write_text(render_markdown(fm, body))
         written += 1
+
+    stale = sorted({entry[0] for entry in by_id.values()} - touched)
 
     # Warnings to stderr so stdout stays clean.
     for w in warnings:
@@ -352,6 +546,28 @@ def main():
     for track, src in unmatched:
         print(f"WARNING: source '{src}' (track {track}) not found in inventory; "
               f"generated from fields only", file=sys.stderr)
+    if skipped_empty:
+        print(f"Skipped {len(skipped_empty)} source(s) with no field rows (--skip-empty): "
+              + ", ".join(f"{t}/{s}" for t, s in skipped_empty), file=sys.stderr)
+    for track, src in inventory_only:
+        print(f"NOTE: {track}/{src} is in the inventory tab but not in the {track} Fields tab",
+              file=sys.stderr)
+    for p in stale:
+        print(f"NOTE: {p} has no matching source in the sheet (left untouched)", file=sys.stderr)
+
+    if not args.dry_run and args.report:
+        report = {
+            "generated": datetime.now().isoformat(timespec="seconds"),
+            "fields_dir": str(fields_dir),
+            "inventory": args.data_sources,
+            "warnings": warnings,
+            "placeholder_rows": [{"track": t, "source": s, "name": n} for t, s, n in skipped],
+            "not_in_inventory": [{"track": t, "source": s} for t, s in unmatched],
+            "not_in_fields_tab": [{"track": t, "source": s} for t, s in inventory_only],
+            "files_without_sheet_source": [str(p) for p in stale],
+        }
+        Path(args.report).write_text(json.dumps(report, indent=2) + "\n")
+        print(f"Sync report written to {args.report}", file=sys.stderr)
 
     print(f"Wrote {written} data source file(s) to {out_dir}"
           f"{' (dry run)' if args.dry_run else ''}", file=sys.stderr)

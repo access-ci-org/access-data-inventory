@@ -90,13 +90,15 @@ refresh_frequency: Daily
 query_capacity: high
 is_canonical: false
 canonical_source:
-- resource_information_cider
+- resource_description_cider
 mcp:
   available: true
-  package: '@access-mcp/software-discovery'
+  url: https://mcp.access-ci.org/software-discovery/mcp
   tools:
   - name: search_software
   - name: list_all_software
   - name: get_software_details
   - name: compare_software_availability
+docs_url: https://support.access-ci.org/api-docs/sds
+sensitivity: Low
 ---

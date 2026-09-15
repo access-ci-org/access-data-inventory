@@ -5,3 +5,9 @@ __pycache__/
 docs/_site/
 docs/.jekyll-cache/
 docs/Gemfile.lock
+
+# Paste-into-Google-Sheet artifacts (canonical store is the Sheet)
+sheet-updates/
+
+# Local CSV export of the sheet (xlsx_to_csv.py output)
+export/

@@ -1,6 +1,6 @@
 {
-  "generated": "2026-06-26T19:30:58.186370",
-  "source_count": 11,
+  "generated": "2026-09-14T21:14:26.070556",
+  "source_count": 88,
   "sources": [
     {
       "id": "access_support_drupal",
@@ -10,15 +10,11 @@
       "track": "Support",
       "access_level": "Varies",
       "is_canonical": true,
-      "canonical_source": null,
       "api_endpoint": "https://support.access-ci.org",
       "dynamic": true,
       "priority": "High",
       "mcp": {
-        "available": false,
-        "package": null,
-        "tools": [],
-        "notes": "Backend canonical source; content exposed via specialized APIs and MCPs"
+        "available": false
       },
       "provides_data_for": [
         "announcements",
@@ -36,16 +32,14 @@
           "name": "nid",
           "type": "int",
           "access": "Public",
-          "required": true,
-          "primary_key": true,
           "description": "Drupal node ID",
-          "semantic_type": "entity_id"
+          "semantic_type": "entity_id",
+          "primary_key": true
         },
         {
           "name": "uuid",
           "type": "varchar",
           "access": "Public",
-          "required": true,
           "description": "Drupal UUID",
           "semantic_type": "uuid"
         },
@@ -53,16 +47,6 @@
           "name": "type",
           "type": "varchar",
           "access": "Public",
-          "required": true,
-          "allowed_values": [
-            "announcement",
-            "event",
-            "eventseries",
-            "eventinstance",
-            "affinity_group",
-            "page",
-            "article"
-          ],
           "description": "Drupal content type",
           "semantic_type": "entity_type"
         },
@@ -70,7 +54,6 @@
           "name": "title",
           "type": "varchar",
           "access": "Public",
-          "required": true,
           "description": "Content title",
           "semantic_type": "entity_name"
         },
@@ -85,7 +68,6 @@
           "name": "status",
           "type": "boolean",
           "access": "Internal Only",
-          "required": true,
           "description": "Published status",
           "semantic_type": "entity_status"
         },
@@ -93,7 +75,6 @@
           "name": "created",
           "type": "timestamp",
           "access": "Public",
-          "required": true,
           "description": "Content creation date",
           "semantic_type": "date_created"
         },
@@ -101,7 +82,6 @@
           "name": "changed",
           "type": "timestamp",
           "access": "Public",
-          "required": true,
           "description": "Last modification date",
           "semantic_type": "date_modified"
         },
@@ -109,9 +89,8 @@
           "name": "uid",
           "type": "int",
           "access": "Restricted",
-          "required": true,
-          "references": "users.user_id",
-          "description": "Author user ID"
+          "description": "Author user ID",
+          "references": "users.user_id"
         }
       ],
       "relationships": [
@@ -140,15 +119,236 @@
           "target": "users",
           "description": "Stores user accounts (Drupal users, linked to COManage)"
         }
-      ]
+      ],
+      "storage_location": "Drupal CMS database",
+      "data_access_mechanism": "Web",
+      "docs_url": "https://support.access-ci.org/api-docs",
+      "refresh_frequency": "realtime",
+      "query_capacity": "moderate",
+      "sensitivity": "High"
+    },
+    {
+      "id": "access_pegasus",
+      "name": "ACCESS Pegasus",
+      "track": "Support",
+      "fields": [],
+      "category": "Usage & Metrics",
+      "access_level": "Authenticated",
+      "priority": "Medium",
+      "description": "Workflow usage and execution data",
+      "refresh_frequency": "daily",
+      "is_canonical": true,
+      "mcp": {
+        "available": false
+      }
+    },
+    {
+      "id": "access_reports",
+      "name": "ACCESS Reports",
+      "track": "Metrics",
+      "fields": [],
+      "category": "Usage & Metrics",
+      "access_level": "Authenticated",
+      "priority": "Low",
+      "description": "Curated report w/ analysis",
+      "data_access_mechanism": "Web",
+      "sensitivity": "Medium",
+      "is_canonical": true,
+      "mcp": {
+        "available": false
+      }
+    },
+    {
+      "id": "access_rp_monthly_reports",
+      "name": "ACCESS RP Monthly Reports",
+      "track": "Metrics",
+      "fields": [],
+      "category": "Usage & Metrics",
+      "access_level": "Restricted",
+      "priority": "Low",
+      "description": "Curated report w/ analysis",
+      "data_access_mechanism": "Web",
+      "sensitivity": "Medium",
+      "is_canonical": true,
+      "mcp": {
+        "available": false
+      }
+    },
+    {
+      "id": "access_user_monthly_reports",
+      "name": "ACCESS User Monthly Reports",
+      "track": "Metrics",
+      "fields": [],
+      "category": "Usage & Metrics",
+      "access_level": "Restricted",
+      "priority": "Low",
+      "description": "Curated report w/ analysis",
+      "data_access_mechanism": "Web",
+      "sensitivity": "High",
+      "is_canonical": true,
+      "mcp": {
+        "available": false
+      }
+    },
+    {
+      "id": "access_xdmod_data_access_endpoints",
+      "name": "ACCESS XDMoD Data Access Endpoints",
+      "track": "Metrics",
+      "fields": [
+        {
+          "name": "Raw Data",
+          "type": "JSON",
+          "access": [
+            "Public",
+            "Authenticated"
+          ]
+        },
+        {
+          "name": "Aggregate Data",
+          "type": "JSON",
+          "access": [
+            "Public",
+            "Authenticated"
+          ]
+        },
+        {
+          "name": "Timeseries Data",
+          "type": "JSON",
+          "access": [
+            "Public",
+            "Authenticated"
+          ]
+        }
+      ],
+      "category": "Usage & Metrics",
+      "access_level": "Public and Authenticated",
+      "priority": "High",
+      "description": "Allocations Information,\nCompute Usage,\nHPC Job Performance & Power Data,\nScience Gateway Usage,\nResource Quality of service data (via Application Kernels),\nHPC Job Efficiency Analytics,\nCommercial and Non-Commercial Cloud Usage,\nOpen OnDemand Usage",
+      "storage_location": "XDMoD Datawarehouse",
+      "data_access_mechanism": "API, Web, MCP",
+      "docs_url": "https://open.xdmod.org/11.0/rest.html",
+      "refresh_frequency": "daily",
+      "sensitivity": "High",
+      "is_canonical": false,
+      "canonical_source": [
+        "batch_compute_log_file_from_resource_provider",
+        "amie_packet_from_resouce_provider",
+        "xras_data",
+        "cilogon_information"
+      ],
+      "mcp": {
+        "available": false
+      }
+    },
+    {
+      "id": "access_xdmod_data_catalog",
+      "name": "ACCESS XDMoD Data Catalog",
+      "track": "Metrics",
+      "fields": [
+        {
+          "name": "Catalog overview",
+          "type": "text",
+          "access": "Public",
+          "description": "Summary of XDMoD data catalog",
+          "required": true,
+          "semantic_type": "entity_summary"
+        },
+        {
+          "name": "Catalog name",
+          "type": "varchar",
+          "access": "Public",
+          "description": "Name of information in data catalog",
+          "required": true,
+          "semantic_type": "entity_name"
+        },
+        {
+          "name": "Description",
+          "type": "text",
+          "access": "Public",
+          "description": "Description of the data provided",
+          "required": true,
+          "semantic_type": "entity_description"
+        },
+        {
+          "name": "Realm",
+          "type": "varchar",
+          "access": "Public",
+          "description": "The XDMoD realm that provides the data",
+          "required": true,
+          "semantic_type": "entity_name"
+        },
+        {
+          "name": "Type",
+          "type": "varchar",
+          "access": "Public",
+          "description": "Is type of (Metric, Group By, Raw Data)",
+          "required": true,
+          "semantic_type": "entity_type"
+        }
+      ],
+      "access_level": "Public",
+      "priority": "High",
+      "description": "List of available statistics and dimensions",
+      "storage_location": "Metrics Website",
+      "data_access_mechanism": "API, MCP, Web",
+      "sensitivity": "Low",
+      "is_canonical": true,
+      "mcp": {
+        "available": false
+      }
+    },
+    {
+      "id": "access_xdmod_user_manual",
+      "name": "ACCESS XDMoD User Manual",
+      "track": "Metrics",
+      "fields": [
+        {
+          "name": "User Manual Pages",
+          "type": "text",
+          "access": "Public",
+          "description": "Webpages that provide documentation on using the XDMoD portal",
+          "required": true,
+          "semantic_type": "entity_description"
+        }
+      ],
+      "access_level": "Public",
+      "priority": "Medium",
+      "description": "XDMoD Web Portal Documentation",
+      "storage_location": "XDMoD Web Portal",
+      "data_access_mechanism": "MCP, Web",
+      "refresh_frequency": "static",
+      "sensitivity": "Low",
+      "is_canonical": true,
+      "mcp": {
+        "available": false
+      }
+    },
+    {
+      "id": "adoption_metrics",
+      "name": "Adoption Metrics",
+      "track": "ACO",
+      "fields": [],
+      "category": "Usage & Metrics",
+      "access_level": "Internal Only",
+      "priority": "Low",
+      "description": "Adoption tracking",
+      "notes": "This should only be tracking how many tools created or made available by the ACO are being adopted by other track teams of ACCESS",
+      "storage_location": "https://access-ci.atlassian.net/wiki/spaces/ACP/database/1648656385",
+      "data_access_mechanism": "Web",
+      "refresh_frequency": "static",
+      "query_capacity": "limited",
+      "is_canonical": true,
+      "mcp": {
+        "available": false
+      }
     },
     {
       "id": "affinity_groups",
       "name": "Affinity Groups",
-      "description": "Community groups organized by interest or domain",
+      "description": "Membership, events, announcements, KB resources",
       "category": "Community & Outreach",
       "track": "Support",
-      "access_level": "Public",
+      "access_level": "Public and Authenticated",
       "is_canonical": false,
       "canonical_source": [
         "access_support_drupal"
@@ -158,7 +358,7 @@
       "priority": "High",
       "mcp": {
         "available": true,
-        "package": "@access-mcp/affinity-groups",
+        "url": "https://mcp.access-ci.org/affinity-groups/mcp",
         "tools": [
           {
             "name": "search_affinity_groups",
@@ -192,46 +392,46 @@
       "fields": [
         {
           "name": "nid",
-          "required": true,
           "type": "int",
           "access": "Public",
-          "primary_key": true,
           "description": "Node ID",
-          "semantic_type": "entity_id"
+          "required": true,
+          "semantic_type": "entity_id",
+          "primary_key": true
         },
         {
           "name": "uuid",
-          "required": true,
           "type": "varchar",
           "access": "Public",
-          "mcp_name": "id",
           "description": "Unique identifier",
+          "required": true,
+          "mcp_name": "id",
           "semantic_type": "uuid"
         },
         {
           "name": "title",
           "type": "varchar",
           "access": "Public",
+          "description": "Group name",
           "required": true,
           "mcp_name": "name",
-          "description": "Group name",
           "semantic_type": "entity_name"
         },
         {
           "name": "body",
           "type": "text",
           "access": "Public",
-          "mcp_name": "description",
           "description": "Group description (HTML cleaned in MCP)",
+          "mcp_name": "description",
           "semantic_type": "entity_description"
         },
         {
           "name": "group_id",
           "type": "varchar",
           "access": "Public",
+          "description": "URL-friendly group identifier",
           "required": true,
           "mcp_name": "id",
-          "description": "URL-friendly group identifier",
           "semantic_type": "entity_id"
         },
         {
@@ -244,12 +444,8 @@
           "name": "category",
           "type": "varchar",
           "access": "Public",
-          "mcp_name": "category",
-          "allowed_values": [
-            "ACCESS_RP",
-            "Community"
-          ],
           "description": "Whether this is an RP-specific or community group",
+          "mcp_name": "category",
           "semantic_type": "entity_type"
         },
         {
@@ -263,16 +459,16 @@
           "name": "coordinator_id",
           "type": "int",
           "access": "Public",
-          "references": "users.user_id",
+          "description": "Group coordinator (exposed as name string in MCP)",
           "mcp_name": "coordinator",
-          "description": "Group coordinator (exposed as name string in MCP)"
+          "references": "users.user_id"
         },
         {
           "name": "slack_link",
           "type": "varchar",
           "access": "Public",
-          "mcp_name": "slack_link",
           "description": "Link to Slack channel",
+          "mcp_name": "slack_link",
           "semantic_type": "url_external"
         },
         {
@@ -300,8 +496,8 @@
           "name": "ask_ci_forum",
           "type": "varchar",
           "access": "Public",
-          "mcp_name": "ask_ci_forum",
           "description": "Link to Ask.CI forum topic",
+          "mcp_name": "ask_ci_forum",
           "semantic_type": "url_external"
         },
         {
@@ -362,15 +558,42 @@
           "through": "entity_tags",
           "description": "Groups can be tagged"
         }
-      ]
+      ],
+      "notes": "affinity-groups MCP exists",
+      "data_access_mechanism": "API, MCP, Web",
+      "refresh_frequency": "real-time",
+      "query_capacity": "high",
+      "sensitivity": "Medium"
+    },
+    {
+      "id": "allocations_projects",
+      "name": "Allocations/Projects",
+      "track": "Allocations",
+      "fields": [],
+      "category": "Usage & Metrics",
+      "access_level": "Authenticated",
+      "priority": "High",
+      "description": "Active projects; Resource allocations; PI info; Detailed Project info",
+      "notes": "allocations MCP exists",
+      "storage_location": "Data gathered from XRAS Databases",
+      "data_access_mechanism": "API, Web",
+      "api_endpoint": "https://api.xras.org/",
+      "docs_url": "https://api.xras.org/",
+      "refresh_frequency": "real-time",
+      "query_capacity": "high",
+      "sensitivity": "High",
+      "is_canonical": true,
+      "mcp": {
+        "available": false
+      }
     },
     {
       "id": "announcements",
       "name": "Announcements",
-      "description": "Resource provider and community announcements",
+      "description": "RP and community announcements",
       "category": "Community & Outreach",
       "track": "Support",
-      "access_level": "Public",
+      "access_level": "Public and Authenticated",
       "is_canonical": false,
       "canonical_source": [
         "access_support_drupal"
@@ -380,7 +603,7 @@
       "priority": "High",
       "mcp": {
         "available": true,
-        "package": "@access-mcp/announcements",
+        "url": "https://mcp.access-ci.org/announcements/mcp",
         "tools": [
           {
             "name": "search_announcements",
@@ -417,97 +640,87 @@
       "fields": [
         {
           "name": "nid",
-          "required": true,
           "type": "int",
           "access": "Public",
-          "primary_key": true,
           "description": "Node ID",
-          "semantic_type": "entity_id"
+          "required": true,
+          "semantic_type": "entity_id",
+          "primary_key": true
         },
         {
           "name": "uuid",
-          "required": true,
           "type": "varchar",
           "access": "Public",
-          "mcp_name": "uuid",
           "description": "Unique identifier",
+          "required": true,
+          "mcp_name": "uuid",
           "semantic_type": "uuid"
         },
         {
           "name": "title",
           "type": "varchar",
           "access": "Public",
+          "description": "Announcement title",
           "required": true,
           "mcp_name": "title",
-          "description": "Announcement title",
           "semantic_type": "entity_name"
         },
         {
           "name": "body",
-          "required": true,
           "type": "text",
           "access": "Public",
-          "mcp_name": "body",
           "description": "HTML content",
+          "required": true,
+          "mcp_name": "body",
           "semantic_type": "entity_description"
         },
         {
           "name": "summary",
           "type": "varchar",
           "access": "Public",
-          "mcp_name": "summary",
           "description": "Short summary text",
+          "mcp_name": "summary",
           "semantic_type": "entity_summary"
         },
         {
           "name": "published_date",
-          "required": true,
           "type": "date",
           "access": "Public",
-          "mcp_name": "published_date",
           "description": "When the announcement was published",
+          "required": true,
+          "mcp_name": "published_date",
           "semantic_type": "date_published"
         },
         {
           "name": "affiliation",
           "type": "varchar",
           "access": "Public",
-          "mcp_name": "affiliation",
-          "allowed_values": [
-            "ACCESS Collaboration",
-            "Community"
-          ],
           "description": "Whether this is an official ACCESS or community announcement",
+          "mcp_name": "affiliation",
           "semantic_type": "affiliation"
         },
         {
           "name": "external_link",
           "type": "varchar",
           "access": "Public",
-          "mcp_name": "external_link",
           "description": "Link to external resource",
+          "mcp_name": "external_link",
           "semantic_type": "url_external"
         },
         {
           "name": "where_to_share",
           "type": "text",
           "access": "Internal Only",
-          "mcp_name": "where_to_share",
-          "allowed_values": [
-            "Announcements page",
-            "Bi-Weekly Digest",
-            "Affinity Group page",
-            "Email to Affinity Group"
-          ],
-          "description": "Distribution channels for this announcement"
+          "description": "Distribution channels for this announcement",
+          "mcp_name": "where_to_share"
         },
         {
           "name": "affinity_group_id",
           "type": "int",
           "access": "Public",
+          "description": "Associated affinity group",
           "mcp_name": "affinity_group",
-          "references": "affinity_groups.nid",
-          "description": "Associated affinity group"
+          "references": "affinity_groups.nid"
         },
         {
           "name": "image_id",
@@ -530,24 +743,95 @@
           "through": "entity_tags",
           "description": "Announcements can be tagged for categorization"
         }
-      ]
+      ],
+      "notes": "announcements MCP exists",
+      "data_access_mechanism": "API, MCP, Web",
+      "docs_url": "https://support.access-ci.org/api-docs/announcements",
+      "refresh_frequency": "real-time",
+      "query_capacity": "high",
+      "sensitivity": "Low"
+    },
+    {
+      "id": "annual_report_data",
+      "name": "Annual Report Data",
+      "track": "Allocations",
+      "fields": [],
+      "category": "Publications & Research",
+      "access_level": "Public",
+      "priority": "High",
+      "description": "Users; Institutions; Academic status; Allocation counts; Projects; Usage; Documents; Abstracts; FOS; Publications; RPs utilized",
+      "notes": "https://kilthub.cmu.edu/articles/report/ACCESS_Allocations_PY3_Annual_Report/28950569; allocations MCP covers some",
+      "storage_location": "Data gathered from XRAS Databases",
+      "data_access_mechanism": "Web",
+      "refresh_frequency": "annually",
+      "query_capacity": "unknown",
+      "sensitivity": "N/A",
+      "is_canonical": true,
+      "mcp": {
+        "available": false
+      }
+    },
+    {
+      "id": "ccep_awards_community_grant",
+      "name": "CCEP Awards (Community Grant)",
+      "track": "Support",
+      "fields": [],
+      "category": "Community & Outreach",
+      "access_level": "Internal Only",
+      "priority": "Low",
+      "description": "Applicants; Institution; Amount awarded; Fund usage",
+      "refresh_frequency": "static",
+      "is_canonical": true,
+      "mcp": {
+        "available": false
+      }
+    },
+    {
+      "id": "chatbot",
+      "name": "Chatbot",
+      "track": "Support",
+      "fields": [],
+      "category": "Support & Tickets",
+      "access_level": "Internal Only",
+      "priority": "Medium",
+      "description": "Questions; Answers; Ratings",
+      "notes": "Answers that are incorrect could be used to improve documentation.",
+      "refresh_frequency": "daily",
+      "is_canonical": true,
+      "mcp": {
+        "available": false
+      }
+    },
+    {
+      "id": "cilogon",
+      "name": "ciLogon",
+      "track": "Operations",
+      "fields": [],
+      "category": "Users & Identity",
+      "access_level": "Sensitive",
+      "priority": "N/A",
+      "description": "Authentication logs",
+      "notes": "Not suitable for AI",
+      "is_canonical": true,
+      "mcp": {
+        "available": false
+      }
     },
     {
       "id": "comanage",
       "name": "COManage/ACCESS Identity",
-      "description": "User identity information",
+      "description": "Identity information; Teragrid.org identities",
       "category": "Users & Identity",
       "track": "Operations",
       "access_level": "Sensitive",
-      "is_canonical": true,
-      "canonical_source": null,
-      "api_endpoint": null,
+      "is_canonical": false,
+      "canonical_source": [
+        "database"
+      ],
       "dynamic": false,
-      "priority": "Low",
+      "priority": "N/A",
       "mcp": {
         "available": false,
-        "package": null,
-        "tools": [],
         "notes": "Identity data is sensitive and not suitable for AI/MCP exposure"
       },
       "use_cases": [
@@ -618,7 +902,28 @@
           "target": "event_registrations",
           "description": "Users register for events"
         }
-      ]
+      ],
+      "notes": "Not suitable for AI; identity data"
+    },
+    {
+      "id": "community_surveys",
+      "name": "Community Surveys",
+      "track": "ACO",
+      "fields": [],
+      "category": "Surveys & Feedback",
+      "access_level": "Restricted",
+      "priority": "Low",
+      "description": "Community feedback; Section/group info",
+      "storage_location": "Eval SC Folder",
+      "refresh_frequency": "annually",
+      "query_capacity": "limited",
+      "is_canonical": false,
+      "canonical_source": [
+        "google_drive"
+      ],
+      "mcp": {
+        "available": false
+      }
     },
     {
       "id": "content_api",
@@ -695,18 +1000,180 @@
       ],
       "category": "Content Management",
       "access_level": "Public",
-      "priority": "Medium",
+      "priority": "High",
       "description": "Plain-text page content and a discovery index for ACCESS Support pages, for RAG ingestion and search syndication.",
       "notes": "Responses include content_hash (SHA-256 of extracted text) and last_modified for incremental ingestion. Documented on the portal at /api-docs/content.",
       "storage_location": "support.access-ci.org",
       "data_access_mechanism": "API, Web",
       "api_endpoint": "https://support.access-ci.org/.well-known/content-index.json",
       "refresh_frequency": "Real-time",
-      "query_capacity": "Per-page by node ID or path alias",
+      "query_capacity": "high",
       "is_canonical": false,
       "canonical_source": [
         "access_support_drupal"
       ],
+      "mcp": {
+        "available": false
+      },
+      "docs_url": "https://support.access-ci.org/api-docs/content",
+      "sensitivity": "Low"
+    },
+    {
+      "id": "cssn_roles_skills_interests",
+      "name": "CSSN Roles/skills/Interests",
+      "track": "Support",
+      "fields": [],
+      "category": "Community & Outreach",
+      "access_level": "Authenticated",
+      "priority": "Medium",
+      "description": "Taxonomy for skills/interests and roles in the community",
+      "data_access_mechanism": "Web",
+      "refresh_frequency": "real-time",
+      "query_capacity": "high",
+      "is_canonical": true,
+      "mcp": {
+        "available": false
+      }
+    },
+    {
+      "id": "current_projects",
+      "name": "Current Projects",
+      "track": "Allocations",
+      "fields": [],
+      "category": "Publications & Research",
+      "access_level": "Public",
+      "priority": "Medium",
+      "description": "Active Projects; Resource Allocations; PI Info",
+      "storage_location": "Data gathered from XRAS Databases",
+      "data_access_mechanism": "API, Web",
+      "api_endpoint": "https://allocations.access-ci.org/current-projects",
+      "refresh_frequency": "real-time",
+      "query_capacity": "high",
+      "sensitivity": "N/A",
+      "is_canonical": true,
+      "mcp": {
+        "available": false
+      }
+    },
+    {
+      "id": "eab_action_items",
+      "name": "EAB Action Items",
+      "track": "ACO",
+      "fields": [],
+      "category": "Governance & Planning",
+      "access_level": "Internal Only",
+      "priority": "Low",
+      "description": "Action items accepted by the EC - tracking and implementation",
+      "notes": "Will be transistioned to JIRA PY5 Q1 hopefully - is Medium user facing priority because recommendations from the EAB are usually pertinent to users",
+      "storage_location": "https://docs.google.com/spreadsheets/d/1CtAMssCnj8RNfWk7M7K4RvZG-rBdNJsuFseFVQWuP5s/edit?gid=0#gid=0",
+      "data_access_mechanism": "Web",
+      "refresh_frequency": "weekly",
+      "query_capacity": "limited",
+      "is_canonical": false,
+      "canonical_source": [
+        "google_sheets"
+      ],
+      "mcp": {
+        "available": false
+      }
+    },
+    {
+      "id": "eab_ec_reports",
+      "name": "EAB-EC Reports",
+      "track": "ACO",
+      "fields": [],
+      "category": "Governance & Planning",
+      "access_level": "Internal Only",
+      "priority": "Low",
+      "description": "EAB recommendations to EC and responses",
+      "notes": "Will be transistioned to JIRA PY5 Q1 hopefully - is Medium user facing priority because recommendations from the EAB are usually pertinent to users",
+      "storage_location": "EAB Meeting Folder",
+      "data_access_mechanism": "Web",
+      "refresh_frequency": "quarterly",
+      "query_capacity": "moderate",
+      "is_canonical": false,
+      "canonical_source": [
+        "google_sheets"
+      ],
+      "mcp": {
+        "available": false
+      }
+    },
+    {
+      "id": "eab_registration_attendance",
+      "name": "EAB Registration/Attendance",
+      "track": "ACO",
+      "fields": [],
+      "category": "Governance & Planning",
+      "access_level": "Restricted",
+      "priority": "Low",
+      "description": "Registrations; Attendance; Ideas generated",
+      "notes": "External Advisory Board - will be porting to JIRA hopefully during PY5 Q1\nAttendace is tracked mannually in each wiki meeting page",
+      "storage_location": "EAB Wiki: attendance tracked in each meeting page",
+      "data_access_mechanism": "Unknown",
+      "refresh_frequency": "quarterly",
+      "query_capacity": "moderate",
+      "is_canonical": false,
+      "canonical_source": [
+        "ideas_generated_google_sheets"
+      ],
+      "mcp": {
+        "available": false
+      }
+    },
+    {
+      "id": "eab_survey",
+      "name": "EAB Survey",
+      "track": "ACO",
+      "fields": [],
+      "category": "Surveys & Feedback",
+      "access_level": "Restricted",
+      "priority": "Low",
+      "description": "Survey responses",
+      "storage_location": "EAB Meeting Folder",
+      "data_access_mechanism": "Web",
+      "refresh_frequency": "quarterly",
+      "query_capacity": "limited",
+      "is_canonical": false,
+      "canonical_source": [
+        "google_drive"
+      ],
+      "mcp": {
+        "available": false
+      }
+    },
+    {
+      "id": "engagement_tracker",
+      "name": "Engagement Tracker",
+      "track": "ACO",
+      "fields": [],
+      "category": "Usage & Metrics",
+      "access_level": "Internal Only",
+      "priority": "Medium",
+      "description": "Engagement metrics - tracking how many conferences and meetings ACO, EC go to and engage with users",
+      "storage_location": "https://docs.google.com/spreadsheets/d/1_EXKUOXmY-TVkDWaHR1-SuiKt404uGEnGSr6uQCkwzw/edit?gid=0#gid=0",
+      "data_access_mechanism": "Web",
+      "refresh_frequency": "real-time",
+      "query_capacity": "high",
+      "is_canonical": false,
+      "canonical_source": [
+        "google_sheets"
+      ],
+      "mcp": {
+        "available": false
+      }
+    },
+    {
+      "id": "eval_team_surveys",
+      "name": "Eval Team Surveys",
+      "track": "Operations",
+      "fields": [],
+      "category": "Surveys & Feedback",
+      "access_level": "Restricted",
+      "priority": "Low",
+      "description": "Community; Staff; RP survey data",
+      "notes": "Received from Eval team",
+      "is_canonical": true,
       "mcp": {
         "available": false
       }
@@ -718,16 +1185,14 @@
       "category": "Events & Training",
       "track": "Support",
       "access_level": "Restricted",
-      "is_canonical": true,
-      "canonical_source": null,
-      "api_endpoint": null,
+      "is_canonical": false,
+      "canonical_source": [
+        "access_support_drupal"
+      ],
       "dynamic": false,
       "priority": "Medium",
       "mcp": {
-        "available": false,
-        "package": null,
-        "tools": [],
-        "notes": "Contains PII; partial coverage via events MCP"
+        "available": false
       },
       "use_cases": [
         "How many people registered for a specific event?",
@@ -748,47 +1213,41 @@
       "fields": [
         {
           "name": "registration_id",
-          "required": true,
           "type": "varchar",
           "access": "Restricted",
-          "primary_key": true,
           "description": "Registration record ID",
-          "semantic_type": "entity_id"
+          "required": true,
+          "semantic_type": "entity_id",
+          "primary_key": true
         },
         {
           "name": "event_id",
-          "required": true,
           "type": "int",
           "access": "Restricted",
-          "references": "events.id",
-          "description": "Associated event"
+          "description": "Associated event",
+          "required": true,
+          "references": "events.id"
         },
         {
           "name": "user_id",
-          "required": true,
           "type": "varchar",
           "access": "Restricted",
-          "references": "users.user_id",
-          "description": "Registered user"
+          "description": "Registered user",
+          "required": true,
+          "references": "users.user_id"
         },
         {
           "name": "registration_date",
-          "required": true,
           "type": "timestamp",
           "access": "Restricted",
           "description": "When the registration was submitted",
+          "required": true,
           "semantic_type": "date_created"
         },
         {
           "name": "attendance_status",
           "type": "varchar",
           "access": "Restricted",
-          "allowed_values": [
-            "registered",
-            "attended",
-            "no_show",
-            "cancelled"
-          ],
           "description": "Registration and attendance status",
           "semantic_type": "entity_status"
         },
@@ -840,7 +1299,9 @@
           "field": "user_id",
           "description": "Each registration is linked to a user"
         }
-      ]
+      ],
+      "storage_location": "ACCESS Support Drupal",
+      "data_access_mechanism": "Web"
     },
     {
       "id": "events",
@@ -858,7 +1319,7 @@
       "priority": "High",
       "mcp": {
         "available": true,
-        "package": "@access-mcp/events",
+        "url": "https://mcp.access-ci.org/events/mcp",
         "tools": [
           {
             "name": "search_events",
@@ -886,110 +1347,95 @@
       "fields": [
         {
           "name": "id",
-          "required": true,
           "type": "int",
           "access": "Public",
-          "primary_key": true,
           "description": "Event ID",
-          "semantic_type": "entity_id"
+          "required": true,
+          "semantic_type": "entity_id",
+          "primary_key": true
         },
         {
           "name": "uuid",
-          "required": true,
           "type": "varchar",
           "access": "Public",
           "description": "Unique identifier",
+          "required": true,
           "semantic_type": "uuid"
         },
         {
           "name": "title",
           "type": "varchar",
           "access": "Public",
+          "description": "Event title",
           "required": true,
           "mcp_name": "title",
-          "description": "Event title",
           "semantic_type": "entity_name"
         },
         {
           "name": "description",
           "type": "text",
           "access": "Public",
-          "mcp_name": "description",
           "description": "Event description",
+          "mcp_name": "description",
           "semantic_type": "entity_description"
         },
         {
           "name": "event_type",
           "type": "varchar",
           "access": "Public",
+          "description": "Type of event",
           "required": true,
           "mcp_name": "type",
-          "allowed_values": [
-            "Conference",
-            "Training",
-            "Office Hours",
-            "Other"
-          ],
-          "description": "Type of event",
           "semantic_type": "entity_type"
         },
         {
           "name": "skill_level",
           "type": "varchar",
           "access": "Public",
-          "mcp_name": "skill",
-          "allowed_values": [
-            "Beginner",
-            "Intermediate",
-            "Advanced"
-          ],
           "description": "Target skill level for attendees",
+          "mcp_name": "skill",
           "semantic_type": "skill_level"
         },
         {
           "name": "affiliation",
           "type": "varchar",
           "access": "Public",
-          "allowed_values": [
-            "ACCESS Collaboration",
-            "Community"
-          ],
           "description": "Whether this is an official ACCESS or community event",
           "semantic_type": "affiliation"
         },
         {
           "name": "start_date",
-          "required": true,
           "type": "timestamp",
           "access": "Public",
-          "mcp_name": "start_date",
           "description": "Event start date and time",
+          "required": true,
+          "mcp_name": "start_date",
           "semantic_type": "date_start"
         },
         {
           "name": "end_date",
           "type": "timestamp",
           "access": "Public",
-          "mcp_name": "end_date",
           "description": "Event end date and time",
+          "mcp_name": "end_date",
           "semantic_type": "date_end"
         },
         {
           "name": "duration_hours",
           "type": "decimal",
           "access": "Public",
+          "description": "Calculated duration in hours",
           "computed": true,
           "mcp_name": "duration_hours",
-          "description": "Calculated duration in hours",
           "semantic_type": "duration"
         },
         {
           "name": "starts_in_hours",
           "type": "decimal",
           "access": "Public",
+          "description": "Hours until event starts (negative if past)",
           "computed": true,
           "mcp_name": "starts_in_hours",
-          "description": "Hours until event starts (negative if past)",
           "semantic_type": "time_relative"
         },
         {
@@ -1003,24 +1449,24 @@
           "name": "virtual_meeting_link",
           "type": "varchar",
           "access": "Authenticated",
-          "mcp_name": "virtual_meeting_link",
           "description": "Zoom/Teams link - requires authentication",
+          "mcp_name": "virtual_meeting_link",
           "semantic_type": "url_meeting"
         },
         {
           "name": "registration_url",
           "type": "varchar",
           "access": "Public",
-          "mcp_name": "registration_url",
           "description": "Link to register for the event",
+          "mcp_name": "registration_url",
           "semantic_type": "url_registration"
         },
         {
           "name": "contact",
           "type": "varchar",
           "access": "Public",
-          "mcp_name": "contact",
           "description": "Contact person or email",
+          "mcp_name": "contact",
           "semantic_type": "contact_info"
         },
         {
@@ -1034,17 +1480,16 @@
           "name": "tags",
           "type": "text",
           "access": "Public",
-          "computed": true,
+          "description": "Discovery tags",
           "mcp_name": "tags",
-          "description": "Parsed from comma-separated tag list",
           "semantic_type": "tags"
         },
         {
           "name": "affinity_group_id",
           "type": "int",
           "access": "Public",
-          "references": "affinity_groups.nid",
-          "description": "Associated affinity group"
+          "description": "Associated affinity group",
+          "references": "affinity_groups.nid"
         }
       ],
       "relationships": [
@@ -1065,7 +1510,793 @@
           "target": "event_registrations",
           "description": "Registration records for this event"
         }
-      ]
+      ],
+      "storage_location": "ACCESS Support Drupal",
+      "data_access_mechanism": "API, MCP",
+      "docs_url": "https://support.access-ci.org/api-docs/events",
+      "refresh_frequency": "realtime",
+      "query_capacity": "high",
+      "sensitivity": "Low"
+    },
+    {
+      "id": "external_newsletter_content",
+      "name": "External Newsletter Content",
+      "track": "ACO",
+      "fields": [],
+      "category": "Community & Outreach",
+      "access_level": "Public",
+      "priority": "High",
+      "description": "Science content (stories),  what are RPs doing with ACCESS, what are users doing with ACCESS, articles and awards, what is going on with ACCESS, publications",
+      "storage_location": "These are all now on the wiki at: https://access-ci.atlassian.net/wiki/spaces/ACP/pages/104891248/ACCESS+Newsletter+Archive; also on access-ci.org/news",
+      "data_access_mechanism": "Web",
+      "refresh_frequency": "monthly",
+      "query_capacity": "moderate",
+      "is_canonical": false,
+      "canonical_source": [
+        "monthly_solicitation_to_working_groups",
+        "standing_committees",
+        "comms_team_and_resource_providers"
+      ],
+      "mcp": {
+        "available": false
+      }
+    },
+    {
+      "id": "financial_reports",
+      "name": "Financial Reports",
+      "track": "ACO",
+      "fields": [],
+      "category": "Governance & Planning",
+      "access_level": "Internal Only",
+      "priority": "Low",
+      "description": "Finances for ACO, EC, EAB, and SDSC",
+      "notes": "Not everyone will have access to U of I Banner - but the annotated reports are in Google Drive",
+      "storage_location": "Banner, Google Drive: https://drive.google.com/drive/u/0/folders/19u_GRcsIexcMujOJ1ckxxni-irxDK4sY?ths=true",
+      "data_access_mechanism": "Web",
+      "refresh_frequency": "monthly",
+      "query_capacity": "limited",
+      "is_canonical": false,
+      "canonical_source": [
+        "banner",
+        "google_drive"
+      ],
+      "mcp": {
+        "available": false
+      }
+    },
+    {
+      "id": "focus_groups_2023",
+      "name": "Focus Groups (2023)",
+      "track": "Support",
+      "fields": [],
+      "category": "Surveys & Feedback",
+      "access_level": "Internal Only",
+      "priority": "Low",
+      "description": "User experience feedback; Website review findings",
+      "notes": "Historical - 2023 website review",
+      "refresh_frequency": "annually",
+      "is_canonical": true,
+      "mcp": {
+        "available": false
+      }
+    },
+    {
+      "id": "graphical_visualizations_of_data_avaible_in_xdmod",
+      "name": "Graphical Visualizations of data avaible in XDMoD",
+      "track": "Metrics",
+      "fields": [],
+      "category": "Usage & Metrics",
+      "access_level": "Public and Authenticated",
+      "priority": "High",
+      "description": "Chart Configurations, List of available visualizations",
+      "data_access_mechanism": "API, MCP, Web",
+      "refresh_frequency": "daily",
+      "sensitivity": "High",
+      "is_canonical": true,
+      "mcp": {
+        "available": false
+      }
+    },
+    {
+      "id": "internal_newsletter_content",
+      "name": "Internal Newsletter Content",
+      "track": "ACO",
+      "fields": [],
+      "category": "Governance & Planning",
+      "access_level": "Internal Only",
+      "priority": "Low",
+      "description": "Staff-focused information",
+      "storage_location": "These are all now on the wiki at: https://access-ci.atlassian.net/wiki/spaces/ACP/pages/104891248/ACCESS+Newsletter+Archive",
+      "data_access_mechanism": "Web",
+      "refresh_frequency": "monthly",
+      "query_capacity": "moderate",
+      "is_canonical": false,
+      "canonical_source": [
+        "monthly_solicitation_to_working_groups",
+        "standing_committees",
+        "comms_team_and_resource_providers"
+      ],
+      "mcp": {
+        "available": false
+      }
+    },
+    {
+      "id": "internet2_flow_data",
+      "name": "Internet2 Flow Data",
+      "track": "Operations",
+      "fields": [],
+      "category": "Usage & Metrics",
+      "access_level": "Restricted",
+      "priority": "Low",
+      "description": "Network flow data",
+      "notes": "Received from Internet2",
+      "is_canonical": true,
+      "mcp": {
+        "available": false
+      }
+    },
+    {
+      "id": "match_services",
+      "name": "MATCH Services",
+      "track": "Support",
+      "fields": [],
+      "category": "Support & Tickets",
+      "access_level": "Restricted",
+      "priority": "Low",
+      "description": "Service requests and requestors",
+      "refresh_frequency": "monthly",
+      "is_canonical": true,
+      "mcp": {
+        "available": false
+      }
+    },
+    {
+      "id": "meeting_notes",
+      "name": "Meeting Notes",
+      "track": "ACO",
+      "fields": [],
+      "category": "Governance & Planning",
+      "access_level": "Internal Only",
+      "priority": "Low",
+      "description": "Notes; Attendance, decisions",
+      "notes": "Any group that takes notes in Confluence can query their notes",
+      "storage_location": "Confluence: https://access-ci.atlassian.net/wiki/spaces/ACP/pages/479199256/ACO+Easy+Access+Page",
+      "data_access_mechanism": "Web",
+      "refresh_frequency": "weekly",
+      "query_capacity": "high",
+      "is_canonical": false,
+      "canonical_source": [
+        "confluence"
+      ],
+      "mcp": {
+        "available": false
+      }
+    },
+    {
+      "id": "metrics_framework",
+      "name": "Metrics Framework",
+      "track": "Allocations",
+      "fields": [],
+      "category": "Usage & Metrics",
+      "access_level": "Public",
+      "priority": "High",
+      "description": "KPIs; Democratization Index; Ecosystem access time; RP Satisfaction; XRAS uptime; Feedback responsiveness; Ticket resolution; Staff satisfaction",
+      "notes": "https://link.springer.com/article/10.1007/s42979-024-02787-4",
+      "data_access_mechanism": "Web",
+      "query_capacity": "unknown",
+      "is_canonical": true,
+      "mcp": {
+        "available": false
+      }
+    },
+    {
+      "id": "nagios",
+      "name": "Nagios",
+      "track": "Operations",
+      "fields": [],
+      "category": "Resources",
+      "access_level": "Internal Only",
+      "priority": "Low",
+      "description": "Monitoring data",
+      "is_canonical": true,
+      "mcp": {
+        "available": false
+      }
+    },
+    {
+      "id": "nairr_underutilization_surveys",
+      "name": "NAIRR Underutilization Surveys",
+      "track": "Support",
+      "fields": [],
+      "category": "Surveys & Feedback",
+      "access_level": "Restricted",
+      "priority": "Low",
+      "description": "Resource; Reason for underutilization; Support needs",
+      "notes": "November 2024 survey",
+      "refresh_frequency": "annually",
+      "is_canonical": true,
+      "mcp": {
+        "available": false
+      }
+    },
+    {
+      "id": "nairr_underutilized_allocations",
+      "name": "NAIRR Underutilized Allocations",
+      "track": "Support",
+      "fields": [],
+      "category": "Surveys & Feedback",
+      "access_level": "Restricted",
+      "priority": "Low",
+      "description": "1:1 meeting notes; Resource; Reasons; Support needs",
+      "notes": "Ongoing 2025; threshold 2000 SU",
+      "refresh_frequency": "annually",
+      "is_canonical": true,
+      "mcp": {
+        "available": false
+      }
+    },
+    {
+      "id": "netsage",
+      "name": "NetSage",
+      "track": "Metrics",
+      "fields": [],
+      "category": "Usage & Metrics",
+      "access_level": "Public and Authenticated",
+      "priority": "Low",
+      "description": "Network Usage data",
+      "sensitivity": "Medium",
+      "is_canonical": true,
+      "mcp": {
+        "available": false
+      }
+    },
+    {
+      "id": "network_traffic",
+      "name": "Network Traffic",
+      "track": "Operations",
+      "fields": [],
+      "category": "Usage & Metrics",
+      "access_level": "Internal Only",
+      "priority": "Low",
+      "description": "Historical traffic volumes",
+      "is_canonical": true,
+      "mcp": {
+        "available": false
+      }
+    },
+    {
+      "id": "nsf_awards",
+      "name": "NSF Awards",
+      "track": "External",
+      "fields": [],
+      "category": "Publications & Research",
+      "access_level": "Public",
+      "priority": "High",
+      "description": "NSF funding data; Award details",
+      "notes": "nsf-awards MCP exists",
+      "is_canonical": true,
+      "mcp": {
+        "available": false
+      }
+    },
+    {
+      "id": "office_hours",
+      "name": "Office Hours",
+      "track": "Support",
+      "fields": [],
+      "category": "Support & Tickets",
+      "access_level": "Restricted",
+      "priority": "Low",
+      "description": "Attendees; Concerns raised",
+      "refresh_frequency": "weekly",
+      "is_canonical": true,
+      "mcp": {
+        "available": false
+      }
+    },
+    {
+      "id": "perfsonar",
+      "name": "perfSONAR",
+      "track": "Operations",
+      "fields": [],
+      "category": "Resources",
+      "access_level": "Public",
+      "priority": "Medium",
+      "description": "Network performance logs",
+      "notes": "Network performance data often public",
+      "is_canonical": true,
+      "mcp": {
+        "available": false
+      }
+    },
+    {
+      "id": "publications",
+      "name": "Publications",
+      "track": "Metrics",
+      "fields": [
+        {
+          "name": "XDMoD Citation Reference",
+          "type": "text",
+          "access": "Public",
+          "description": "Citation to use when referencing XDMoD",
+          "required": true,
+          "semantic_type": "entity_name"
+        },
+        {
+          "name": "Year",
+          "type": "int",
+          "access": "Public",
+          "description": "Year of publications",
+          "required": true,
+          "semantic_type": "date_published"
+        },
+        {
+          "name": "Publication Reference",
+          "type": "text",
+          "access": "Public",
+          "description": "Publication citation",
+          "required": true,
+          "semantic_type": "entity_name"
+        }
+      ],
+      "access_level": "Public",
+      "priority": "Low",
+      "description": "List of published papers and presentations",
+      "data_access_mechanism": "Web",
+      "refresh_frequency": "static",
+      "sensitivity": "Low",
+      "is_canonical": true,
+      "mcp": {
+        "available": false
+      }
+    },
+    {
+      "id": "publications_allocations",
+      "name": "Publications",
+      "track": "Allocations",
+      "fields": [],
+      "category": "Publications & Research",
+      "access_level": "Public",
+      "priority": "Low",
+      "description": "List of publications by ACCESS researchers",
+      "storage_location": "Data gathered from XRAS Databases",
+      "data_access_mechanism": "API, Web",
+      "api_endpoint": "https://allocations.access-ci.org/access-publications",
+      "refresh_frequency": "real-time",
+      "query_capacity": "high",
+      "sensitivity": "N/A",
+      "is_canonical": true,
+      "mcp": {
+        "available": false
+      }
+    },
+    {
+      "id": "publications_non_catalog_referenced_in_3",
+      "name": "Publications (non-catalog) - referenced in 3",
+      "track": "ACO",
+      "fields": [],
+      "category": "Publications & Research",
+      "access_level": "Public",
+      "priority": "Medium",
+      "description": "Publications not in main pub list",
+      "notes": "Not sure how this is different than line 22",
+      "data_access_mechanism": "Unknown",
+      "is_canonical": true,
+      "mcp": {
+        "available": false
+      }
+    },
+    {
+      "id": "qm_survey",
+      "name": "QM Survey",
+      "track": "ACO",
+      "fields": [],
+      "category": "Surveys & Feedback",
+      "access_level": "Restricted",
+      "priority": "Low",
+      "description": "Quarterly meeting survey",
+      "notes": "Results are stored in it's respective meeting folder",
+      "storage_location": "Quarterly Meeting Folder",
+      "refresh_frequency": "quarterly",
+      "query_capacity": "limited",
+      "is_canonical": false,
+      "canonical_source": [
+        "google_drive"
+      ],
+      "mcp": {
+        "available": false
+      }
+    },
+    {
+      "id": "quality_risk_assessment",
+      "name": "Quality Risk Assessment",
+      "track": "ACO",
+      "fields": [],
+      "category": "Operations & Security",
+      "access_level": "Internal Only",
+      "priority": "Low",
+      "description": "Quality/risk assessment",
+      "notes": "JIRA can be updated at any time, it is reviewed at least quarterly",
+      "storage_location": "JIRA:https://access-ci.atlassian.net/jira/core/projects/ATT/list?jql=project%20%3D%20ATT%20AND%20status%20!%3D%20%22Done%2FComplete%22%20ORDER%20BY%20assignee%20ASC%2C%20cf%5B10019%5D%20ASC",
+      "data_access_mechanism": "API, Unknown",
+      "refresh_frequency": "quarterly",
+      "query_capacity": "high",
+      "is_canonical": false,
+      "canonical_source": [
+        "jira_https_access_ci_atlassian_net_jira_core_projects_att_list_jql_project_20_3d_20att_20and_20status_20_3d_20_22done_2fcomplete_22_20order_20by_20assignee_20asc_2c_20cf_5b10019_5d_20asc"
+      ],
+      "mcp": {
+        "available": false
+      }
+    },
+    {
+      "id": "qualys",
+      "name": "Qualys",
+      "track": "Operations",
+      "fields": [],
+      "category": "Operations & Security",
+      "access_level": "Sensitive",
+      "priority": "N/A",
+      "description": "Host vulnerability data",
+      "notes": "Not suitable for AI; security scanning",
+      "is_canonical": true,
+      "mcp": {
+        "available": false
+      }
+    },
+    {
+      "id": "quarterly_annual_reports",
+      "name": "Quarterly/Annual Reports",
+      "track": "ACO",
+      "fields": [],
+      "category": "Governance & Planning",
+      "access_level": "Internal Only",
+      "priority": "Low",
+      "description": "Reports to NSF",
+      "storage_location": "Google Drive: https://drive.google.com/drive/u/0/folders/1NNImO8UjJWM59V3g2SdZTD2shGJjYiP5?ths=true",
+      "data_access_mechanism": "Web",
+      "refresh_frequency": "quarterly",
+      "query_capacity": "moderate",
+      "is_canonical": false,
+      "canonical_source": [
+        "google_drive",
+        "confluence"
+      ],
+      "mcp": {
+        "available": false
+      }
+    },
+    {
+      "id": "quarterly_report_data",
+      "name": "Quarterly Report Data",
+      "track": "ACO",
+      "fields": [],
+      "category": "Governance & Planning",
+      "access_level": "Internal Only",
+      "priority": "Low",
+      "description": "Publications; New publications; Turnaround time; EC decisions; Lessons learned, metrics, risks, task tracking, financials, outreach,",
+      "notes": "Not user-facing",
+      "storage_location": "Links are in the reports themselves - data is stored in locations listed above",
+      "data_access_mechanism": "Web",
+      "refresh_frequency": "quarterly",
+      "query_capacity": "high",
+      "is_canonical": false,
+      "canonical_source": [
+        "ga4",
+        "constant_contact",
+        "hootsuite",
+        "jira",
+        "confluence",
+        "google_drive"
+      ],
+      "mcp": {
+        "available": false
+      }
+    },
+    {
+      "id": "rac_registration_attendance",
+      "name": "RAC Registration/Attendance",
+      "track": "ACO",
+      "fields": [],
+      "category": "Events & Training",
+      "access_level": "Restricted",
+      "priority": "Low",
+      "description": "Registrations; Attendance",
+      "notes": "Researcher Advisory Committee - do they do registrations in Google forms?\nCindy: They do not register via Google Form. Attendace is tracked mannually in each wiki meeting page",
+      "storage_location": "RAC Wiki: attedance tracked in each meeting",
+      "data_access_mechanism": "Unknown",
+      "is_canonical": true,
+      "mcp": {
+        "available": false
+      }
+    },
+    {
+      "id": "request_statistics",
+      "name": "Request Statistics",
+      "track": "Allocations",
+      "fields": [],
+      "category": "Usage & Metrics",
+      "access_level": "Internal Only",
+      "priority": "Medium",
+      "description": "Request counts; Response times; Approval/decline rates",
+      "notes": "Per-RP data available but not actively published",
+      "storage_location": "Data gathered from XRAS Databases",
+      "data_access_mechanism": "API, Web",
+      "api_endpoint": "https://allocations.access-ci.org/",
+      "refresh_frequency": "real-time",
+      "query_capacity": "moderate",
+      "sensitivity": "High",
+      "is_canonical": true,
+      "mcp": {
+        "available": false
+      }
+    },
+    {
+      "id": "resource_description_cider",
+      "name": "Resource Description (CIDeR)",
+      "track": "Operations",
+      "fields": [
+        {
+          "name": "cider_resource_id",
+          "type": "int",
+          "access": "Public",
+          "description": "CiDeR primary key",
+          "required": true
+        },
+        {
+          "name": "info_resource_id",
+          "type": "varchar",
+          "access": "Public",
+          "description": "Global human meaningful resource ID",
+          "required": true,
+          "notes": "Used across all Operations information repositories to identify a resource"
+        },
+        {
+          "name": "info_site_id",
+          "type": "varchar",
+          "access": "Public",
+          "description": "Global human meaningful site ID",
+          "required": true,
+          "notes": "Used across all Operations information repositories to identify a site"
+        },
+        {
+          "name": "cider_type",
+          "type": "varchar",
+          "access": "Public",
+          "description": "Compute, Storage, Gateway, Network, etc.",
+          "required": true
+        },
+        {
+          "name": "organization_name",
+          "type": "varchar",
+          "access": "Public",
+          "required": true
+        },
+        {
+          "name": "organization_url",
+          "type": "varchar",
+          "access": "Public",
+          "required": true
+        },
+        {
+          "name": "organization_logo_url",
+          "type": "varchar",
+          "access": "Public",
+          "required": true
+        },
+        {
+          "name": "groups",
+          "type": "int",
+          "access": "Public",
+          "description": "list of resource groups this resource belongs to",
+          "required": true
+        },
+        {
+          "name": "resource_descriptive_name",
+          "type": "varchar",
+          "access": "Public",
+          "description": "Descriptive resource name",
+          "required": true
+        },
+        {
+          "name": "resource_description",
+          "type": "varchar",
+          "access": "Public",
+          "description": "Full resource description",
+          "required": true
+        },
+        {
+          "name": "project_affiliation",
+          "type": "varchar",
+          "access": "Public",
+          "description": "Resource affliation: ACCESS, NAIRR, etc.",
+          "required": true
+        },
+        {
+          "name": "latest_status",
+          "type": "varchar",
+          "access": "Public",
+          "description": "Coming soon, pre-production, production, post-production, or retired status",
+          "required": true
+        },
+        {
+          "name": "latest_status_start",
+          "type": "date",
+          "access": "Public",
+          "description": "What latest status starts",
+          "required": true
+        },
+        {
+          "name": "latest_status_end",
+          "type": "date",
+          "access": "Public",
+          "description": "What latest status ends",
+          "required": true
+        },
+        {
+          "name": "resource_status",
+          "type": "JSON",
+          "access": "Public",
+          "description": "Historical statuses with corresponding start and end dates",
+          "required": true
+        },
+        {
+          "name": "compute.recommended_use",
+          "type": "varchar",
+          "access": "Public",
+          "required": true
+        },
+        {
+          "name": "compute.access_description",
+          "type": "varchar",
+          "access": "Public",
+          "required": true
+        },
+        {
+          "name": "compute.use_guide_url",
+          "type": "varchar",
+          "access": "Public",
+          "required": true
+        },
+        {
+          "name": "compute.cpu_type",
+          "type": "varchar",
+          "access": "Public",
+          "required": true
+        },
+        {
+          "name": "compute.operating_system",
+          "type": "varchar",
+          "access": "Public",
+          "required": true
+        },
+        {
+          "name": "compute.gpu_description",
+          "type": "varchar",
+          "access": "Public",
+          "required": true
+        },
+        {
+          "name": "compute.recommended_use",
+          "type": "varchar",
+          "access": "Public",
+          "required": true
+        },
+        {
+          "name": "compute.job_manager",
+          "type": "varchar",
+          "access": "Public",
+          "required": true
+        },
+        {
+          "name": "compute.batch_system",
+          "type": "varchar",
+          "access": "Public",
+          "required": true
+        },
+        {
+          "name": "compute.interconnect",
+          "type": "varchar",
+          "access": "Public",
+          "required": true
+        },
+        {
+          "name": "compute.storage_network",
+          "type": "varchar",
+          "access": "Public",
+          "required": true
+        },
+        {
+          "name": "compute.machine_type",
+          "type": "varchar",
+          "access": "Public",
+          "required": true
+        },
+        {
+          "name": "compute.cpu_speed_ghz",
+          "type": "int",
+          "access": "Public",
+          "required": true
+        },
+        {
+          "name": "compute.platform_name",
+          "type": "varchar",
+          "access": "Public",
+          "required": true
+        },
+        {
+          "name": "compute.memory_per_cpu_gb",
+          "type": "int",
+          "access": "Public",
+          "required": true
+        },
+        {
+          "name": "compute.cpu_count_per_node",
+          "type": "int",
+          "access": "Public",
+          "required": true
+        },
+        {
+          "name": "compute.xsedenet_participation",
+          "type": "varchar",
+          "access": "Public",
+          "required": true
+        },
+        {
+          "name": "compute.node_count",
+          "type": "int",
+          "access": "Public",
+          "required": true
+        },
+        {
+          "name": "compute.supports_sensitive_data",
+          "type": "varchar",
+          "access": "Public",
+          "required": true
+        },
+        {
+          "name": "compute.sensitive_data_support_description",
+          "type": "varchar",
+          "access": "Public",
+          "required": true
+        },
+        {
+          "name": "compute.local_storage_per_node_gb",
+          "type": "int",
+          "access": "Public",
+          "required": true
+        },
+        {
+          "name": "storage.<multiple_attributes>",
+          "type": "int",
+          "access": "Public",
+          "required": true
+        },
+        {
+          "name": "gateway.<multiple_attributes>"
+        },
+        {
+          "name": "features",
+          "type": "JSON",
+          "access": "Public",
+          "description": "Contains feature id, name, description, category_types, and feature_category",
+          "required": true
+        }
+      ],
+      "category": "Resources",
+      "access_level": "Public",
+      "priority": "High",
+      "description": "Organizations, resource descriptions, and integration information for ACCESS resource providers.",
+      "notes": "Source of record for ACCESS resource/organization data. The Resource Documentation API and SDS draw on CiDeR resource identifiers.",
+      "storage_location": "operations.access-ci.org",
+      "data_access_mechanism": "API, Web",
+      "api_endpoint": "https://operations-api.access-ci.org/wh2/cider/v1/",
+      "refresh_frequency": "Daily",
+      "query_capacity": "high",
+      "is_canonical": true,
+      "mcp": {
+        "available": false
+      }
     },
     {
       "id": "resource_documentation_api",
@@ -1166,39 +2397,446 @@
       ],
       "category": "Resources",
       "access_level": "Public",
-      "priority": "Medium",
+      "priority": "High",
       "description": "Team-authored documentation for ACCESS resource providers (login, file transfer, storage, queue specs, top software, datasets), with resource-group inheritance.",
       "notes": "Detail responses include a content_hash for change detection. Documented on the portal at /api-docs/resources.",
       "storage_location": "support.access-ci.org",
       "data_access_mechanism": "API, Web",
       "api_endpoint": "https://support.access-ci.org/api/1.0/resources",
       "refresh_frequency": "Real-time",
-      "query_capacity": "Per-resource and per-group lookups",
+      "query_capacity": "high",
       "is_canonical": false,
       "canonical_source": [
         "access_support_drupal",
-        "resource_information_cider"
+        "resource_description_cider"
+      ],
+      "mcp": {
+        "available": false
+      },
+      "docs_url": "https://support.access-ci.org/api-docs/resources",
+      "sensitivity": "Low"
+    },
+    {
+      "id": "resource_integration_roadmaps_and_badges",
+      "name": "Resource Integration Roadmaps and Badges",
+      "track": "Operations",
+      "fields": [
+        {
+          "name": "Roadmap.badge_id",
+          "type": "int",
+          "access": "Public"
+        },
+        {
+          "name": "Roadmap.name",
+          "type": "varchar",
+          "access": "Public"
+        },
+        {
+          "name": "Roadmap.graphic",
+          "type": "image",
+          "access": "Public"
+        },
+        {
+          "name": "Roadmap.executive_summary",
+          "type": "text",
+          "access": "Public",
+          "description": "For RP leadership"
+        },
+        {
+          "name": "Roadmap.infrastructure_types",
+          "type": "varchar",
+          "access": "Public",
+          "description": "Types of infrastructure that can use this roadmap"
+        },
+        {
+          "name": "Roadmap.integration_coordinators",
+          "type": "varchar",
+          "access": "Public",
+          "description": "Coordinators"
+        },
+        {
+          "name": "Roadmap.status",
+          "type": "varchar",
+          "access": "Public",
+          "description": "Draft or Production"
+        },
+        {
+          "name": "Badge.badge_id",
+          "type": "int",
+          "access": "Public"
+        },
+        {
+          "name": "Badge.name",
+          "type": "varchar",
+          "access": "Public"
+        },
+        {
+          "name": "Badge.graphic",
+          "type": "image",
+          "access": "Public"
+        },
+        {
+          "name": "Badge.researcher_summary",
+          "type": "text",
+          "access": "Public",
+          "description": "For researching using the badges"
+        },
+        {
+          "name": "Badge.resource_provider_summary",
+          "type": "text",
+          "access": "Public",
+          "description": "Summary of what RPs provide and necessary support work"
+        },
+        {
+          "name": "Badge.verfication_summary",
+          "type": "text",
+          "access": "Public",
+          "description": "How is the badge verified"
+        },
+        {
+          "name": "Badge.verification_method",
+          "type": "varchar",
+          "access": "Public",
+          "description": "Manaul or Automated"
+        },
+        {
+          "name": "Badge.default_badge_access_url",
+          "type": "varchar",
+          "access": "Public",
+          "description": "URL for accessing this badge if the RP doesn't provide one"
+        },
+        {
+          "name": "Badge.default_badge_access_url_label",
+          "type": "varchar",
+          "access": "Public",
+          "description": "URL link label"
+        },
+        {
+          "name": "Task.task_id",
+          "type": "int",
+          "access": "Public"
+        },
+        {
+          "name": "Task.name",
+          "type": "varchar",
+          "access": "Public"
+        },
+        {
+          "name": "Task.technical_summary",
+          "type": "text",
+          "access": "Public",
+          "description": "Summary of what the RPs must do"
+        },
+        {
+          "name": "Task.implementor_roles",
+          "type": "varchar",
+          "access": "Public",
+          "description": "RP roles involved in implementation work"
+        },
+        {
+          "name": "Task.task_experts",
+          "type": "varchar",
+          "access": "Public",
+          "description": "Who can help with task"
+        },
+        {
+          "name": "Task.detailed_instructions_url",
+          "type": "varchar",
+          "access": "Public",
+          "description": "URL to task instructions"
+        },
+        {
+          "name": "Badge_Prerequisite_Badge.badge",
+          "type": "varchar",
+          "access": "Public"
+        },
+        {
+          "name": "Badge_Prerequisite_Badge.prerequisite_badge",
+          "type": "varchar",
+          "access": "Public"
+        },
+        {
+          "name": "Badge_Prerequisite_Badge.sequence_no",
+          "type": "int",
+          "access": "Public",
+          "description": "For ordering pre-requisites"
+        },
+        {
+          "name": "Roadmap_Badge.roadmap",
+          "type": "varchar",
+          "access": "Public"
+        },
+        {
+          "name": "Roadmap_Badge.badge",
+          "type": "varchar",
+          "access": "Public"
+        },
+        {
+          "name": "Roadmap_Badge.sequence_no",
+          "type": "int",
+          "access": "Public",
+          "description": "For ordering badges"
+        },
+        {
+          "name": "Roadmap_Badge.required",
+          "type": "boolean",
+          "access": "Public",
+          "description": "Is the badge required in this roadmap"
+        },
+        {
+          "name": "Badge_Task.badge",
+          "type": "varchar",
+          "access": "Public"
+        },
+        {
+          "name": "Badge_Task.task",
+          "type": "varchar",
+          "access": "Public"
+        },
+        {
+          "name": "Badge_Task.sequence_no",
+          "type": "int",
+          "access": "Public",
+          "description": "For ordering tasks"
+        },
+        {
+          "name": "Badge_Task.required",
+          "type": "boolean",
+          "access": "Public",
+          "description": "Is the task required in this badge"
+        },
+        {
+          "name": "Resource_Roadmap.info_resourceid",
+          "type": "varchar",
+          "access": "Public",
+          "description": "Which resource"
+        },
+        {
+          "name": "Resource_Roadmap.roadmap",
+          "type": "varchar",
+          "access": "Public"
+        },
+        {
+          "name": "Resource_Badge.info_resourceid",
+          "type": "varchar",
+          "access": "Public",
+          "description": "Which resource"
+        },
+        {
+          "name": "Resource_Badge.roadmap",
+          "type": "varchar",
+          "access": "Public"
+        },
+        {
+          "name": "Resource_Badge.badge",
+          "type": "varchar",
+          "access": "Public"
+        },
+        {
+          "name": "Resource_Badge.badge_access_url",
+          "type": "varchar",
+          "access": "Public",
+          "description": "URL for accessing this badge for a resource"
+        },
+        {
+          "name": "Resource_Badge_Worflow",
+          "access": "Public",
+          "description": "tracks resource-roadmap-badge status"
+        },
+        {
+          "name": "Resource_Badge_Task_Workflow",
+          "access": "Public",
+          "description": "tracks resource-roadmap-badge-task status"
+        }
+      ],
+      "category": "Resources",
+      "access_level": "Public",
+      "priority": "High",
+      "description": "Integration status, badges supported",
+      "data_access_mechanism": "API, Web",
+      "is_canonical": true,
+      "mcp": {
+        "available": false
+      }
+    },
+    {
+      "id": "resource_news_outages",
+      "name": "Resource News/Outages",
+      "track": "Operations",
+      "fields": [
+        {
+          "name": "News.Content",
+          "type": "text",
+          "access": "Public"
+        },
+        {
+          "name": "News.Start",
+          "type": "timestamp",
+          "access": "Public"
+        },
+        {
+          "name": "News.End",
+          "type": "timestamp",
+          "access": "Public"
+        },
+        {
+          "name": "News.Type",
+          "type": "varchar",
+          "access": "Public"
+        },
+        {
+          "name": "News.DistributionOptions",
+          "type": "varchar",
+          "access": "Public"
+        },
+        {
+          "name": "News.WebURL",
+          "type": "varchar",
+          "access": "Public"
+        },
+        {
+          "name": "News.Affiliation",
+          "type": "varchar",
+          "access": "Public"
+        },
+        {
+          "name": "News.Publisher",
+          "type": "varchar",
+          "access": "Public"
+        },
+        {
+          "name": "News_Associations",
+          "type": "varchar",
+          "access": "Public",
+          "description": "Associates news to infrastructure elements"
+        },
+        {
+          "name": "News_Publisher.OrganizationID",
+          "type": "varchar",
+          "access": "Public"
+        },
+        {
+          "name": "News_Publisher.OrganizationName",
+          "type": "varchar",
+          "access": "Public"
+        },
+        {
+          "name": "News_Publisher.NewsURNPrefix",
+          "type": "varchar",
+          "access": "Public"
+        }
+      ],
+      "category": "Resources",
+      "access_level": "Public",
+      "priority": "High",
+      "description": "Outages; Maintenance; Announcements",
+      "notes": "system-status MCP exists",
+      "data_access_mechanism": "API, Web",
+      "is_canonical": true,
+      "mcp": {
+        "available": false
+      }
+    },
+    {
+      "id": "rp_batch_scheduler_information_from_ipf",
+      "name": "RP batch scheduler information (from IPF)",
+      "track": "Operations",
+      "fields": [],
+      "category": "Resources",
+      "access_level": "Public",
+      "priority": "High",
+      "description": "Scheduler queue configuration but not queue contents or reservations",
+      "notes": "Scheduler and queue configurations can be public, but NO queue contents, job information, or reservation information can be shared as it may contain PII",
+      "data_access_mechanism": "API, Web",
+      "is_canonical": true,
+      "mcp": {
+        "available": false
+      }
+    },
+    {
+      "id": "rp_integration_effort",
+      "name": "RP Integration Effort",
+      "track": "Operations",
+      "fields": [],
+      "category": "Operations & Security",
+      "access_level": "TBD",
+      "priority": "Medium",
+      "description": "Time/effort for new RP integration",
+      "notes": "DATA NEEDED - requires cross-team input",
+      "is_canonical": true,
+      "mcp": {
+        "available": false
+      }
+    },
+    {
+      "id": "rp_software_modules_from_ipf",
+      "name": "RP software modules (from IPF)",
+      "track": "Operations",
+      "fields": [],
+      "category": "Resources",
+      "access_level": "Public",
+      "priority": "High",
+      "description": "Software catalog from resources",
+      "notes": "Part of software-discovery MCP",
+      "data_access_mechanism": "API, Web",
+      "is_canonical": true,
+      "mcp": {
+        "available": false
+      }
+    },
+    {
+      "id": "rp_support_effort",
+      "name": "RP Support Effort",
+      "track": "Operations",
+      "fields": [],
+      "category": "Operations & Security",
+      "access_level": "TBD",
+      "priority": "Medium",
+      "description": "Time/effort for ongoing RP support",
+      "notes": "DATA NEEDED - requires cross-team input",
+      "is_canonical": true,
+      "mcp": {
+        "available": false
+      }
+    },
+    {
+      "id": "rp_survey",
+      "name": "RP Survey",
+      "track": "ACO",
+      "fields": [],
+      "category": "Surveys & Feedback",
+      "access_level": "Restricted",
+      "priority": "Low",
+      "description": "Resource provider feedback",
+      "storage_location": "Eval SC Folder",
+      "refresh_frequency": "annually",
+      "query_capacity": "limited",
+      "is_canonical": false,
+      "canonical_source": [
+        "google_drive"
       ],
       "mcp": {
         "available": false
       }
     },
     {
-      "id": "resource_information_cider",
-      "name": "Resource Information (CIDeR)",
-      "track": "Operations",
+      "id": "sc_wg_reporting_schedules",
+      "name": "SC/WG Reporting Schedules",
+      "track": "ACO",
       "fields": [],
-      "category": "Resources",
-      "access_level": "Public",
-      "priority": "High",
-      "description": "Organizations, resource descriptions, and integration information for ACCESS resource providers.",
-      "notes": "Source of record for ACCESS resource/organization data. The Resource Documentation API and SDS draw on CiDeR resource identifiers.",
-      "storage_location": "operations.access-ci.org",
-      "data_access_mechanism": "API, Web",
-      "api_endpoint": "https://operations-api.access-ci.org/wh2/cider/v1/",
-      "refresh_frequency": "Daily",
-      "query_capacity": "high",
-      "is_canonical": true,
+      "category": "Governance & Planning",
+      "access_level": "Internal Only",
+      "priority": "N/A",
+      "description": "SC/WG interaction schedule with the EC",
+      "storage_location": "Confluence: https://access-ci.atlassian.net/wiki/spaces/ACP/pages/2024767490/ACCESS+Standing+Committee+RACI+Documents\nGoogle: https://drive.google.com/drive/u/0/folders/1O_TKTQtvBXL_8wbPdsDmBX4HoXKhPGDU?ths=true",
+      "data_access_mechanism": "Web",
+      "refresh_frequency": "weekly",
+      "query_capacity": "limited",
+      "is_canonical": false,
+      "canonical_source": [
+        "raci_in_confluence",
+        "google_doc"
+      ],
       "mcp": {
         "available": false
       }
@@ -1316,11 +2954,11 @@
       "query_capacity": "high",
       "is_canonical": false,
       "canonical_source": [
-        "resource_information_cider"
+        "resource_description_cider"
       ],
       "mcp": {
         "available": true,
-        "package": "@access-mcp/software-discovery",
+        "url": "https://mcp.access-ci.org/software-discovery/mcp",
         "tools": [
           {
             "name": "search_software"
@@ -1335,6 +2973,315 @@
             "name": "compare_software_availability"
           }
         ]
+      },
+      "docs_url": "https://support.access-ci.org/api-docs/sds",
+      "sensitivity": "Low"
+    },
+    {
+      "id": "service_index",
+      "name": "Service Index",
+      "track": "Operations",
+      "fields": [],
+      "category": "Resources",
+      "access_level": "Restricted",
+      "priority": "N/A",
+      "description": "Service catalog and status",
+      "notes": "Not suitable for AI",
+      "data_access_mechanism": "API",
+      "is_canonical": false,
+      "canonical_source": [
+        "database"
+      ],
+      "mcp": {
+        "available": false
+      }
+    },
+    {
+      "id": "social_media_reach",
+      "name": "Social Media Reach",
+      "track": "ACO",
+      "fields": [],
+      "category": "Community & Outreach",
+      "access_level": "Internal Only",
+      "priority": "Low",
+      "description": "Engagement metrics",
+      "notes": "user facing no - important to internal ACCESS and NSF yes",
+      "storage_location": "Is Dina the only one who can log into hootsuite for data?",
+      "data_access_mechanism": "Web",
+      "refresh_frequency": "real-time",
+      "query_capacity": "high",
+      "is_canonical": false,
+      "canonical_source": [
+        "hootsuite"
+      ],
+      "mcp": {
+        "available": false
+      }
+    },
+    {
+      "id": "staff_survey",
+      "name": "Staff Survey",
+      "track": "ACO",
+      "fields": [],
+      "category": "Surveys & Feedback",
+      "access_level": "Sensitive",
+      "priority": "Low",
+      "description": "Staff feedback",
+      "notes": "Staff PII/opinions",
+      "storage_location": "Eval SC Folder",
+      "refresh_frequency": "annually",
+      "query_capacity": "limited",
+      "is_canonical": false,
+      "canonical_source": [
+        "google_drive"
+      ],
+      "mcp": {
+        "available": false
+      }
+    },
+    {
+      "id": "step_application",
+      "name": "STEP Application",
+      "track": "Operations",
+      "fields": [],
+      "category": "Users & Identity",
+      "access_level": "Restricted",
+      "priority": "Low",
+      "description": "Institution demographics",
+      "is_canonical": true,
+      "mcp": {
+        "available": false
+      }
+    },
+    {
+      "id": "step_survey",
+      "name": "STEP Survey",
+      "track": "Operations",
+      "fields": [],
+      "category": "Surveys & Feedback",
+      "access_level": "Sensitive",
+      "priority": "N/A",
+      "description": "Survey responses",
+      "notes": "Not suitable for AI; Sensitive - not to be shared",
+      "is_canonical": true,
+      "mcp": {
+        "available": false
+      }
+    },
+    {
+      "id": "stories_publications_referenced_in_3",
+      "name": "Stories/Publications - referenced in 3",
+      "track": "ACO",
+      "fields": [],
+      "category": "Publications & Research",
+      "access_level": "Public",
+      "priority": "Medium",
+      "description": "HPC Wire articles; Awards; science stories",
+      "storage_location": "Website: https://access-ci.org/news/",
+      "data_access_mechanism": "Web",
+      "refresh_frequency": "real-time",
+      "query_capacity": "high",
+      "is_canonical": false,
+      "canonical_source": [
+        "submissions_from_researchers_or_comms_other_institutions_publication_searches_using_allocations_data"
+      ],
+      "mcp": {
+        "available": false
+      }
+    },
+    {
+      "id": "support_digest",
+      "name": "Support Digest",
+      "track": "Support",
+      "fields": [],
+      "category": "Community & Outreach",
+      "access_level": "Internal Only",
+      "priority": "Low",
+      "description": "Link clicks; Open rates",
+      "notes": "Email newsletter metrics",
+      "refresh_frequency": "weekly",
+      "is_canonical": true,
+      "mcp": {
+        "available": false
+      }
+    },
+    {
+      "id": "swg_notes",
+      "name": "SWG Notes",
+      "track": "ACO",
+      "fields": [],
+      "category": "Governance & Planning",
+      "access_level": "Internal Only",
+      "priority": "Low",
+      "description": "Strategic working group notes",
+      "notes": "Any group that takes notes in Confluence can query their notes",
+      "storage_location": "Confluence: https://access-ci.atlassian.net/wiki/spaces/ACP/pages/18055209/ACCESS+Working+Groups+and+Standing+Committees",
+      "data_access_mechanism": "Web",
+      "refresh_frequency": "weekly",
+      "query_capacity": "high",
+      "is_canonical": false,
+      "canonical_source": [
+        "confluence"
+      ],
+      "mcp": {
+        "available": false
+      }
+    },
+    {
+      "id": "system_service_logs",
+      "name": "System & Service Logs",
+      "track": "Operations",
+      "fields": [],
+      "category": "Operations & Security",
+      "access_level": "Sensitive",
+      "priority": "N/A",
+      "description": "Security logs; Monitoring data",
+      "notes": "Not suitable for AI; retained for security review",
+      "is_canonical": true,
+      "mcp": {
+        "available": false
+      }
+    },
+    {
+      "id": "ticketing_access_system",
+      "name": "Ticketing (ACCESS System)",
+      "track": "Operations",
+      "fields": [],
+      "category": "Support & Tickets",
+      "access_level": "Restricted",
+      "priority": "High",
+      "description": "Full ticket data; Tags; Resolution data",
+      "notes": "ACCESS system only; may contain PII; high value for AI; Likely to not get approval without creating a very strict subset of approved tickets",
+      "is_canonical": true,
+      "mcp": {
+        "available": false
+      }
+    },
+    {
+      "id": "ticketing_statistics",
+      "name": "Ticketing Statistics",
+      "track": "Operations",
+      "fields": [],
+      "category": "Support & Tickets",
+      "access_level": "Internal Only",
+      "priority": "Medium",
+      "description": "Time to resolution; Tags",
+      "notes": "Aggregate stats may be shareable",
+      "is_canonical": true,
+      "mcp": {
+        "available": false
+      }
+    },
+    {
+      "id": "video_tutorials",
+      "name": "Video Tutorials",
+      "track": "Metrics",
+      "fields": [
+        {
+          "name": "Use Case Playlist",
+          "type": "text",
+          "access": "Public",
+          "description": "Playlist(s) that showcase different use cases of XDMoD",
+          "required": true,
+          "semantic_type": "media_ref"
+        }
+      ],
+      "access_level": "Public",
+      "priority": "Low",
+      "description": "Playlist(s) of tutorial videos",
+      "storage_location": "XDMoD Youtube Channel",
+      "data_access_mechanism": "Web",
+      "refresh_frequency": "static",
+      "sensitivity": "Low",
+      "is_canonical": true,
+      "mcp": {
+        "available": false
+      }
+    },
+    {
+      "id": "web_stats_google_analytics",
+      "name": "Web Stats (Google Analytics)",
+      "track": "Operations",
+      "fields": [],
+      "category": "Usage & Metrics",
+      "access_level": "Internal Only",
+      "priority": "Low",
+      "description": "Page hits and visits",
+      "is_canonical": true,
+      "mcp": {
+        "available": false
+      }
+    },
+    {
+      "id": "webinar_registration_nairr_access",
+      "name": "Webinar Registration (NAIRR/ACCESS)",
+      "track": "Support",
+      "fields": [],
+      "category": "Events & Training",
+      "access_level": "Restricted",
+      "priority": "Medium",
+      "description": "Names; Institutions; ACCESS ID; Email; Referral source",
+      "notes": "Events MCP covers some; contains PII; Should consider not pursing due to risk of PII",
+      "data_access_mechanism": "Web, API",
+      "refresh_frequency": "real-time",
+      "query_capacity": "high",
+      "is_canonical": true,
+      "mcp": {
+        "available": false
+      }
+    },
+    {
+      "id": "website_analytics",
+      "name": "Website Analytics",
+      "track": "Support",
+      "fields": [],
+      "category": "Usage & Metrics",
+      "access_level": "Internal Only",
+      "priority": "Medium",
+      "description": "Institution; Login status; Carnegie classification; Geography; Session clicks; Referrers",
+      "notes": "Aggregate may be public",
+      "refresh_frequency": "real-time",
+      "query_capacity": "high",
+      "is_canonical": true,
+      "mcp": {
+        "available": false
+      }
+    },
+    {
+      "id": "website_stats",
+      "name": "Website Stats",
+      "track": "ACO",
+      "fields": [],
+      "category": "Usage & Metrics",
+      "access_level": "Internal Only",
+      "priority": "Low",
+      "description": "Visits; Click-through rates",
+      "storage_location": "Google Drive: ACCESS Comms/web Metrics",
+      "data_access_mechanism": "Web",
+      "refresh_frequency": "real-time",
+      "query_capacity": "high",
+      "is_canonical": false,
+      "canonical_source": [
+        "google_analytics_4"
+      ],
+      "mcp": {
+        "available": false
+      }
+    },
+    {
+      "id": "workshop_surveys_cu",
+      "name": "Workshop Surveys (CU)",
+      "track": "Support",
+      "fields": [],
+      "category": "Surveys & Feedback",
+      "access_level": "Restricted",
+      "priority": "Low",
+      "description": "Pre/post surveys; Institution; Motivation; Experience feedback",
+      "notes": "AI-centered workshops",
+      "refresh_frequency": "quarterly",
+      "is_canonical": true,
+      "mcp": {
+        "available": false
       }
     },
     {
@@ -2208,25 +4155,275 @@
         "SUPREMM has ~20 additional network I/O statistics (eth0, ib0, lustre, block device rates) not listed individually",
         "Storage realm does not appear in menu queries but statistics work via direct get_data calls"
       ]
+    },
+    {
+      "id": "xdmod_data_github_repository",
+      "name": "xdmod-data GitHub Repository",
+      "track": "Metrics",
+      "fields": [
+        {
+          "name": "Source Code",
+          "type": "text",
+          "access": "Public",
+          "description": "Source code for Data Analytics Framework",
+          "required": true,
+          "semantic_type": "entity_description"
+        },
+        {
+          "name": "Python Package Information",
+          "type": "text",
+          "access": "Public",
+          "description": "PyPI package information",
+          "required": true,
+          "semantic_type": "entity_summary"
+        },
+        {
+          "name": "API Token Instructions",
+          "type": "text",
+          "access": "Public",
+          "description": "API Token generation instructions",
+          "required": true,
+          "semantic_type": "entity_description"
+        },
+        {
+          "name": "Support & Feedback Information",
+          "type": "text",
+          "access": "Public",
+          "required": true,
+          "semantic_type": "contact_info"
+        },
+        {
+          "name": "Licence Information",
+          "type": "text",
+          "access": "Public",
+          "required": true,
+          "semantic_type": "entity_type"
+        },
+        {
+          "name": "Reference Citation",
+          "type": "text",
+          "access": "Public",
+          "required": true,
+          "semantic_type": "entity_name"
+        }
+      ],
+      "access_level": "Public",
+      "priority": "Low",
+      "description": "Documentation for the XDMoD Python/R APIs",
+      "storage_location": "Github",
+      "data_access_mechanism": "Web",
+      "refresh_frequency": "static",
+      "sensitivity": "Low",
+      "is_canonical": true,
+      "mcp": {
+        "available": false
+      }
+    },
+    {
+      "id": "xdmod_notebooks_github_repository",
+      "name": "xdmod-notebooks GitHub Repository",
+      "track": "Metrics",
+      "fields": [
+        {
+          "name": "Jupyter Notebooks",
+          "type": "text",
+          "access": "Public",
+          "description": "Tutorial Jupyter notebooks showcasing the XDMoD Data Analytics Framework",
+          "required": true,
+          "semantic_type": "entity_description"
+        },
+        {
+          "name": "Notebook build instructions",
+          "type": "text",
+          "access": "Public",
+          "description": "Instructions for building and running the notebooks",
+          "required": true,
+          "semantic_type": "entity_summary"
+        }
+      ],
+      "access_level": "Public",
+      "priority": "Low",
+      "description": "Jupyter notebook training materials and examples",
+      "storage_location": "Github",
+      "data_access_mechanism": "Web",
+      "refresh_frequency": "static",
+      "sensitivity": "Low",
+      "is_canonical": true,
+      "mcp": {
+        "available": false
+      }
+    },
+    {
+      "id": "xdmod_open_api_documentation",
+      "name": "XDMoD Open API Documentation",
+      "track": "Metrics",
+      "fields": [
+        {
+          "name": "Endpoint Name",
+          "type": "varchar",
+          "access": "Public",
+          "description": "XDMoD REST API Endpoint Name",
+          "required": true,
+          "semantic_type": "entity_name"
+        },
+        {
+          "name": "Endpoint Description",
+          "type": "text",
+          "access": "Public",
+          "description": "Purpose of endpoint",
+          "semantic_type": "entity_summary"
+        },
+        {
+          "name": "Authorizations",
+          "type": "varchar",
+          "access": "Public",
+          "description": "Supported authentication methods",
+          "required": true,
+          "semantic_type": "entity_type"
+        },
+        {
+          "name": "Request Body Schema",
+          "type": "varchar",
+          "access": "Public",
+          "description": "Schema type",
+          "semantic_type": "entity_type"
+        },
+        {
+          "name": "Path Parameters",
+          "type": "text",
+          "access": "Public",
+          "description": "Path parameters and their descriptions",
+          "semantic_type": "entity_description"
+        },
+        {
+          "name": "Request Parameters",
+          "type": "text",
+          "access": "Public",
+          "description": "Query parameters and their descriptions",
+          "semantic_type": "entity_description"
+        },
+        {
+          "name": "Endpoint Responses",
+          "type": "text",
+          "access": "Public",
+          "description": "Possible request responses",
+          "required": true,
+          "semantic_type": "entity_description"
+        }
+      ],
+      "access_level": "Public",
+      "priority": "High",
+      "description": "Descriptions of XDMoD Open API endpoints",
+      "data_access_mechanism": "Web",
+      "docs_url": "https://open.xdmod.org/11.0/rest.html",
+      "refresh_frequency": "static",
+      "sensitivity": "Low",
+      "is_canonical": true,
+      "mcp": {
+        "available": false
+      }
     }
   ],
   "by_track": {
     "Support": [
       "access_support_drupal",
+      "access_pegasus",
       "affinity_groups",
       "announcements",
+      "ccep_awards_community_grant",
+      "chatbot",
       "content_api",
+      "cssn_roles_skills_interests",
       "event_registrations",
       "events",
+      "focus_groups_2023",
+      "match_services",
+      "nairr_underutilization_surveys",
+      "nairr_underutilized_allocations",
+      "office_hours",
       "resource_documentation_api",
-      "sds_software_discovery_service"
-    ],
-    "Operations": [
-      "comanage",
-      "resource_information_cider"
+      "sds_software_discovery_service",
+      "support_digest",
+      "webinar_registration_nairr_access",
+      "website_analytics",
+      "workshop_surveys_cu"
     ],
     "Metrics": [
-      "xdmod"
+      "access_reports",
+      "access_rp_monthly_reports",
+      "access_user_monthly_reports",
+      "access_xdmod_data_access_endpoints",
+      "access_xdmod_data_catalog",
+      "access_xdmod_user_manual",
+      "graphical_visualizations_of_data_avaible_in_xdmod",
+      "netsage",
+      "publications",
+      "video_tutorials",
+      "xdmod",
+      "xdmod_data_github_repository",
+      "xdmod_notebooks_github_repository",
+      "xdmod_open_api_documentation"
+    ],
+    "ACO": [
+      "adoption_metrics",
+      "community_surveys",
+      "eab_action_items",
+      "eab_ec_reports",
+      "eab_registration_attendance",
+      "eab_survey",
+      "engagement_tracker",
+      "external_newsletter_content",
+      "financial_reports",
+      "internal_newsletter_content",
+      "meeting_notes",
+      "publications_non_catalog_referenced_in_3",
+      "qm_survey",
+      "quality_risk_assessment",
+      "quarterly_annual_reports",
+      "quarterly_report_data",
+      "rac_registration_attendance",
+      "rp_survey",
+      "sc_wg_reporting_schedules",
+      "social_media_reach",
+      "staff_survey",
+      "stories_publications_referenced_in_3",
+      "swg_notes",
+      "website_stats"
+    ],
+    "Allocations": [
+      "allocations_projects",
+      "annual_report_data",
+      "current_projects",
+      "metrics_framework",
+      "publications_allocations",
+      "request_statistics"
+    ],
+    "Operations": [
+      "cilogon",
+      "comanage",
+      "eval_team_surveys",
+      "internet2_flow_data",
+      "nagios",
+      "network_traffic",
+      "perfsonar",
+      "qualys",
+      "resource_description_cider",
+      "resource_integration_roadmaps_and_badges",
+      "resource_news_outages",
+      "rp_batch_scheduler_information_from_ipf",
+      "rp_integration_effort",
+      "rp_software_modules_from_ipf",
+      "rp_support_effort",
+      "service_index",
+      "step_application",
+      "step_survey",
+      "system_service_logs",
+      "ticketing_access_system",
+      "ticketing_statistics",
+      "web_stats_google_analytics"
+    ],
+    "External": [
+      "nsf_awards"
     ]
   },
   "by_category": {
@@ -2234,21 +4431,112 @@
       "access_support_drupal",
       "content_api"
     ],
+    "Usage & Metrics": [
+      "access_pegasus",
+      "access_reports",
+      "access_rp_monthly_reports",
+      "access_user_monthly_reports",
+      "access_xdmod_data_access_endpoints",
+      "adoption_metrics",
+      "allocations_projects",
+      "engagement_tracker",
+      "graphical_visualizations_of_data_avaible_in_xdmod",
+      "internet2_flow_data",
+      "metrics_framework",
+      "netsage",
+      "network_traffic",
+      "request_statistics",
+      "web_stats_google_analytics",
+      "website_analytics",
+      "website_stats"
+    ],
+    "Unknown": [
+      "access_xdmod_data_catalog",
+      "access_xdmod_user_manual",
+      "publications",
+      "video_tutorials",
+      "xdmod_data_github_repository",
+      "xdmod_notebooks_github_repository",
+      "xdmod_open_api_documentation"
+    ],
     "Community & Outreach": [
       "affinity_groups",
-      "announcements"
+      "announcements",
+      "ccep_awards_community_grant",
+      "cssn_roles_skills_interests",
+      "external_newsletter_content",
+      "social_media_reach",
+      "support_digest"
+    ],
+    "Publications & Research": [
+      "annual_report_data",
+      "current_projects",
+      "nsf_awards",
+      "publications_allocations",
+      "publications_non_catalog_referenced_in_3",
+      "stories_publications_referenced_in_3"
+    ],
+    "Support & Tickets": [
+      "chatbot",
+      "match_services",
+      "office_hours",
+      "ticketing_access_system",
+      "ticketing_statistics"
     ],
     "Users & Identity": [
-      "comanage"
+      "cilogon",
+      "comanage",
+      "step_application"
+    ],
+    "Surveys & Feedback": [
+      "community_surveys",
+      "eab_survey",
+      "eval_team_surveys",
+      "focus_groups_2023",
+      "nairr_underutilization_surveys",
+      "nairr_underutilized_allocations",
+      "qm_survey",
+      "rp_survey",
+      "staff_survey",
+      "step_survey",
+      "workshop_surveys_cu"
+    ],
+    "Governance & Planning": [
+      "eab_action_items",
+      "eab_ec_reports",
+      "eab_registration_attendance",
+      "financial_reports",
+      "internal_newsletter_content",
+      "meeting_notes",
+      "quarterly_annual_reports",
+      "quarterly_report_data",
+      "sc_wg_reporting_schedules",
+      "swg_notes"
     ],
     "Events & Training": [
       "event_registrations",
-      "events"
+      "events",
+      "rac_registration_attendance",
+      "webinar_registration_nairr_access"
     ],
     "Resources": [
+      "nagios",
+      "perfsonar",
+      "resource_description_cider",
       "resource_documentation_api",
-      "resource_information_cider",
-      "sds_software_discovery_service"
+      "resource_integration_roadmaps_and_badges",
+      "resource_news_outages",
+      "rp_batch_scheduler_information_from_ipf",
+      "rp_software_modules_from_ipf",
+      "sds_software_discovery_service",
+      "service_index"
+    ],
+    "Operations & Security": [
+      "quality_risk_assessment",
+      "qualys",
+      "rp_integration_effort",
+      "rp_support_effort",
+      "system_service_logs"
     ],
     "Metrics & Reporting": [
       "xdmod"
@@ -2259,20 +4547,105 @@
       "access_support_drupal",
       "xdmod"
     ],
-    "Public": [
-      "affinity_groups",
-      "announcements",
-      "content_api",
-      "events",
-      "resource_documentation_api",
-      "resource_information_cider",
-      "sds_software_discovery_service"
-    ],
-    "Sensitive": [
-      "comanage"
+    "Authenticated": [
+      "access_pegasus",
+      "access_reports",
+      "allocations_projects",
+      "cssn_roles_skills_interests"
     ],
     "Restricted": [
-      "event_registrations"
+      "access_rp_monthly_reports",
+      "access_user_monthly_reports",
+      "community_surveys",
+      "eab_registration_attendance",
+      "eab_survey",
+      "eval_team_surveys",
+      "event_registrations",
+      "internet2_flow_data",
+      "match_services",
+      "nairr_underutilization_surveys",
+      "nairr_underutilized_allocations",
+      "office_hours",
+      "qm_survey",
+      "rac_registration_attendance",
+      "rp_survey",
+      "service_index",
+      "step_application",
+      "ticketing_access_system",
+      "webinar_registration_nairr_access",
+      "workshop_surveys_cu"
+    ],
+    "Public and Authenticated": [
+      "access_xdmod_data_access_endpoints",
+      "affinity_groups",
+      "announcements",
+      "graphical_visualizations_of_data_avaible_in_xdmod",
+      "netsage"
+    ],
+    "Public": [
+      "access_xdmod_data_catalog",
+      "access_xdmod_user_manual",
+      "annual_report_data",
+      "content_api",
+      "current_projects",
+      "events",
+      "external_newsletter_content",
+      "metrics_framework",
+      "nsf_awards",
+      "perfsonar",
+      "publications",
+      "publications_allocations",
+      "publications_non_catalog_referenced_in_3",
+      "resource_description_cider",
+      "resource_documentation_api",
+      "resource_integration_roadmaps_and_badges",
+      "resource_news_outages",
+      "rp_batch_scheduler_information_from_ipf",
+      "rp_software_modules_from_ipf",
+      "sds_software_discovery_service",
+      "stories_publications_referenced_in_3",
+      "video_tutorials",
+      "xdmod_data_github_repository",
+      "xdmod_notebooks_github_repository",
+      "xdmod_open_api_documentation"
+    ],
+    "Internal Only": [
+      "adoption_metrics",
+      "ccep_awards_community_grant",
+      "chatbot",
+      "eab_action_items",
+      "eab_ec_reports",
+      "engagement_tracker",
+      "financial_reports",
+      "focus_groups_2023",
+      "internal_newsletter_content",
+      "meeting_notes",
+      "nagios",
+      "network_traffic",
+      "quality_risk_assessment",
+      "quarterly_annual_reports",
+      "quarterly_report_data",
+      "request_statistics",
+      "sc_wg_reporting_schedules",
+      "social_media_reach",
+      "support_digest",
+      "swg_notes",
+      "ticketing_statistics",
+      "web_stats_google_analytics",
+      "website_analytics",
+      "website_stats"
+    ],
+    "Sensitive": [
+      "cilogon",
+      "comanage",
+      "qualys",
+      "staff_survey",
+      "step_survey",
+      "system_service_logs"
+    ],
+    "TBD": [
+      "rp_integration_effort",
+      "rp_support_effort"
     ]
   }
 }

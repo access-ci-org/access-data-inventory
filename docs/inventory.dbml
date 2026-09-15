@@ -1,5 +1,5 @@
 // ACCESS Data Inventory
-// Generated: 2026-06-26 19:30
+// Generated: 2026-09-14 21:14
 // Source: data-sources/*.md
 
 // =============================================================================
@@ -18,43 +18,274 @@ Enum data_source {
     mcp_available: false
     mcp_package: null
     api_endpoint: https://support.access-ci.org
-    storage_location: null
+    storage_location: Drupal CMS database
     priority: High
+    data_access_mechanism: Web
+    refresh_frequency: realtime
+    query_capacity: moderate
+    docs_url: https://support.access-ci.org/api-docs
+    sensitivity: High
+  ''']
+
+  access_pegasus [note: '''
+    name: ACCESS Pegasus
+    description: Workflow usage and execution data
+    category: Usage & Metrics
+    track: Support
+    access_level: Authenticated
+    is_canonical: true
+    canonical_source: null
+    mcp_available: false
+    mcp_package: null
+    api_endpoint: null
+    storage_location: null
+    priority: Medium
+    refresh_frequency: daily
+  ''']
+
+  access_reports [note: '''
+    name: ACCESS Reports
+    description: Curated report w/ analysis
+    category: Usage & Metrics
+    track: Metrics
+    access_level: Authenticated
+    is_canonical: true
+    canonical_source: null
+    mcp_available: false
+    mcp_package: null
+    api_endpoint: null
+    storage_location: null
+    priority: Low
+    data_access_mechanism: Web
+    sensitivity: Medium
+  ''']
+
+  access_rp_monthly_reports [note: '''
+    name: ACCESS RP Monthly Reports
+    description: Curated report w/ analysis
+    category: Usage & Metrics
+    track: Metrics
+    access_level: Restricted
+    is_canonical: true
+    canonical_source: null
+    mcp_available: false
+    mcp_package: null
+    api_endpoint: null
+    storage_location: null
+    priority: Low
+    data_access_mechanism: Web
+    sensitivity: Medium
+  ''']
+
+  access_user_monthly_reports [note: '''
+    name: ACCESS User Monthly Reports
+    description: Curated report w/ analysis
+    category: Usage & Metrics
+    track: Metrics
+    access_level: Restricted
+    is_canonical: true
+    canonical_source: null
+    mcp_available: false
+    mcp_package: null
+    api_endpoint: null
+    storage_location: null
+    priority: Low
+    data_access_mechanism: Web
+    sensitivity: High
+  ''']
+
+  access_xdmod_data_access_endpoints [note: '''
+    name: ACCESS XDMoD Data Access Endpoints
+    description: Allocations Information,
+Compute Usage,
+HPC Job Performance & Power Data,
+Science Gateway Usage,
+Resource Quality of service data (via Application Kernels),
+HPC Job Efficiency Analytics,
+Commercial and Non-Commercial Cloud Usage,
+Open OnDemand Usage
+    category: Usage & Metrics
+    track: Metrics
+    access_level: Public and Authenticated
+    is_canonical: false
+    canonical_source: batch_compute_log_file_from_resource_provider, amie_packet_from_resouce_provider, xras_data, cilogon_information
+    mcp_available: false
+    mcp_package: null
+    api_endpoint: null
+    storage_location: XDMoD Datawarehouse
+    priority: High
+    data_access_mechanism: API, Web, MCP
+    refresh_frequency: daily
+    docs_url: https://open.xdmod.org/11.0/rest.html
+    sensitivity: High
+  ''']
+
+  access_xdmod_data_catalog [note: '''
+    name: ACCESS XDMoD Data Catalog
+    description: List of available statistics and dimensions
+    category: 
+    track: Metrics
+    access_level: Public
+    is_canonical: true
+    canonical_source: null
+    mcp_available: false
+    mcp_package: null
+    api_endpoint: null
+    storage_location: Metrics Website
+    priority: High
+    data_access_mechanism: API, MCP, Web
+    sensitivity: Low
+  ''']
+
+  access_xdmod_user_manual [note: '''
+    name: ACCESS XDMoD User Manual
+    description: XDMoD Web Portal Documentation
+    category: 
+    track: Metrics
+    access_level: Public
+    is_canonical: true
+    canonical_source: null
+    mcp_available: false
+    mcp_package: null
+    api_endpoint: null
+    storage_location: XDMoD Web Portal
+    priority: Medium
+    data_access_mechanism: MCP, Web
+    refresh_frequency: static
+    sensitivity: Low
+  ''']
+
+  adoption_metrics [note: '''
+    name: Adoption Metrics
+    description: Adoption tracking
+    category: Usage & Metrics
+    track: ACO
+    access_level: Internal Only
+    is_canonical: true
+    canonical_source: null
+    mcp_available: false
+    mcp_package: null
+    api_endpoint: null
+    storage_location: https://access-ci.atlassian.net/wiki/spaces/ACP/database/1648656385
+    priority: Low
+    data_access_mechanism: Web
+    refresh_frequency: static
+    query_capacity: limited
   ''']
 
   affinity_groups [note: '''
     name: Affinity Groups
-    description: Community groups organized by interest or domain
+    description: Membership, events, announcements, KB resources
     category: Community & Outreach
     track: Support
-    access_level: Public
+    access_level: Public and Authenticated
     is_canonical: false
     canonical_source: access_support_drupal
     mcp_available: true
-    mcp_package: @access-mcp/affinity-groups
+    mcp_package: null
     api_endpoint: https://support.access-ci.org/api/1.1/affinity_groups
     storage_location: null
     priority: High
+    data_access_mechanism: API, MCP, Web
+    refresh_frequency: real-time
+    query_capacity: high
+    sensitivity: Medium
+  ''']
+
+  allocations_projects [note: '''
+    name: Allocations/Projects
+    description: Active projects; Resource allocations; PI info; Detailed Project info
+    category: Usage & Metrics
+    track: Allocations
+    access_level: Authenticated
+    is_canonical: true
+    canonical_source: null
+    mcp_available: false
+    mcp_package: null
+    api_endpoint: https://api.xras.org/
+    storage_location: Data gathered from XRAS Databases
+    priority: High
+    data_access_mechanism: API, Web
+    refresh_frequency: real-time
+    query_capacity: high
+    docs_url: https://api.xras.org/
+    sensitivity: High
   ''']
 
   announcements [note: '''
     name: Announcements
-    description: Resource provider and community announcements
+    description: RP and community announcements
     category: Community & Outreach
     track: Support
-    access_level: Public
+    access_level: Public and Authenticated
     is_canonical: false
     canonical_source: access_support_drupal
     mcp_available: true
-    mcp_package: @access-mcp/announcements
+    mcp_package: null
     api_endpoint: https://support.access-ci.org/api/2.2/announcements
     storage_location: null
     priority: High
+    data_access_mechanism: API, MCP, Web
+    refresh_frequency: real-time
+    query_capacity: high
+    docs_url: https://support.access-ci.org/api-docs/announcements
+    sensitivity: Low
   ''']
 
-  comanage [note: '''
-    name: COManage/ACCESS Identity
-    description: User identity information
+  annual_report_data [note: '''
+    name: Annual Report Data
+    description: Users; Institutions; Academic status; Allocation counts; Projects; Usage; Documents; Abstracts; FOS; Publications; RPs utilized
+    category: Publications & Research
+    track: Allocations
+    access_level: Public
+    is_canonical: true
+    canonical_source: null
+    mcp_available: false
+    mcp_package: null
+    api_endpoint: null
+    storage_location: Data gathered from XRAS Databases
+    priority: High
+    data_access_mechanism: Web
+    refresh_frequency: annually
+    query_capacity: unknown
+    sensitivity: N/A
+  ''']
+
+  ccep_awards_community_grant [note: '''
+    name: CCEP Awards (Community Grant)
+    description: Applicants; Institution; Amount awarded; Fund usage
+    category: Community & Outreach
+    track: Support
+    access_level: Internal Only
+    is_canonical: true
+    canonical_source: null
+    mcp_available: false
+    mcp_package: null
+    api_endpoint: null
+    storage_location: null
+    priority: Low
+    refresh_frequency: static
+  ''']
+
+  chatbot [note: '''
+    name: Chatbot
+    description: Questions; Answers; Ratings
+    category: Support & Tickets
+    track: Support
+    access_level: Internal Only
+    is_canonical: true
+    canonical_source: null
+    mcp_available: false
+    mcp_package: null
+    api_endpoint: null
+    storage_location: null
+    priority: Medium
+    refresh_frequency: daily
+  ''']
+
+  cilogon [note: '''
+    name: ciLogon
+    description: Authentication logs
     category: Users & Identity
     track: Operations
     access_level: Sensitive
@@ -64,7 +295,39 @@ Enum data_source {
     mcp_package: null
     api_endpoint: null
     storage_location: null
+    priority: N/A
+  ''']
+
+  comanage [note: '''
+    name: COManage/ACCESS Identity
+    description: Identity information; Teragrid.org identities
+    category: Users & Identity
+    track: Operations
+    access_level: Sensitive
+    is_canonical: false
+    canonical_source: database
+    mcp_available: false
+    mcp_package: null
+    api_endpoint: null
+    storage_location: null
+    priority: N/A
+  ''']
+
+  community_surveys [note: '''
+    name: Community Surveys
+    description: Community feedback; Section/group info
+    category: Surveys & Feedback
+    track: ACO
+    access_level: Restricted
+    is_canonical: false
+    canonical_source: google_drive
+    mcp_available: false
+    mcp_package: null
+    api_endpoint: null
+    storage_location: Eval SC Folder
     priority: Low
+    refresh_frequency: annually
+    query_capacity: limited
   ''']
 
   content_api [note: '''
@@ -79,10 +342,154 @@ Enum data_source {
     mcp_package: null
     api_endpoint: https://support.access-ci.org/.well-known/content-index.json
     storage_location: support.access-ci.org
-    priority: Medium
+    priority: High
     data_access_mechanism: API, Web
     refresh_frequency: Real-time
-    query_capacity: Per-page by node ID or path alias
+    query_capacity: high
+    docs_url: https://support.access-ci.org/api-docs/content
+    sensitivity: Low
+  ''']
+
+  cssn_roles_skills_interests [note: '''
+    name: CSSN Roles/skills/Interests
+    description: Taxonomy for skills/interests and roles in the community
+    category: Community & Outreach
+    track: Support
+    access_level: Authenticated
+    is_canonical: true
+    canonical_source: null
+    mcp_available: false
+    mcp_package: null
+    api_endpoint: null
+    storage_location: null
+    priority: Medium
+    data_access_mechanism: Web
+    refresh_frequency: real-time
+    query_capacity: high
+  ''']
+
+  current_projects [note: '''
+    name: Current Projects
+    description: Active Projects; Resource Allocations; PI Info
+    category: Publications & Research
+    track: Allocations
+    access_level: Public
+    is_canonical: true
+    canonical_source: null
+    mcp_available: false
+    mcp_package: null
+    api_endpoint: https://allocations.access-ci.org/current-projects
+    storage_location: Data gathered from XRAS Databases
+    priority: Medium
+    data_access_mechanism: API, Web
+    refresh_frequency: real-time
+    query_capacity: high
+    sensitivity: N/A
+  ''']
+
+  eab_action_items [note: '''
+    name: EAB Action Items
+    description: Action items accepted by the EC - tracking and implementation
+    category: Governance & Planning
+    track: ACO
+    access_level: Internal Only
+    is_canonical: false
+    canonical_source: google_sheets
+    mcp_available: false
+    mcp_package: null
+    api_endpoint: null
+    storage_location: https://docs.google.com/spreadsheets/d/1CtAMssCnj8RNfWk7M7K4RvZG-rBdNJsuFseFVQWuP5s/edit?gid=0#gid=0
+    priority: Low
+    data_access_mechanism: Web
+    refresh_frequency: weekly
+    query_capacity: limited
+  ''']
+
+  eab_ec_reports [note: '''
+    name: EAB-EC Reports
+    description: EAB recommendations to EC and responses
+    category: Governance & Planning
+    track: ACO
+    access_level: Internal Only
+    is_canonical: false
+    canonical_source: google_sheets
+    mcp_available: false
+    mcp_package: null
+    api_endpoint: null
+    storage_location: EAB Meeting Folder
+    priority: Low
+    data_access_mechanism: Web
+    refresh_frequency: quarterly
+    query_capacity: moderate
+  ''']
+
+  eab_registration_attendance [note: '''
+    name: EAB Registration/Attendance
+    description: Registrations; Attendance; Ideas generated
+    category: Governance & Planning
+    track: ACO
+    access_level: Restricted
+    is_canonical: false
+    canonical_source: ideas_generated_google_sheets
+    mcp_available: false
+    mcp_package: null
+    api_endpoint: null
+    storage_location: EAB Wiki: attendance tracked in each meeting page
+    priority: Low
+    data_access_mechanism: Unknown
+    refresh_frequency: quarterly
+    query_capacity: moderate
+  ''']
+
+  eab_survey [note: '''
+    name: EAB Survey
+    description: Survey responses
+    category: Surveys & Feedback
+    track: ACO
+    access_level: Restricted
+    is_canonical: false
+    canonical_source: google_drive
+    mcp_available: false
+    mcp_package: null
+    api_endpoint: null
+    storage_location: EAB Meeting Folder
+    priority: Low
+    data_access_mechanism: Web
+    refresh_frequency: quarterly
+    query_capacity: limited
+  ''']
+
+  engagement_tracker [note: '''
+    name: Engagement Tracker
+    description: Engagement metrics - tracking how many conferences and meetings ACO, EC go to and engage with users
+    category: Usage & Metrics
+    track: ACO
+    access_level: Internal Only
+    is_canonical: false
+    canonical_source: google_sheets
+    mcp_available: false
+    mcp_package: null
+    api_endpoint: null
+    storage_location: https://docs.google.com/spreadsheets/d/1_EXKUOXmY-TVkDWaHR1-SuiKt404uGEnGSr6uQCkwzw/edit?gid=0#gid=0
+    priority: Medium
+    data_access_mechanism: Web
+    refresh_frequency: real-time
+    query_capacity: high
+  ''']
+
+  eval_team_surveys [note: '''
+    name: Eval Team Surveys
+    description: Community; Staff; RP survey data
+    category: Surveys & Feedback
+    track: Operations
+    access_level: Restricted
+    is_canonical: true
+    canonical_source: null
+    mcp_available: false
+    mcp_package: null
+    api_endpoint: null
+    storage_location: null
+    priority: Low
   ''']
 
   event_registrations [note: '''
@@ -91,13 +498,14 @@ Enum data_source {
     category: Events & Training
     track: Support
     access_level: Restricted
-    is_canonical: true
-    canonical_source: null
+    is_canonical: false
+    canonical_source: access_support_drupal
     mcp_available: false
     mcp_package: null
     api_endpoint: null
-    storage_location: null
+    storage_location: ACCESS Support Drupal
     priority: Medium
+    data_access_mechanism: Web
   ''']
 
   events [note: '''
@@ -109,32 +517,471 @@ Enum data_source {
     is_canonical: false
     canonical_source: access_support_drupal
     mcp_available: true
-    mcp_package: @access-mcp/events
+    mcp_package: null
     api_endpoint: https://support.access-ci.org/api/2.2/events
+    storage_location: ACCESS Support Drupal
+    priority: High
+    data_access_mechanism: API, MCP
+    refresh_frequency: realtime
+    query_capacity: high
+    docs_url: https://support.access-ci.org/api-docs/events
+    sensitivity: Low
+  ''']
+
+  external_newsletter_content [note: '''
+    name: External Newsletter Content
+    description: Science content (stories),  what are RPs doing with ACCESS, what are users doing with ACCESS, articles and awards, what is going on with ACCESS, publications
+    category: Community & Outreach
+    track: ACO
+    access_level: Public
+    is_canonical: false
+    canonical_source: monthly_solicitation_to_working_groups, standing_committees, comms_team_and_resource_providers
+    mcp_available: false
+    mcp_package: null
+    api_endpoint: null
+    storage_location: These are all now on the wiki at: https://access-ci.atlassian.net/wiki/spaces/ACP/pages/104891248/ACCESS+Newsletter+Archive; also on access-ci.org/news
+    priority: High
+    data_access_mechanism: Web
+    refresh_frequency: monthly
+    query_capacity: moderate
+  ''']
+
+  financial_reports [note: '''
+    name: Financial Reports
+    description: Finances for ACO, EC, EAB, and SDSC
+    category: Governance & Planning
+    track: ACO
+    access_level: Internal Only
+    is_canonical: false
+    canonical_source: banner, google_drive
+    mcp_available: false
+    mcp_package: null
+    api_endpoint: null
+    storage_location: Banner, Google Drive: https://drive.google.com/drive/u/0/folders/19u_GRcsIexcMujOJ1ckxxni-irxDK4sY?ths=true
+    priority: Low
+    data_access_mechanism: Web
+    refresh_frequency: monthly
+    query_capacity: limited
+  ''']
+
+  focus_groups_2023 [note: '''
+    name: Focus Groups (2023)
+    description: User experience feedback; Website review findings
+    category: Surveys & Feedback
+    track: Support
+    access_level: Internal Only
+    is_canonical: true
+    canonical_source: null
+    mcp_available: false
+    mcp_package: null
+    api_endpoint: null
+    storage_location: null
+    priority: Low
+    refresh_frequency: annually
+  ''']
+
+  graphical_visualizations_of_data_avaible_in_xdmod [note: '''
+    name: Graphical Visualizations of data avaible in XDMoD
+    description: Chart Configurations, List of available visualizations
+    category: Usage & Metrics
+    track: Metrics
+    access_level: Public and Authenticated
+    is_canonical: true
+    canonical_source: null
+    mcp_available: false
+    mcp_package: null
+    api_endpoint: null
+    storage_location: null
+    priority: High
+    data_access_mechanism: API, MCP, Web
+    refresh_frequency: daily
+    sensitivity: High
+  ''']
+
+  internal_newsletter_content [note: '''
+    name: Internal Newsletter Content
+    description: Staff-focused information
+    category: Governance & Planning
+    track: ACO
+    access_level: Internal Only
+    is_canonical: false
+    canonical_source: monthly_solicitation_to_working_groups, standing_committees, comms_team_and_resource_providers
+    mcp_available: false
+    mcp_package: null
+    api_endpoint: null
+    storage_location: These are all now on the wiki at: https://access-ci.atlassian.net/wiki/spaces/ACP/pages/104891248/ACCESS+Newsletter+Archive
+    priority: Low
+    data_access_mechanism: Web
+    refresh_frequency: monthly
+    query_capacity: moderate
+  ''']
+
+  internet2_flow_data [note: '''
+    name: Internet2 Flow Data
+    description: Network flow data
+    category: Usage & Metrics
+    track: Operations
+    access_level: Restricted
+    is_canonical: true
+    canonical_source: null
+    mcp_available: false
+    mcp_package: null
+    api_endpoint: null
+    storage_location: null
+    priority: Low
+  ''']
+
+  match_services [note: '''
+    name: MATCH Services
+    description: Service requests and requestors
+    category: Support & Tickets
+    track: Support
+    access_level: Restricted
+    is_canonical: true
+    canonical_source: null
+    mcp_available: false
+    mcp_package: null
+    api_endpoint: null
+    storage_location: null
+    priority: Low
+    refresh_frequency: monthly
+  ''']
+
+  meeting_notes [note: '''
+    name: Meeting Notes
+    description: Notes; Attendance, decisions
+    category: Governance & Planning
+    track: ACO
+    access_level: Internal Only
+    is_canonical: false
+    canonical_source: confluence
+    mcp_available: false
+    mcp_package: null
+    api_endpoint: null
+    storage_location: Confluence: https://access-ci.atlassian.net/wiki/spaces/ACP/pages/479199256/ACO+Easy+Access+Page
+    priority: Low
+    data_access_mechanism: Web
+    refresh_frequency: weekly
+    query_capacity: high
+  ''']
+
+  metrics_framework [note: '''
+    name: Metrics Framework
+    description: KPIs; Democratization Index; Ecosystem access time; RP Satisfaction; XRAS uptime; Feedback responsiveness; Ticket resolution; Staff satisfaction
+    category: Usage & Metrics
+    track: Allocations
+    access_level: Public
+    is_canonical: true
+    canonical_source: null
+    mcp_available: false
+    mcp_package: null
+    api_endpoint: null
+    storage_location: null
+    priority: High
+    data_access_mechanism: Web
+    query_capacity: unknown
+  ''']
+
+  nagios [note: '''
+    name: Nagios
+    description: Monitoring data
+    category: Resources
+    track: Operations
+    access_level: Internal Only
+    is_canonical: true
+    canonical_source: null
+    mcp_available: false
+    mcp_package: null
+    api_endpoint: null
+    storage_location: null
+    priority: Low
+  ''']
+
+  nairr_underutilization_surveys [note: '''
+    name: NAIRR Underutilization Surveys
+    description: Resource; Reason for underutilization; Support needs
+    category: Surveys & Feedback
+    track: Support
+    access_level: Restricted
+    is_canonical: true
+    canonical_source: null
+    mcp_available: false
+    mcp_package: null
+    api_endpoint: null
+    storage_location: null
+    priority: Low
+    refresh_frequency: annually
+  ''']
+
+  nairr_underutilized_allocations [note: '''
+    name: NAIRR Underutilized Allocations
+    description: 1:1 meeting notes; Resource; Reasons; Support needs
+    category: Surveys & Feedback
+    track: Support
+    access_level: Restricted
+    is_canonical: true
+    canonical_source: null
+    mcp_available: false
+    mcp_package: null
+    api_endpoint: null
+    storage_location: null
+    priority: Low
+    refresh_frequency: annually
+  ''']
+
+  netsage [note: '''
+    name: NetSage
+    description: Network Usage data
+    category: Usage & Metrics
+    track: Metrics
+    access_level: Public and Authenticated
+    is_canonical: true
+    canonical_source: null
+    mcp_available: false
+    mcp_package: null
+    api_endpoint: null
+    storage_location: null
+    priority: Low
+    sensitivity: Medium
+  ''']
+
+  network_traffic [note: '''
+    name: Network Traffic
+    description: Historical traffic volumes
+    category: Usage & Metrics
+    track: Operations
+    access_level: Internal Only
+    is_canonical: true
+    canonical_source: null
+    mcp_available: false
+    mcp_package: null
+    api_endpoint: null
+    storage_location: null
+    priority: Low
+  ''']
+
+  nsf_awards [note: '''
+    name: NSF Awards
+    description: NSF funding data; Award details
+    category: Publications & Research
+    track: External
+    access_level: Public
+    is_canonical: true
+    canonical_source: null
+    mcp_available: false
+    mcp_package: null
+    api_endpoint: null
     storage_location: null
     priority: High
   ''']
 
-  resource_documentation_api [note: '''
-    name: Resource Documentation API
-    description: Team-authored documentation for ACCESS resource providers (login, file transfer, storage, queue specs, top software, datasets), with resource-group inheritance.
-    category: Resources
+  office_hours [note: '''
+    name: Office Hours
+    description: Attendees; Concerns raised
+    category: Support & Tickets
     track: Support
-    access_level: Public
-    is_canonical: false
-    canonical_source: access_support_drupal, resource_information_cider
+    access_level: Restricted
+    is_canonical: true
+    canonical_source: null
     mcp_available: false
     mcp_package: null
-    api_endpoint: https://support.access-ci.org/api/1.0/resources
-    storage_location: support.access-ci.org
-    priority: Medium
-    data_access_mechanism: API, Web
-    refresh_frequency: Real-time
-    query_capacity: Per-resource and per-group lookups
+    api_endpoint: null
+    storage_location: null
+    priority: Low
+    refresh_frequency: weekly
   ''']
 
-  resource_information_cider [note: '''
-    name: Resource Information (CIDeR)
+  perfsonar [note: '''
+    name: perfSONAR
+    description: Network performance logs
+    category: Resources
+    track: Operations
+    access_level: Public
+    is_canonical: true
+    canonical_source: null
+    mcp_available: false
+    mcp_package: null
+    api_endpoint: null
+    storage_location: null
+    priority: Medium
+  ''']
+
+  publications [note: '''
+    name: Publications
+    description: List of published papers and presentations
+    category: 
+    track: Metrics
+    access_level: Public
+    is_canonical: true
+    canonical_source: null
+    mcp_available: false
+    mcp_package: null
+    api_endpoint: null
+    storage_location: null
+    priority: Low
+    data_access_mechanism: Web
+    refresh_frequency: static
+    sensitivity: Low
+  ''']
+
+  publications_allocations [note: '''
+    name: Publications
+    description: List of publications by ACCESS researchers
+    category: Publications & Research
+    track: Allocations
+    access_level: Public
+    is_canonical: true
+    canonical_source: null
+    mcp_available: false
+    mcp_package: null
+    api_endpoint: https://allocations.access-ci.org/access-publications
+    storage_location: Data gathered from XRAS Databases
+    priority: Low
+    data_access_mechanism: API, Web
+    refresh_frequency: real-time
+    query_capacity: high
+    sensitivity: N/A
+  ''']
+
+  publications_non_catalog_referenced_in_3 [note: '''
+    name: Publications (non-catalog) - referenced in 3
+    description: Publications not in main pub list
+    category: Publications & Research
+    track: ACO
+    access_level: Public
+    is_canonical: true
+    canonical_source: null
+    mcp_available: false
+    mcp_package: null
+    api_endpoint: null
+    storage_location: null
+    priority: Medium
+    data_access_mechanism: Unknown
+  ''']
+
+  qm_survey [note: '''
+    name: QM Survey
+    description: Quarterly meeting survey
+    category: Surveys & Feedback
+    track: ACO
+    access_level: Restricted
+    is_canonical: false
+    canonical_source: google_drive
+    mcp_available: false
+    mcp_package: null
+    api_endpoint: null
+    storage_location: Quarterly Meeting Folder
+    priority: Low
+    refresh_frequency: quarterly
+    query_capacity: limited
+  ''']
+
+  quality_risk_assessment [note: '''
+    name: Quality Risk Assessment
+    description: Quality/risk assessment
+    category: Operations & Security
+    track: ACO
+    access_level: Internal Only
+    is_canonical: false
+    canonical_source: jira_https_access_ci_atlassian_net_jira_core_projects_att_list_jql_project_20_3d_20att_20and_20status_20_3d_20_22done_2fcomplete_22_20order_20by_20assignee_20asc_2c_20cf_5b10019_5d_20asc
+    mcp_available: false
+    mcp_package: null
+    api_endpoint: null
+    storage_location: JIRA:https://access-ci.atlassian.net/jira/core/projects/ATT/list?jql=project%20%3D%20ATT%20AND%20status%20!%3D%20%22Done%2FComplete%22%20ORDER%20BY%20assignee%20ASC%2C%20cf%5B10019%5D%20ASC
+    priority: Low
+    data_access_mechanism: API, Unknown
+    refresh_frequency: quarterly
+    query_capacity: high
+  ''']
+
+  qualys [note: '''
+    name: Qualys
+    description: Host vulnerability data
+    category: Operations & Security
+    track: Operations
+    access_level: Sensitive
+    is_canonical: true
+    canonical_source: null
+    mcp_available: false
+    mcp_package: null
+    api_endpoint: null
+    storage_location: null
+    priority: N/A
+  ''']
+
+  quarterly_annual_reports [note: '''
+    name: Quarterly/Annual Reports
+    description: Reports to NSF
+    category: Governance & Planning
+    track: ACO
+    access_level: Internal Only
+    is_canonical: false
+    canonical_source: google_drive, confluence
+    mcp_available: false
+    mcp_package: null
+    api_endpoint: null
+    storage_location: Google Drive: https://drive.google.com/drive/u/0/folders/1NNImO8UjJWM59V3g2SdZTD2shGJjYiP5?ths=true
+    priority: Low
+    data_access_mechanism: Web
+    refresh_frequency: quarterly
+    query_capacity: moderate
+  ''']
+
+  quarterly_report_data [note: '''
+    name: Quarterly Report Data
+    description: Publications; New publications; Turnaround time; EC decisions; Lessons learned, metrics, risks, task tracking, financials, outreach,
+    category: Governance & Planning
+    track: ACO
+    access_level: Internal Only
+    is_canonical: false
+    canonical_source: ga4, constant_contact, hootsuite, jira, confluence, google_drive
+    mcp_available: false
+    mcp_package: null
+    api_endpoint: null
+    storage_location: Links are in the reports themselves - data is stored in locations listed above
+    priority: Low
+    data_access_mechanism: Web
+    refresh_frequency: quarterly
+    query_capacity: high
+  ''']
+
+  rac_registration_attendance [note: '''
+    name: RAC Registration/Attendance
+    description: Registrations; Attendance
+    category: Events & Training
+    track: ACO
+    access_level: Restricted
+    is_canonical: true
+    canonical_source: null
+    mcp_available: false
+    mcp_package: null
+    api_endpoint: null
+    storage_location: RAC Wiki: attedance tracked in each meeting
+    priority: Low
+    data_access_mechanism: Unknown
+  ''']
+
+  request_statistics [note: '''
+    name: Request Statistics
+    description: Request counts; Response times; Approval/decline rates
+    category: Usage & Metrics
+    track: Allocations
+    access_level: Internal Only
+    is_canonical: true
+    canonical_source: null
+    mcp_available: false
+    mcp_package: null
+    api_endpoint: https://allocations.access-ci.org/
+    storage_location: Data gathered from XRAS Databases
+    priority: Medium
+    data_access_mechanism: API, Web
+    refresh_frequency: real-time
+    query_capacity: moderate
+    sensitivity: High
+  ''']
+
+  resource_description_cider [note: '''
+    name: Resource Description (CIDeR)
     description: Organizations, resource descriptions, and integration information for ACCESS resource providers.
     category: Resources
     track: Operations
@@ -151,6 +998,156 @@ Enum data_source {
     query_capacity: high
   ''']
 
+  resource_documentation_api [note: '''
+    name: Resource Documentation API
+    description: Team-authored documentation for ACCESS resource providers (login, file transfer, storage, queue specs, top software, datasets), with resource-group inheritance.
+    category: Resources
+    track: Support
+    access_level: Public
+    is_canonical: false
+    canonical_source: access_support_drupal, resource_description_cider
+    mcp_available: false
+    mcp_package: null
+    api_endpoint: https://support.access-ci.org/api/1.0/resources
+    storage_location: support.access-ci.org
+    priority: High
+    data_access_mechanism: API, Web
+    refresh_frequency: Real-time
+    query_capacity: high
+    docs_url: https://support.access-ci.org/api-docs/resources
+    sensitivity: Low
+  ''']
+
+  resource_integration_roadmaps_and_badges [note: '''
+    name: Resource Integration Roadmaps and Badges
+    description: Integration status, badges supported
+    category: Resources
+    track: Operations
+    access_level: Public
+    is_canonical: true
+    canonical_source: null
+    mcp_available: false
+    mcp_package: null
+    api_endpoint: null
+    storage_location: null
+    priority: High
+    data_access_mechanism: API, Web
+  ''']
+
+  resource_news_outages [note: '''
+    name: Resource News/Outages
+    description: Outages; Maintenance; Announcements
+    category: Resources
+    track: Operations
+    access_level: Public
+    is_canonical: true
+    canonical_source: null
+    mcp_available: false
+    mcp_package: null
+    api_endpoint: null
+    storage_location: null
+    priority: High
+    data_access_mechanism: API, Web
+  ''']
+
+  rp_batch_scheduler_information_from_ipf [note: '''
+    name: RP batch scheduler information (from IPF)
+    description: Scheduler queue configuration but not queue contents or reservations
+    category: Resources
+    track: Operations
+    access_level: Public
+    is_canonical: true
+    canonical_source: null
+    mcp_available: false
+    mcp_package: null
+    api_endpoint: null
+    storage_location: null
+    priority: High
+    data_access_mechanism: API, Web
+  ''']
+
+  rp_integration_effort [note: '''
+    name: RP Integration Effort
+    description: Time/effort for new RP integration
+    category: Operations & Security
+    track: Operations
+    access_level: TBD
+    is_canonical: true
+    canonical_source: null
+    mcp_available: false
+    mcp_package: null
+    api_endpoint: null
+    storage_location: null
+    priority: Medium
+  ''']
+
+  rp_software_modules_from_ipf [note: '''
+    name: RP software modules (from IPF)
+    description: Software catalog from resources
+    category: Resources
+    track: Operations
+    access_level: Public
+    is_canonical: true
+    canonical_source: null
+    mcp_available: false
+    mcp_package: null
+    api_endpoint: null
+    storage_location: null
+    priority: High
+    data_access_mechanism: API, Web
+  ''']
+
+  rp_support_effort [note: '''
+    name: RP Support Effort
+    description: Time/effort for ongoing RP support
+    category: Operations & Security
+    track: Operations
+    access_level: TBD
+    is_canonical: true
+    canonical_source: null
+    mcp_available: false
+    mcp_package: null
+    api_endpoint: null
+    storage_location: null
+    priority: Medium
+  ''']
+
+  rp_survey [note: '''
+    name: RP Survey
+    description: Resource provider feedback
+    category: Surveys & Feedback
+    track: ACO
+    access_level: Restricted
+    is_canonical: false
+    canonical_source: google_drive
+    mcp_available: false
+    mcp_package: null
+    api_endpoint: null
+    storage_location: Eval SC Folder
+    priority: Low
+    refresh_frequency: annually
+    query_capacity: limited
+  ''']
+
+  sc_wg_reporting_schedules [note: '''
+    name: SC/WG Reporting Schedules
+    description: SC/WG interaction schedule with the EC
+    category: Governance & Planning
+    track: ACO
+    access_level: Internal Only
+    is_canonical: false
+    canonical_source: raci_in_confluence, google_doc
+    mcp_available: false
+    mcp_package: null
+    api_endpoint: null
+    storage_location: Confluence: https://access-ci.atlassian.net/wiki/spaces/ACP/pages/2024767490/ACCESS+Standing+Committee+RACI+Documents
+Google: https://drive.google.com/drive/u/0/folders/1O_TKTQtvBXL_8wbPdsDmBX4HoXKhPGDU?ths=true
+    priority: N/A
+    data_access_mechanism: Web
+    refresh_frequency: weekly
+    query_capacity: limited
+  ''']
+
   sds_software_discovery_service [note: '''
     name: SDS (Software Discovery Service)
     description: Software discovery: which software packages are available on which ACCESS resource providers.
@@ -158,15 +1155,297 @@ Enum data_source {
     track: Support
     access_level: Public
     is_canonical: false
-    canonical_source: resource_information_cider
+    canonical_source: resource_description_cider
     mcp_available: true
-    mcp_package: @access-mcp/software-discovery
+    mcp_package: null
     api_endpoint: https://sds-ara-api.access-ci.org/api/v1
     storage_location: sds-ara-api.access-ci.org
     priority: High
     data_access_mechanism: API, MCP, Web
     refresh_frequency: Daily
     query_capacity: high
+    docs_url: https://support.access-ci.org/api-docs/sds
+    sensitivity: Low
+  ''']
+
+  service_index [note: '''
+    name: Service Index
+    description: Service catalog and status
+    category: Resources
+    track: Operations
+    access_level: Restricted
+    is_canonical: false
+    canonical_source: database
+    mcp_available: false
+    mcp_package: null
+    api_endpoint: null
+    storage_location: null
+    priority: N/A
+    data_access_mechanism: API
+  ''']
+
+  social_media_reach [note: '''
+    name: Social Media Reach
+    description: Engagement metrics
+    category: Community & Outreach
+    track: ACO
+    access_level: Internal Only
+    is_canonical: false
+    canonical_source: hootsuite
+    mcp_available: false
+    mcp_package: null
+    api_endpoint: null
+    storage_location: Is Dina the only one who can log into hootsuite for data?
+    priority: Low
+    data_access_mechanism: Web
+    refresh_frequency: real-time
+    query_capacity: high
+  ''']
+
+  staff_survey [note: '''
+    name: Staff Survey
+    description: Staff feedback
+    category: Surveys & Feedback
+    track: ACO
+    access_level: Sensitive
+    is_canonical: false
+    canonical_source: google_drive
+    mcp_available: false
+    mcp_package: null
+    api_endpoint: null
+    storage_location: Eval SC Folder
+    priority: Low
+    refresh_frequency: annually
+    query_capacity: limited
+  ''']
+
+  step_application [note: '''
+    name: STEP Application
+    description: Institution demographics
+    category: Users & Identity
+    track: Operations
+    access_level: Restricted
+    is_canonical: true
+    canonical_source: null
+    mcp_available: false
+    mcp_package: null
+    api_endpoint: null
+    storage_location: null
+    priority: Low
+  ''']
+
+  step_survey [note: '''
+    name: STEP Survey
+    description: Survey responses
+    category: Surveys & Feedback
+    track: Operations
+    access_level: Sensitive
+    is_canonical: true
+    canonical_source: null
+    mcp_available: false
+    mcp_package: null
+    api_endpoint: null
+    storage_location: null
+    priority: N/A
+  ''']
+
+  stories_publications_referenced_in_3 [note: '''
+    name: Stories/Publications - referenced in 3
+    description: HPC Wire articles; Awards; science stories
+    category: Publications & Research
+    track: ACO
+    access_level: Public
+    is_canonical: false
+    canonical_source: submissions_from_researchers_or_comms_other_institutions_publication_searches_using_allocations_data
+    mcp_available: false
+    mcp_package: null
+    api_endpoint: null
+    storage_location: Website: https://access-ci.org/news/
+    priority: Medium
+    data_access_mechanism: Web
+    refresh_frequency: real-time
+    query_capacity: high
+  ''']
+
+  support_digest [note: '''
+    name: Support Digest
+    description: Link clicks; Open rates
+    category: Community & Outreach
+    track: Support
+    access_level: Internal Only
+    is_canonical: true
+    canonical_source: null
+    mcp_available: false
+    mcp_package: null
+    api_endpoint: null
+    storage_location: null
+    priority: Low
+    refresh_frequency: weekly
+  ''']
+
+  swg_notes [note: '''
+    name: SWG Notes
+    description: Strategic working group notes
+    category: Governance & Planning
+    track: ACO
+    access_level: Internal Only
+    is_canonical: false
+    canonical_source: confluence
+    mcp_available: false
+    mcp_package: null
+    api_endpoint: null
+    storage_location: Confluence: https://access-ci.atlassian.net/wiki/spaces/ACP/pages/18055209/ACCESS+Working+Groups+and+Standing+Committees
+    priority: Low
+    data_access_mechanism: Web
+    refresh_frequency: weekly
+    query_capacity: high
+  ''']
+
+  system_service_logs [note: '''
+    name: System & Service Logs
+    description: Security logs; Monitoring data
+    category: Operations & Security
+    track: Operations
+    access_level: Sensitive
+    is_canonical: true
+    canonical_source: null
+    mcp_available: false
+    mcp_package: null
+    api_endpoint: null
+    storage_location: null
+    priority: N/A
+  ''']
+
+  ticketing_access_system [note: '''
+    name: Ticketing (ACCESS System)
+    description: Full ticket data; Tags; Resolution data
+    category: Support & Tickets
+    track: Operations
+    access_level: Restricted
+    is_canonical: true
+    canonical_source: null
+    mcp_available: false
+    mcp_package: null
+    api_endpoint: null
+    storage_location: null
+    priority: High
+  ''']
+
+  ticketing_statistics [note: '''
+    name: Ticketing Statistics
+    description: Time to resolution; Tags
+    category: Support & Tickets
+    track: Operations
+    access_level: Internal Only
+    is_canonical: true
+    canonical_source: null
+    mcp_available: false
+    mcp_package: null
+    api_endpoint: null
+    storage_location: null
+    priority: Medium
+  ''']
+
+  video_tutorials [note: '''
+    name: Video Tutorials
+    description: Playlist(s) of tutorial videos
+    category: 
+    track: Metrics
+    access_level: Public
+    is_canonical: true
+    canonical_source: null
+    mcp_available: false
+    mcp_package: null
+    api_endpoint: null
+    storage_location: XDMoD Youtube Channel
+    priority: Low
+    data_access_mechanism: Web
+    refresh_frequency: static
+    sensitivity: Low
+  ''']
+
+  web_stats_google_analytics [note: '''
+    name: Web Stats (Google Analytics)
+    description: Page hits and visits
+    category: Usage & Metrics
+    track: Operations
+    access_level: Internal Only
+    is_canonical: true
+    canonical_source: null
+    mcp_available: false
+    mcp_package: null
+    api_endpoint: null
+    storage_location: null
+    priority: Low
+  ''']
+
+  webinar_registration_nairr_access [note: '''
+    name: Webinar Registration (NAIRR/ACCESS)
+    description: Names; Institutions; ACCESS ID; Email; Referral source
+    category: Events & Training
+    track: Support
+    access_level: Restricted
+    is_canonical: true
+    canonical_source: null
+    mcp_available: false
+    mcp_package: null
+    api_endpoint: null
+    storage_location: null
+    priority: Medium
+    data_access_mechanism: Web, API
+    refresh_frequency: real-time
+    query_capacity: high
+  ''']
+
+  website_analytics [note: '''
+    name: Website Analytics
+    description: Institution; Login status; Carnegie classification; Geography; Session clicks; Referrers
+    category: Usage & Metrics
+    track: Support
+    access_level: Internal Only
+    is_canonical: true
+    canonical_source: null
+    mcp_available: false
+    mcp_package: null
+    api_endpoint: null
+    storage_location: null
+    priority: Medium
+    refresh_frequency: real-time
+    query_capacity: high
+  ''']
+
+  website_stats [note: '''
+    name: Website Stats
+    description: Visits; Click-through rates
+    category: Usage & Metrics
+    track: ACO
+    access_level: Internal Only
+    is_canonical: false
+    canonical_source: google_analytics_4
+    mcp_available: false
+    mcp_package: null
+    api_endpoint: null
+    storage_location: Google Drive: ACCESS Comms/web Metrics
+    priority: Low
+    data_access_mechanism: Web
+    refresh_frequency: real-time
+    query_capacity: high
+  ''']
+
+  workshop_surveys_cu [note: '''
+    name: Workshop Surveys (CU)
+    description: Pre/post surveys; Institution; Motivation; Experience feedback
+    category: Surveys & Feedback
+    track: Support
+    access_level: Restricted
+    is_canonical: true
+    canonical_source: null
+    mcp_available: false
+    mcp_package: null
+    api_endpoint: null
+    storage_location: null
+    priority: Low
+    refresh_frequency: quarterly
   ''']
 
   xdmod [note: '''
@@ -185,6 +1464,61 @@ Enum data_source {
     realms: Accounts (2 stats, 2 dims), Allocations (11 stats, 9 dims), Cloud (11 stats, 23 dims), Gateways (28 stats, 23 dims), Jobs (30 stats, 24 dims), Requests (2 stats, 3 dims), ResourceSpecifications (18 stats, 4 dims), Storage (6 stats, 0 dims), SUPREMM (33 stats, 30 dims)
   ''']
 
+  xdmod_data_github_repository [note: '''
+    name: xdmod-data GitHub Repository
+    description: Documentation for the XDMoD Python/R APIs
+    category: 
+    track: Metrics
+    access_level: Public
+    is_canonical: true
+    canonical_source: null
+    mcp_available: false
+    mcp_package: null
+    api_endpoint: null
+    storage_location: Github
+    priority: Low
+    data_access_mechanism: Web
+    refresh_frequency: static
+    sensitivity: Low
+  ''']
+
+  xdmod_notebooks_github_repository [note: '''
+    name: xdmod-notebooks GitHub Repository
+    description: Jupyter notebook training materials and examples
+    category: 
+    track: Metrics
+    access_level: Public
+    is_canonical: true
+    canonical_source: null
+    mcp_available: false
+    mcp_package: null
+    api_endpoint: null
+    storage_location: Github
+    priority: Low
+    data_access_mechanism: Web
+    refresh_frequency: static
+    sensitivity: Low
+  ''']
+
+  xdmod_open_api_documentation [note: '''
+    name: XDMoD Open API Documentation
+    description: Descriptions of XDMoD Open API endpoints
+    category: 
+    track: Metrics
+    access_level: Public
+    is_canonical: true
+    canonical_source: null
+    mcp_available: false
+    mcp_package: null
+    api_endpoint: null
+    storage_location: null
+    priority: High
+    data_access_mechanism: Web
+    refresh_frequency: static
+    docs_url: https://open.xdmod.org/11.0/rest.html
+    sensitivity: Low
+  ''']
+
 }
 
 // =============================================================================
@@ -192,15 +1526,15 @@ Enum data_source {
 // =============================================================================
 
 Table access_support_drupal {
-  nid int [pk, not null, note: 'access: Public | semantic: entity_id | Drupal node ID']
-  uuid varchar [not null, note: 'access: Public | semantic: uuid | Drupal UUID']
-  type varchar [not null, note: 'access: Public | semantic: entity_type | Drupal content type']
-  title varchar [not null, note: 'access: Public | semantic: entity_name | Content title']
+  nid int [pk, note: 'access: Public | semantic: entity_id | Drupal node ID']
+  uuid varchar [note: 'access: Public | semantic: uuid | Drupal UUID']
+  type varchar [note: 'access: Public | semantic: entity_type | Drupal content type']
+  title varchar [note: 'access: Public | semantic: entity_name | Content title']
   body text [note: 'access: Public | semantic: entity_description | Content body (HTML)']
-  status boolean [not null, note: 'access: Internal Only | semantic: entity_status | Published status']
-  created timestamp [not null, note: 'access: Public | semantic: date_created | Content creation date']
-  changed timestamp [not null, note: 'access: Public | semantic: date_modified | Last modification date']
-  uid int [not null, note: 'access: Restricted | Author user ID']
+  status boolean [note: 'access: Internal Only | semantic: entity_status | Published status']
+  created timestamp [note: 'access: Public | semantic: date_created | Content creation date']
+  changed timestamp [note: 'access: Public | semantic: date_modified | Last modification date']
+  uid int [note: 'access: Restricted | Author user ID']
 
   Note: '''
     source: access_support_drupal
@@ -210,6 +1544,49 @@ Table access_support_drupal {
       - What content types are stored in the ACCESS Support CMS?
       - When was a specific piece of content last modified?
       - How many published nodes exist by content type?
+  '''
+}
+
+Table access_xdmod_data_access_endpoints {
+  "Raw Data" JSON [note: 'access: Public, Authenticated']
+  "Aggregate Data" JSON [note: 'access: Public, Authenticated']
+  "Timeseries Data" JSON [note: 'access: Public, Authenticated']
+
+  Note: '''
+    source: access_xdmod_data_access_endpoints
+    description: Allocations Information,
+Compute Usage,
+HPC Job Performance & Power Data,
+Science Gateway Usage,
+Resource Quality of service data (via Application Kernels),
+HPC Job Efficiency Analytics,
+Commercial and Non-Commercial Cloud Usage,
+Open OnDemand Usage
+    access_level: Public and Authenticated
+  '''
+}
+
+Table access_xdmod_data_catalog {
+  "Catalog overview" text [not null, note: 'access: Public | semantic: entity_summary | Summary of XDMoD data catalog']
+  "Catalog name" varchar [not null, note: 'access: Public | semantic: entity_name | Name of information in data catalog']
+  Description text [not null, note: 'access: Public | semantic: entity_description | Description of the data provided']
+  Realm varchar [not null, note: 'access: Public | semantic: entity_name | The XDMoD realm that provides the data']
+  Type varchar [not null, note: 'access: Public | semantic: entity_type | Is type of (Metric, Group By, Raw Data)']
+
+  Note: '''
+    source: access_xdmod_data_catalog
+    description: List of available statistics and dimensions
+    access_level: Public
+  '''
+}
+
+Table access_xdmod_user_manual {
+  "User Manual Pages" text [not null, note: 'access: Public | semantic: entity_description | Webpages that provide documentation on using the XDMoD portal']
+
+  Note: '''
+    source: access_xdmod_user_manual
+    description: XDMoD Web Portal Documentation
+    access_level: Public
   '''
 }
 
@@ -235,8 +1612,8 @@ Table affinity_groups {
 
   Note: '''
     source: affinity_groups
-    description: Community groups organized by interest or domain
-    access_level: Public
+    description: Membership, events, announcements, KB resources
+    access_level: Public and Authenticated
     use_cases:
       - Which affinity groups are available for a specific research domain?
       - Who coordinates a particular affinity group?
@@ -262,8 +1639,8 @@ Table announcements {
 
   Note: '''
     source: announcements
-    description: Resource provider and community announcements
-    access_level: Public
+    description: RP and community announcements
+    access_level: Public and Authenticated
     use_cases:
       - What announcements have been published this week?
       - Are there any announcements related to a specific affinity group?
@@ -280,7 +1657,7 @@ Table comanage {
 
   Note: '''
     source: comanage
-    description: User identity information
+    description: Identity information; Teragrid.org identities
     access_level: Sensitive
     use_cases:
       - How many unique users are registered in ACCESS?
@@ -354,7 +1731,7 @@ Table events {
   registration_url varchar [note: 'access: Public | mcp: registration_url | semantic: url_registration | Link to register for the event']
   contact varchar [note: 'access: Public | mcp: contact | semantic: contact_info | Contact person or email']
   speakers text [note: 'access: Public | semantic: person_name | Speaker names and affiliations']
-  tags text [note: 'access: Public | mcp: tags | computed: true | semantic: tags | Parsed from comma-separated tag list']
+  tags text [note: 'access: Public | mcp: tags | semantic: tags | Discovery tags']
   affinity_group_id int [note: 'access: Public | Associated affinity group']
 
   Note: '''
@@ -366,6 +1743,66 @@ Table events {
       - Which events are associated with a specific affinity group?
       - How many office hours are scheduled for next week?
       - What events require registration?
+  '''
+}
+
+Table publications {
+  "XDMoD Citation Reference" text [not null, note: 'access: Public | semantic: entity_name | Citation to use when referencing XDMoD']
+  Year int [not null, note: 'access: Public | semantic: date_published | Year of publications']
+  "Publication Reference" text [not null, note: 'access: Public | semantic: entity_name | Publication citation']
+
+  Note: '''
+    source: publications
+    description: List of published papers and presentations
+    access_level: Public
+  '''
+}
+
+Table resource_description_cider {
+  cider_resource_id int [not null, note: 'access: Public | CiDeR primary key']
+  info_resource_id varchar [not null, note: 'access: Public | Global human meaningful resource ID']
+  info_site_id varchar [not null, note: 'access: Public | Global human meaningful site ID']
+  cider_type varchar [not null, note: 'access: Public | Compute, Storage, Gateway, Network, etc.']
+  organization_name varchar [not null, note: 'access: Public']
+  organization_url varchar [not null, note: 'access: Public']
+  organization_logo_url varchar [not null, note: 'access: Public']
+  groups int [not null, note: 'access: Public | list of resource groups this resource belongs to']
+  resource_descriptive_name varchar [not null, note: 'access: Public | Descriptive resource name']
+  resource_description varchar [not null, note: 'access: Public | Full resource description']
+  project_affiliation varchar [not null, note: 'access: Public | Resource affliation: ACCESS, NAIRR, etc.']
+  latest_status varchar [not null, note: 'access: Public | Coming soon, pre-production, production, post-production, or retired status']
+  latest_status_start date [not null, note: 'access: Public | What latest status starts']
+  latest_status_end date [not null, note: 'access: Public | What latest status ends']
+  resource_status JSON [not null, note: 'access: Public | Historical statuses with corresponding start and end dates']
+  "compute.recommended_use" varchar [not null, note: 'access: Public']
+  "compute.access_description" varchar [not null, note: 'access: Public']
+  "compute.use_guide_url" varchar [not null, note: 'access: Public']
+  "compute.cpu_type" varchar [not null, note: 'access: Public']
+  "compute.operating_system" varchar [not null, note: 'access: Public']
+  "compute.gpu_description" varchar [not null, note: 'access: Public']
+  "compute.recommended_use_2" varchar [not null, note: 'access: Public']
+  "compute.job_manager" varchar [not null, note: 'access: Public']
+  "compute.batch_system" varchar [not null, note: 'access: Public']
+  "compute.interconnect" varchar [not null, note: 'access: Public']
+  "compute.storage_network" varchar [not null, note: 'access: Public']
+  "compute.machine_type" varchar [not null, note: 'access: Public']
+  "compute.cpu_speed_ghz" int [not null, note: 'access: Public']
+  "compute.platform_name" varchar [not null, note: 'access: Public']
+  "compute.memory_per_cpu_gb" int [not null, note: 'access: Public']
+  "compute.cpu_count_per_node" int [not null, note: 'access: Public']
+  "compute.xsedenet_participation" varchar [not null, note: 'access: Public']
+  "compute.node_count" int [not null, note: 'access: Public']
+  "compute.supports_sensitive_data" varchar [not null, note: 'access: Public']
+  "compute.sensitive_data_support_description" varchar [not null, note: 'access: Public']
+  "compute.local_storage_per_node_gb" int [not null, note: 'access: Public']
+  "storage.<multiple_attributes>" int [not null, note: 'access: Public']
+  "gateway.<multiple_attributes>" varchar [note: 'access: Public']
+  features JSON [not null, note: 'access: Public | Contains feature id, name, description, category_types, and feature_category']
+
+  Note: '''
+    source: resource_description_cider
+    description: Organizations, resource descriptions, and integration information for ACCESS resource providers.
+    access_level: Public
   '''
 }
 
@@ -389,6 +1826,77 @@ Table resource_documentation_api {
   '''
 }
 
+Table resource_integration_roadmaps_and_badges {
+  "Roadmap.badge_id" int [note: 'access: Public']
+  "Roadmap.name" varchar [note: 'access: Public']
+  "Roadmap.graphic" image [note: 'access: Public']
+  "Roadmap.executive_summary" text [note: 'access: Public | For RP leadership']
+  "Roadmap.infrastructure_types" varchar [note: 'access: Public | Types of infrastructure that can use this roadmap']
+  "Roadmap.integration_coordinators" varchar [note: 'access: Public | Coordinators']
+  "Roadmap.status" varchar [note: 'access: Public | Draft or Production']
+  "Badge.badge_id" int [note: 'access: Public']
+  "Badge.name" varchar [note: 'access: Public']
+  "Badge.graphic" image [note: 'access: Public']
+  "Badge.researcher_summary" text [note: 'access: Public | For researching using the badges']
+  "Badge.resource_provider_summary" text [note: 'access: Public | Summary of what RPs provide and necessary support work']
+  "Badge.verfication_summary" text [note: 'access: Public | How is the badge verified']
+  "Badge.verification_method" varchar [note: 'access: Public | Manaul or Automated']
+  "Badge.default_badge_access_url" varchar [note: 'access: Public | URL for accessing this badge if the RP doesn\'t provide one']
+  "Badge.default_badge_access_url_label" varchar [note: 'access: Public | URL link label']
+  "Task.task_id" int [note: 'access: Public']
+  "Task.name" varchar [note: 'access: Public']
+  "Task.technical_summary" text [note: 'access: Public | Summary of what the RPs must do']
+  "Task.implementor_roles" varchar [note: 'access: Public | RP roles involved in implementation work']
+  "Task.task_experts" varchar [note: 'access: Public | Who can help with task']
+  "Task.detailed_instructions_url" varchar [note: 'access: Public | URL to task instructions']
+  "Badge_Prerequisite_Badge.badge" varchar [note: 'access: Public']
+  "Badge_Prerequisite_Badge.prerequisite_badge" varchar [note: 'access: Public']
+  "Badge_Prerequisite_Badge.sequence_no" int [note: 'access: Public | For ordering pre-requisites']
+  "Roadmap_Badge.roadmap" varchar [note: 'access: Public']
+  "Roadmap_Badge.badge" varchar [note: 'access: Public']
+  "Roadmap_Badge.sequence_no" int [note: 'access: Public | For ordering badges']
+  "Roadmap_Badge.required" boolean [note: 'access: Public | Is the badge required in this roadmap']
+  "Badge_Task.badge" varchar [note: 'access: Public']
+  "Badge_Task.task" varchar [note: 'access: Public']
+  "Badge_Task.sequence_no" int [note: 'access: Public | For ordering tasks']
+  "Badge_Task.required" boolean [note: 'access: Public | Is the task required in this badge']
+  "Resource_Roadmap.info_resourceid" varchar [note: 'access: Public | Which resource']
+  "Resource_Roadmap.roadmap" varchar [note: 'access: Public']
+  "Resource_Badge.info_resourceid" varchar [note: 'access: Public | Which resource']
+  "Resource_Badge.roadmap" varchar [note: 'access: Public']
+  "Resource_Badge.badge" varchar [note: 'access: Public']
+  "Resource_Badge.badge_access_url" varchar [note: 'access: Public | URL for accessing this badge for a resource']
+  Resource_Badge_Worflow varchar [note: 'access: Public | tracks resource-roadmap-badge status']
+  Resource_Badge_Task_Workflow varchar [note: 'access: Public | tracks resource-roadmap-badge-task status']
+
+  Note: '''
+    source: resource_integration_roadmaps_and_badges
+    description: Integration status, badges supported
+    access_level: Public
+  '''
+}
+
+Table resource_news_outages {
+  "News.Content" text [note: 'access: Public']
+  "News.Start" timestamp [note: 'access: Public']
+  "News.End" timestamp [note: 'access: Public']
+  "News.Type" varchar [note: 'access: Public']
+  "News.DistributionOptions" varchar [note: 'access: Public']
+  "News.WebURL" varchar [note: 'access: Public']
+  "News.Affiliation" varchar [note: 'access: Public']
+  "News.Publisher" varchar [note: 'access: Public']
+  News_Associations varchar [note: 'access: Public | Associates news to infrastructure elements']
+  "News_Publisher.OrganizationID" varchar [note: 'access: Public']
+  "News_Publisher.OrganizationName" varchar [note: 'access: Public']
+  "News_Publisher.NewsURNPrefix" varchar [note: 'access: Public']
+
+  Note: '''
+    source: resource_news_outages
+    description: Outages; Maintenance; Announcements
+    access_level: Public
+  '''
+}
+
 Table sds_software_discovery_service {
   rps json [note: 'access: Restricted | Request param: array of Resource Provider names/IDs to filter by, case-insensitive. Conditional (rps and/or software).']
   software json [note: 'access: Restricted | semantic: entity_name | Request param: array of software names to filter by, case-insensitive. Conditional (rps and/or software).']
@@ -404,6 +1912,58 @@ Table sds_software_discovery_service {
   Note: '''
     source: sds_software_discovery_service
     description: Software discovery: which software packages are available on which ACCESS resource providers.
+    access_level: Public
+  '''
+}
+
+Table video_tutorials {
+  "Use Case Playlist" text [not null, note: 'access: Public | semantic: media_ref | Playlist(s) that showcase different use cases of XDMoD']
+
+  Note: '''
+    source: video_tutorials
+    description: Playlist(s) of tutorial videos
+    access_level: Public
+  '''
+}
+
+Table xdmod_data_github_repository {
+  "Source Code" text [not null, note: 'access: Public | semantic: entity_description | Source code for Data Analytics Framework']
+  "Python Package Information" text [not null, note: 'access: Public | semantic: entity_summary | PyPI package information']
+  "API Token Instructions" text [not null, note: 'access: Public | semantic: entity_description | API Token generation instructions']
+  "Support & Feedback Information" text [not null, note: 'access: Public | semantic: contact_info']
+  "Licence Information" text [not null, note: 'access: Public | semantic: entity_type']
+  "Reference Citation" text [not null, note: 'access: Public | semantic: entity_name']
+
+  Note: '''
+    source: xdmod_data_github_repository
+    description: Documentation for the XDMoD Python/R APIs
+    access_level: Public
+  '''
+}
+
+Table xdmod_notebooks_github_repository {
+  "Jupyter Notebooks" text [not null, note: 'access: Public | semantic: entity_description | Tutorial Jupyter notebooks showcasing the XDMoD Data Analytics Framework']
+  "Notebook build instructions" text [not null, note: 'access: Public | semantic: entity_summary | Instructions for building and running the notebooks']
+
+  Note: '''
+    source: xdmod_notebooks_github_repository
+    description: Jupyter notebook training materials and examples
+    access_level: Public
+  '''
+}
+
+Table xdmod_open_api_documentation {
+  "Endpoint Name" varchar [not null, note: 'access: Public | semantic: entity_name | XDMoD REST API Endpoint Name']
+  "Endpoint Description" text [note: 'access: Public | semantic: entity_summary | Purpose of endpoint']
+  Authorizations varchar [not null, note: 'access: Public | semantic: entity_type | Supported authentication methods']
+  "Request Body Schema" varchar [note: 'access: Public | semantic: entity_type | Schema type']
+  "Path Parameters" text [note: 'access: Public | semantic: entity_description | Path parameters and their descriptions']
+  "Request Parameters" text [note: 'access: Public | semantic: entity_description | Query parameters and their descriptions']
+  "Endpoint Responses" text [not null, note: 'access: Public | semantic: entity_description | Possible request responses']
+
+  Note: '''
+    source: xdmod_open_api_documentation
+    description: Descriptions of XDMoD Open API endpoints
     access_level: Public
   '''
 }

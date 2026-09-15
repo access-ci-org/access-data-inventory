@@ -17,24 +17,47 @@ The **canonical source of truth is the Google Sheet** ("ACCESS Data Source
 Inventory"). Everything else is generated from it:
 
 ```
-Google Sheet  →  CSV export  →  sheets_to_md.py  →  data-sources/*.md  →  generate.py  →  docs/ (Pages + dbdocs)
-   (canonical)                  (converter)         (generated md)        (visualizations)
+Google Sheet  →  .xlsx download  →  xlsx_to_csv.py  →  sheets_to_md.py  →  data-sources/*.md  →  generate.py  →  docs/ (Pages + dbdocs)
+   (canonical)                       (export)           (converter)         (generated md)        (visualizations)
 ```
 
 1. **Edit the Google Sheet** — add or update a row in the inventory tab and its
    fields in the matching `<Track> Fields` tab.
-2. **Regenerate the markdown** — export the sheet tabs to CSV and run
-   `python sheets_to_md.py -f <fields-dir> -d <inventory.csv> -o data-sources`.
-   This rewrites `data-sources/*.md` from the sheet.
-3. **Commit and push to `main`** — GitHub Actions then runs `generate.py` and
+2. **Regenerate the markdown** — download the sheet as `.xlsx`
+   (File → Download → Microsoft Excel) and run:
+
+   ```bash
+   pip install pyyaml openpyxl          # once
+   python xlsx_to_csv.py "ACCESS Data Source Inventory.xlsx" -o export
+   python sheets_to_md.py -f export/fields -d export/inventory.csv -o data-sources
+   python generate.py --validate        # surfaces sheet cells that need fixing
+   ```
+
+   `export/` is git-ignored. The converter updates `data-sources/*.md` in
+   place: every column the sheet has is written from the sheet, and every
+   inventory row is written even before anyone has typed its fields (pass
+   `--skip-empty` to leave those out). It also writes `sync-report.json`
+   (committed) listing what it noticed: broken formula headings, rows in one
+   tab but not the other, and repository files the sheet no longer mentions.
+3. **Look at the data quality page** — `generate.py` never fails on bad
+   cells. Blank categories, types outside the vocabulary, canonical sources
+   that name no row, and so on are collected into `docs/data-quality.md`
+   (published with the site) as the cleanup list for each track. It only
+   refuses to generate when a file has no id or name.
+4. **Commit and push to `main`** — GitHub Actions then runs `generate.py` and
    publishes the docs.
 
-> **Important:** `data-sources/*.md` are a **generated intermediate**. Do NOT
-> hand-edit them — your changes will be overwritten the next time the sheet is
-> exported. Edit the Google Sheet instead. (`md_to_sheet.py` is a helper for the
-> reverse direction: dumping curated markdown back into sheet-pasteable CSVs.)
+> **Important:** everything the sheet has a column for is owned by the sheet.
+> Do NOT edit those values in `data-sources/*.md` — they are overwritten on the
+> next regeneration. Edit the Google Sheet instead. The converter preserves
+> the parts the sheet cannot hold: `use_cases`, `constraints`,
+> `relationships`, `realms`, `mcp_authenticated`, per-tool MCP
+> `method`/`description`, and the markdown body below the frontmatter. Those
+> (and only those) may be maintained by hand. (`md_to_sheet.py` is a helper
+> for the reverse direction: dumping curated markdown back into
+> sheet-pasteable CSVs.)
 
-> **Coming soon:** the sheet export + regeneration is currently a manual local
+> **Coming soon:** the sheet download + regeneration is currently a manual local
 > step. The plan is to automate pulling from the Google Sheet (via the Sheets
 > API) so a sheet edit regenerates and publishes without the manual export.
 
@@ -174,12 +197,15 @@ Detailed description of this data source.
 | `references` | No | Foreign key reference (e.g., `users.user_id`) |
 | `allowed_values` | No | List of valid values |
 | `semantic_type` | No | Controlled vocabulary tag for cross-source field matching (see [Semantic Types](#semantic-types)) |
+| `access_notes` | No | Which parts of the field need authentication, when `access` varies |
+| `authoritative_source` | No | Where this field's value originates, when it differs from the source itself |
+| `notes` | No | Free-text notes from the sheet |
 
 ### Allowed Values
 
-**category:** Community & Outreach, Events & Training, Users & Identity, Content Management, Allocations, Resources, Operations, Metrics & Reporting
+**category:** Community & Outreach, Events & Training, Users & Identity, Content Management, Allocations, Resources, Operations, Metrics & Reporting, Usage & Metrics, Publications & Research, Surveys & Feedback, Support & Tickets
 
-**track:** Support, Operations, Allocations, ACO
+**track:** Support, Operations, Allocations, ACO, Metrics, External
 
 **access_level:** Public, Authenticated, Public and Authenticated, Restricted, Internal Only, Sensitive, Varies, TBD
 
@@ -282,11 +308,14 @@ data-inventory/
 │   ├── index.md
 │   ├── summary.md
 │   ├── field-dictionary.md
+│   ├── data-quality.md
 │   ├── inventory.dbml
 │   ├── inventory.json
 │   └── heb-visualization.html
 ├── templates/              # HTML templates
 │   └── heb-visualization.html
+├── xlsx_to_csv.py          # Sheet .xlsx download -> CSVs for the converter
+├── sheets_to_md.py         # CSVs -> data-sources/*.md (updates in place)
 ├── generate.py             # Generator script
 ├── schema.yaml             # Validation rules
 └── package.json            # Node dependencies (dbdocs)
@@ -299,6 +328,7 @@ data-inventory/
 | `index.md` | Landing page | GitHub Pages |
 | `summary.md` | Stakeholder overview by track | GitHub Pages |
 | `field-dictionary.md` | Detailed field documentation | GitHub Pages |
+| `data-quality.md` | Sheet cells to fix, by track | GitHub Pages |
 | `heb-visualization.html` | Interactive relationship diagram | GitHub Pages |
 | `inventory.dbml` | Database schema | dbdocs.io |
 | `inventory.json` | Machine-readable data | API/tools |

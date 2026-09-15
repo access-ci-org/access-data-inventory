@@ -6,113 +6,89 @@ category: Content Management
 track: Support
 access_level: Varies
 is_canonical: true
-canonical_source: null
 api_endpoint: https://support.access-ci.org
 dynamic: true
 priority: High
-
 mcp:
   available: false
-  package: null
-  tools: []
-  notes: Backend canonical source; content exposed via specialized APIs and MCPs
-
 provides_data_for:
-  - announcements
-  - events
-  - affinity_groups
-  - tags
-
+- announcements
+- events
+- affinity_groups
+- tags
 use_cases:
-  - What content types are stored in the ACCESS Support CMS?
-  - When was a specific piece of content last modified?
-  - How many published nodes exist by content type?
-
+- What content types are stored in the ACCESS Support CMS?
+- When was a specific piece of content last modified?
+- How many published nodes exist by content type?
 fields:
-  - name: nid
-    type: int
-    access: Public
-    required: true
-    primary_key: true
-    description: Drupal node ID
-    semantic_type: entity_id
-
-  - name: uuid
-    type: varchar
-    access: Public
-    required: true
-    description: Drupal UUID
-    semantic_type: uuid
-
-  - name: type
-    type: varchar
-    access: Public
-    required: true
-    allowed_values: [announcement, event, eventseries, eventinstance, affinity_group, page, article]
-    description: Drupal content type
-    semantic_type: entity_type
-
-  - name: title
-    type: varchar
-    access: Public
-    required: true
-    description: Content title
-    semantic_type: entity_name
-
-  - name: body
-    type: text
-    access: Public
-    description: Content body (HTML)
-    semantic_type: entity_description
-
-  - name: status
-    type: boolean
-    access: Internal Only
-    required: true
-    description: Published status
-    semantic_type: entity_status
-
-  - name: created
-    type: timestamp
-    access: Public
-    required: true
-    description: Content creation date
-    semantic_type: date_created
-
-  - name: changed
-    type: timestamp
-    access: Public
-    required: true
-    description: Last modification date
-    semantic_type: date_modified
-
-  - name: uid
-    type: int
-    access: Restricted
-    required: true
-    references: users.user_id
-    description: Author user ID
-
+- name: nid
+  type: int
+  access: Public
+  description: Drupal node ID
+  semantic_type: entity_id
+  primary_key: true
+- name: uuid
+  type: varchar
+  access: Public
+  description: Drupal UUID
+  semantic_type: uuid
+- name: type
+  type: varchar
+  access: Public
+  description: Drupal content type
+  semantic_type: entity_type
+- name: title
+  type: varchar
+  access: Public
+  description: Content title
+  semantic_type: entity_name
+- name: body
+  type: text
+  access: Public
+  description: Content body (HTML)
+  semantic_type: entity_description
+- name: status
+  type: boolean
+  access: Internal Only
+  description: Published status
+  semantic_type: entity_status
+- name: created
+  type: timestamp
+  access: Public
+  description: Content creation date
+  semantic_type: date_created
+- name: changed
+  type: timestamp
+  access: Public
+  description: Last modification date
+  semantic_type: date_modified
+- name: uid
+  type: int
+  access: Restricted
+  description: Author user ID
+  references: users.user_id
 relationships:
-  - type: has_many
-    target: announcements
-    description: Stores announcement content
-
-  - type: has_many
-    target: events
-    description: Stores event content (series and instances)
-
-  - type: has_many
-    target: affinity_groups
-    description: Stores affinity group content
-
-  - type: has_many
-    target: tags
-    description: Stores taxonomy terms
-
-  - type: has_many
-    target: users
-    description: Stores user accounts (Drupal users, linked to COManage)
+- type: has_many
+  target: announcements
+  description: Stores announcement content
+- type: has_many
+  target: events
+  description: Stores event content (series and instances)
+- type: has_many
+  target: affinity_groups
+  description: Stores affinity group content
+- type: has_many
+  target: tags
+  description: Stores taxonomy terms
+- type: has_many
+  target: users
+  description: Stores user accounts (Drupal users, linked to COManage)
+storage_location: Drupal CMS database
+data_access_mechanism: Web
+docs_url: https://support.access-ci.org/api-docs
+refresh_frequency: realtime
+query_capacity: moderate
+sensitivity: High
 ---
 
 ## Overview
